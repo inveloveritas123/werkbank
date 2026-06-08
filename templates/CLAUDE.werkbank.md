@@ -48,10 +48,21 @@ Regel: Beim Agent-Spawn `model=` = `tier_router.route(<label>).model` setzen. La
 - **E1** EU-Routing (kein Non-EU-Endpunkt/Region in Code/Config) · **E2** keine Klartext-PII in Logs/Prompts/Outputs · **D3** keine Secrets · **E3** Mandantentrennung (Audit-Log) · **E4** Audit-Log-Schema · **E5** DSGVO-Artefakt-Vollständigkeit (`--privacy-dir`).
 - Nicht-implementierte Gates erscheinen als **SKIP** (ehrlich, nicht „grün"). E1 ist statisch (kein Laufzeit-Zwang); PII-Erkennung ist heuristisch — siehe WERKBANK-Grenzen.
 
+## Ralph-Loop (Autonomie-Motor)
+Vollautonom mit frischem Kontext je Runde, bis Gates grün **und** promise erscheint:
+```bash
+ralph/ralph-loop.sh --build-cmd 'claude -p "<Story abarbeiten; bei fertig <promise>GRUEN</promise> ausgeben>"' \
+  --target . --max-iterations 15
+```
+Stoppt erst bei **GRUEN + `<promise>GRUEN</promise>`**; hält an bei `--max-iterations` oder
+**Drift** (mehr rote Gates als in der Vorrunde). In-Session-Variante: `ralph/stop_hook.py` (opt-in).
+
 ## Befehle
 ```bash
 python3 gates/runner.py --target . --report GATE-REPORT.md   # Gate-Lauf
 python3 gates/runner.py --target . --ci                       # CI (Exit 1 bei ROT)
+ralph/ralph-loop.sh --build-cmd '<worker>' --max-iterations 15  # Ralph-Loop
+python3 orchestrator/tier_router.py --table                   # Tier-Routing
 npx bmad-method status                                        # BMAD-Status
 ```
 

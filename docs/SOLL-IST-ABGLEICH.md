@@ -30,8 +30,8 @@
 | Soll (Blueprint §2) | Ist | Status |
 |---|---|---|
 | Verification-first (Tests+Gates als Orakel) | durchgängig RED→GREEN | ✅ |
-| Ralph-Loop: Stop-Hook + `completion-promise GRUEN` + `--max-iterations` | `promise` nur als Text in gates.yaml; kein Hook, kein Loop-Code | ❌ nicht verdrahtet |
-| Drift-Pausegate (Qualität sinkt → anhalten) | nur Doku; manuell via BENCHMARK | 🟡 |
+| Ralph-Loop: Stop-Hook + `completion-promise GRUEN` + `--max-iterations` | **implementiert (T9): `ralph/ralph-loop.sh` Fresh-Context-Motor + `stop_hook.py` + Engine, 10 Tests** | ✅ |
+| Drift-Pausegate (Qualität sinkt → anhalten) | **implementiert in `ralph_decide` (rote Gates gestiegen → HALT)** | ✅ |
 | `STATE.md` crash-sicher (Pipeline-Position) | Datei existiert, manuell gepflegt; kein Code liest/schreibt | 🟡 |
 | Persistente Minds + frische Worker | frische Worker (Subagenten) ja; persistente Minds nein | 🟡 |
 | 3 Review-Ebenen: Paar→QA-Tribunal→Deployment-Val. | nur Ebene 1 (Paar-Review/GP) | 🟡 (2/3 fehlen) |
@@ -93,6 +93,6 @@ Die **drei Schichten als „Einheit"** existieren als Gerüst + Doku (`CLAUDE.md
 1. ~~**C-Gate**: Tests als Block-Gate~~ — **erledigt (T9, C1)**. Offen: C2 Coverage.
 2. ~~**H4** CHANGELOG · **F1** Modell-Pinning~~ — **erledigt (T9)**.
 3. **B-Gates**: Lint/Typecheck/Build (ruff/mypy) — sobald ein echtes Projekt damit läuft.
-4. **Ralph-Loop echt**: Stop-Hook + `completion-promise`-Konsum + `--max-iterations` im Runner/Hook.
-5. **BMAD wirklich nutzen**: 01-konzipieren an die BMAD-Rollen anbinden (1 echter Durchstich).
+4. ~~**Ralph-Loop echt**~~ — **erledigt (T9): `ralph/ralph-loop.sh` + Stop-Hook + Drift-Pausegate.**
+5. **BMAD wirklich nutzen**: 01-konzipieren an die BMAD-Rollen anbinden (1 echter Durchstich). ← nächster großer Brocken
 6. **I2/I3** (QA-Tribunal, Deployment-Validierung), **E6/E7** (DPIA/Drittland), **Budget/Kill-Switch**.

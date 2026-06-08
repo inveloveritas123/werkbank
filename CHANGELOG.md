@@ -2,6 +2,16 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-08 — T9 (Substanz): Echter Ralph-Loop (Autonomie-Motor)
+- `ralph/ralph_decide.py` — deterministische Entscheidungs-Engine (fertig/weiter/anhalten),
+  inkl. **Drift-Pausegate** (rote Gates gestiegen → HALT) und max-iterations-Netz. Eine Quelle der Wahrheit.
+- `ralph/ralph-loop.sh` — **Fresh-Context-Motor** (Blueprint-bevorzugt): Worker je Runde mit frischem
+  Kontext, re-invoziert bis **alle Block-Gates grün UND `<promise>GRUEN</promise>`**. Exit 0/3/2.
+- `ralph/stop_hook.py` (+ `settings.stop-hook.json`) — In-Session-Stop-Hook (opt-in via `--ralph-hook`).
+- **10 Tests** (Engine + Bash-Motor end-to-end + Stop-Hook). Installer kopiert `ralph/`.
+- Ehrlich: Stop-Hook `block` pausiert, re-invoziert interaktiv nicht garantiert — daher ist der
+  Bash-Motor der vollautonome Weg (genau die Blueprint-Empfehlung). SOLL-IST: Ralph-Loop ✅.
+
 ## 2026-06-08 — T9: Drei Gates echt gemacht (C1/F1/H4) — 6 → 9 implementiert
 - **C1** (Unit-Tests grün): führt die Test-Suite des Ziels als Block-Gate aus — schließt die Lücke
   „Tests existieren, aber kein Gate führt sie aus" (Repo-Self-Lauf: C1 = 102 Tests grün).

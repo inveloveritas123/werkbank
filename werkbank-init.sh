@@ -14,13 +14,14 @@
 set -euo pipefail
 
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"   # dieses WERKBANK-Repo
-TARGET="."; WITH_BMAD=1; FORCE=0
+TARGET="."; WITH_BMAD=1; FORCE=0; RALPH_HOOK=0
 for arg in "$@"; do
   case "$arg" in
-    --no-bmad) WITH_BMAD=0 ;;
-    --force)   FORCE=1 ;;
-    -*)        echo "Unbekannte Option: $arg" >&2; exit 2 ;;
-    *)         TARGET="$arg" ;;
+    --no-bmad)    WITH_BMAD=0 ;;
+    --force)      FORCE=1 ;;
+    --ralph-hook) RALPH_HOOK=1 ;;
+    -*)           echo "Unbekannte Option: $arg" >&2; exit 2 ;;
+    *)            TARGET="$arg" ;;
   esac
 done
 
@@ -46,6 +47,7 @@ cp_safe templates templates
 cp_safe agents agents
 cp_safe workflows workflows
 cp_safe orchestrator orchestrator
+cp_safe ralph ralph
 mkdir -p "$TARGET/.github/workflows"
 cp_safe .github/workflows/werkbank-gates.yml .github/workflows/werkbank-gates.yml
 
@@ -94,6 +96,26 @@ if [ "$WITH_BMAD" -eq 1 ]; then
   else
     echo "  ! node/npx fehlt — BMAD übersprungen. Später: npx bmad-method@6.8.0 install --tools claude-code"
   fi
+fi
+
+if [ "$RALPH_HOOK" -eq 1 ]; then
+  echo "▶ Ralph-Stop-Hook in .claude/settings.json mergen"
+  ( cd "$TARGET" && python3 - <<'PY'
+import json, os
+p = os.path.join(".claude", "settings.json")
+os.makedirs(".claude", exist_ok=True)
+try:
+    cfg = json.load(open(p, encoding="utf-8"))
+except (OSError, ValueError):
+    cfg = {}
+hook = {"matcher": "*", "hooks": [{"type": "command", "command": "python3 ralph/stop_hook.py"}]}
+stop = cfg.setdefault("hooks", {}).setdefault("Stop", [])
+if not any("ralph/stop_hook.py" in str(h) for h in stop):
+    stop.append(hook)
+json.dump(cfg, open(p, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
+print("  ✓ .claude/settings.json (Stop-Hook)")
+PY
+  ) || echo "  ! Hook-Merge übersprungen"
 fi
 
 echo "▶ Gate-Baseline"
