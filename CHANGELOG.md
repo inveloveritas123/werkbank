@@ -2,6 +2,14 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-08 — Ein-Befehl-Installer (BMAD + kiln + WERKBANK als Einheit)
+- `werkbank-init.sh`: richtet pro Projekt mit EINEM Befehl alles ein — kopiert gates/templates/
+  agents/workflows + CI, initialisiert kiln-`STATE.md`, härtet `.gitignore`, installiert BMAD,
+  legt Branch `werkbank-build` an und macht einen Gate-Baseline-Lauf. Idempotent; `--no-bmad`/`--force`.
+- `templates/CLAUDE.werkbank.md`: vereinende `CLAUDE.md` — beschreibt die drei Schichten (Methode/
+  Autonomie/Governance) + den Loop, damit der Agent sie als EINE Einheit behandelt.
+- README-Quickstart ergänzt. Getestet gegen Wegwerf-Projekt (Setup + Gate-Baseline GRUEN, idempotent).
+
 ## 2026-06-08 — Freigaben erteilt (intern, ohne echte Kundendaten)
 - Menschliche Freigaben durch Robert Hargesheimer in den Freigabefeldern eingetragen:
   Grenzen/Haftung akzeptiert · Security-Restrisiken akzeptiert · DSB freigegeben **mit Auflagen**.

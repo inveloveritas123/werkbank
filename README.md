@@ -10,12 +10,23 @@ und sich gegen feste Prüfprojekte selbst verbessert. Modular: nicht jeder brauc
 
 > WERKBANK ist **kein Ersatz** für BMAD, sondern eine **DSGVO-/Souveränitäts-Schicht darüber.**
 
-## Schnellstart
+## In ein eigenes Projekt — ein Befehl
+BMAD (Methode) + kiln-Loop (Autonomie) + WERKBANK-Gates (Governance) als **eine Einheit**:
 ```bash
-git clone https://github.com/inveloveritas123/werkbank.git
+git clone https://github.com/inveloveritas123/werkbank.git ~/werkbank   # einmalig
+~/werkbank/werkbank-init.sh /pfad/zum/projekt                            # pro Projekt
+```
+Das richtet `gates/`, `templates/`, `agents/`, `workflows/`, CI, kiln-`STATE.md`, gehärtetes
+`.gitignore` und eine vereinende `CLAUDE.md` ein, installiert BMAD und macht einen Gate-Baseline-Lauf.
+Optionen: `--no-bmad` (BMAD überspringen), `--force` (überschreiben). Voraussetzung: Python 3.9+, Git (Node 20+ für BMAD).
+Danach **Claude Code** im Projekt öffnen (CLI `claude` oder VS-Code-Extension) — `CLAUDE.md` wird automatisch gelesen.
+
+> **Geltung: intern, OHNE echte personenbezogene Kundendaten** (siehe `docs/produktivfreigabe/`).
+
+## Selbstverbesserung (im WERKBANK-Repo selbst)
+```bash
 cd werkbank
-# Den Bootstrap-Prompt in Claude Code einfügen:
-#   bootstrap/BOOTSTRAP-CLAUDE-CODE.md
+# Bootstrap-Prompt in Claude Code einfügen: bootstrap/BOOTSTRAP-CLAUDE-CODE.md
 ```
 Der Agent liest `BACKLOG.md`, arbeitet die Aufgaben ab, misst gegen `SCORING-MATRIX.md`
 und verbessert sich gemäß `SELF-IMPROVEMENT.md` — gegen die `golden-projects/`, nicht frei.
@@ -30,6 +41,9 @@ und verbessert sich gemäß `SELF-IMPROVEMENT.md` — gegen die `golden-projects
 | `gates/gates.yaml` | Quality-Gate-Manifest (deterministisch zuerst) |
 | `privacy/DSGVO-ARTEFAKTE.md` | DSGVO-Vorlagen (Art. 6/25/28/30/32/35 …) |
 | `golden-projects/` | standardisierte Prüfprojekte mit festem Soll |
+| `werkbank-init.sh` | Ein-Befehl-Installer pro Projekt (BMAD+kiln+WERKBANK) |
+| `templates/CLAUDE.werkbank.md` | vereinende `CLAUDE.md`-Vorlage (Bindeglied der drei Schichten) |
+| `docs/produktivfreigabe/` | Grenzen/Haftung, Security-/Datenschutz-Review |
 | `bootstrap/` | Bootstrap-Prompt für Claude Code |
 
 ## Reife
