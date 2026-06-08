@@ -4,6 +4,35 @@
 > Volle 100-Punkte-Matrix (SCORING-MATRIX.md) ab Golden-Project-Läufen (T2+). T1 = Infrastruktur:
 > gemessen an Testabdeckung der Checks + Repo-Gate-Lauf.
 
+## 2026-06-08 — T4 · Golden Project 02 (Kontaktformular DSAR) · Score 99/100
+**Lauf:** Erstes Golden Project mit echtem Code. App `app/contact_service.py` (stdlib) +
+Demo + 3 DSGVO-Artefakte. Gegen E1/E2/D3/E5 gemessen, GP02-GATE-REPORT grün.
+
+**Soll-Ist (SPEC.md, alle grün):** Kontakt speichern ✓ · Export eigener Datensatz ✓ · Löschung ✓ ·
+Fremdzugriff blockiert ✓ · keine PII im Log ✓ (E2 PASS) · Retention-Job ✓.
+
+**100-Punkte-Matrix:**
+| Bereich | Pkt | Erreicht | Messung |
+|---|---:|---:|---|
+| Funktion erfüllt (6 Soll-Ist) | 20 | 20 | alle 6 Checks grün |
+| Tests grün | 15 | 15 | 41/41 (GP02: 11 inkl. Hardening + Persistenz) |
+| E2E-Flow | 10 | 9 | `demo.py` läuft end-to-end; kein Browser-Playwright (−1) |
+| Security-Gates grün | 15 | 15 | D3 PASS + fail-closed Zugriffskontrolle + Fremdzugriff-Block |
+| DSGVO-Artefakte vollständig | 15 | 15 | 3/3 (E5 PASS), Restrisiko ehrlich dokumentiert |
+| Keine PII in Logs/Prompts/Reports | 10 | 10 | E2 PASS, Log-Inhalt verifiziert |
+| Resume/State | 5 | 5 | Persistenz getestet (Neustart lädt Daten) |
+| Kosten/Laufzeit | 5 | 5 | stdlib, 0 LLM, <1 s |
+| Doku/Changelog | 5 | 5 | README+Artefakte+CHANGELOG |
+| **Gesamt** | **100** | **99** | **≥ 85 ✓** |
+
+**Produktiv-Schwelle:** 99 ≥ 85 · 0 Block rot · 0 Secrets · 0 kritische DSGVO-Funde · **Regression GP01 GRUEN**.
+
+**ACT/Paar-Review (Reviewer ≠ Implementer):** fand 2 echte Bugs in sicherheitskritischem Code →
+behoben (RED→GREEN): (1) `_authorized_record` warf KeyError statt AccessDenied bei fehlendem
+token_hash → jetzt fail-closed; (2) `purge_expired` crashte bei naive/aware-datetime → UTC-Normalisierung
+(sonst würde der Retention-Job werfen und PII nie löschen, Art. 17). +3 Tests. Plus Anti-Overclaim:
+Klartext-PII at-rest im DATA-FLOW als Restrisiko dokumentiert. Keine Regression.
+
 ## 2026-06-08 — T3 · PDCA-Zyklus 1 · E2-Telefonerkennung (DE-Nationalformate)
 **Plan:** Höchster offener Hebel aus der Lernpunkt-Historie: E2 fing nur `+49`; deutsche
 Nationalformate (`0151…`, `0351-…`) und `0049` fehlten → hohes False-Negative-Risiko für ein

@@ -24,7 +24,7 @@
 - [x] **T3 · Benchmark + erste kontrollierte Selbstverbesserung (PDCA)**.
   - Akzeptanz: `BENCHMARK.md` mit Vorher/Nachher; mindestens 1 Verbesserung aus `SELF-IMPROVEMENT.md` (erlaubte Liste) angewandt; **keine Regression**; alle Block-Gates grün.
 
-- [ ] **T4 · Golden Project 02 — Kontaktformular mit Auskunft & Löschung** (DSAR).
+- [x] **T4 · Golden Project 02 — Kontaktformular mit Auskunft & Löschung** (DSAR).
   - Akzeptanz: Speichern/Export/Löschung/Fremdzugriff-Block/keine-PII-im-Log/Retention-Job — alle Soll-Ist-Checks grün; Score ≥ 85; Regression über GP01 weiterhin grün.
 
 - [ ] **T5 · Golden Project 03 — Mini-CRM mit Mandantentrennung**.

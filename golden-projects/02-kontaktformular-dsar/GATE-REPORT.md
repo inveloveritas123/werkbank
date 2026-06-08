@@ -1,10 +1,10 @@
-# GATE-REPORT — target=`.` — 2026-06-08T08:26:01Z
+# GATE-REPORT — target=`golden-projects/02-kontaktformular-dsar/app` — 2026-06-08T08:24:16Z
 
 ## Zusammenfassung
 - **Ergebnis:** GRUEN
 - **Block-Gates rot:** 0
 - **Warn-Gates:** 0
-- **Gates ohne Check (offen, SKIP):** 36
+- **Gates ohne Check (offen, SKIP):** 35
 
 ## Detail je Stufe
 | Stufe | Gate | Flags | Ergebnis | Notiz |
@@ -30,7 +30,7 @@
 | 4_sovereignty_dsgvo | E2 | block,deterministic | PASS | keine Klartext-PII in Logs/Prompts/Outputs |
 | 4_sovereignty_dsgvo | E3 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 4_sovereignty_dsgvo | E4 | block,deterministic | SKIP | kein Check implementiert (offen) |
-| 4_sovereignty_dsgvo | E5 | block,deterministic | SKIP | kein Privacy-Kontext (nicht anwendbar) |
+| 4_sovereignty_dsgvo | E5 | block,deterministic | PASS | alle 3 Soll-Artefakte vorhanden, gefuellt, platzhalterfrei, EU |
 | 4_sovereignty_dsgvo | E6 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 4_sovereignty_dsgvo | E7 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 4_sovereignty_dsgvo | E8 | warn,llm | SKIP | kein Check implementiert (offen) |

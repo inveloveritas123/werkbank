@@ -2,6 +2,18 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-08 — T4 · Golden Project 02 (Kontaktformular DSAR) · Score 99/100
+- Erstes Golden Project mit echtem Code: `golden-projects/02-kontaktformular-dsar/app/`
+  (stdlib-only Kontakt-/DSAR-Dienst + `demo.py`). Betroffenenrechte Export (Art. 15/20) & Löschung
+  (Art. 17) nur für eigenen Datensatz (Access-Token, at-rest nur SHA-256-Hash), Mandantentrennung,
+  Retention-Job, PII-freie Logs.
+- 3 DSGVO-Artefakte (DATA-FLOW, RETENTION-DELETION, DSAR-RIGHTS); GP02-Gate-Lauf GRUEN (E1/E2/D3/E5).
+- Runner-Flag `--privacy-required` (E5 mit projektspezifischer Soll-Artefaktliste).
+- **Soll-Ist 6/6 grün** (Speichern/Export/Löschung/Fremdzugriff-Block/keine-PII-Log/Retention).
+- **ACT/Paar-Review:** 2 echte Bugs gefixt (Autorisierung fail-closed statt KeyError; Retention-Job
+  datetime-robust) + Anti-Overclaim (Klartext-at-rest dokumentiert). +3 Tests.
+- **Tests 41/41 grün; Regression GP01 GRUEN; Repo-Self-Lauf GRUEN.** Score 99/100. Details: `.werkbank/BENCHMARK.md`.
+
 ## 2026-06-08 — T3 · PDCA-Zyklus 1 (E2-Telefonerkennung)
 - Kontrollierte Selbstverbesserung gegen die BENCHMARK-Historie: E2 erkennt jetzt deutsche
   Telefon-Nationalformate (`0151…`, `0351-…`) und `0049` zusätzlich zu `+49`.

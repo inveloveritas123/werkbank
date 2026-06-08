@@ -110,11 +110,11 @@ def _self_tooling_exclude(target):
     return set()
 
 
-def run_gates(gates_path, target, report_path, exclude_dirs=None, privacy_dir=None):
+def run_gates(gates_path, target, report_path, exclude_dirs=None, privacy_dir=None, privacy_required=None):
     spec = load_gates(gates_path)
     fail_fast = spec["meta"].get("fail_fast", True)
     exclude_abs = _self_tooling_exclude(target)
-    ctx = {"privacy_dir": privacy_dir}
+    ctx = {"privacy_dir": privacy_dir, "required": privacy_required}
     results, stage_log = {}, []
     overall_red = False
 
@@ -195,13 +195,17 @@ def main(argv=None):
     ap.add_argument("--gates", default=os.path.join(HERE, "gates.yaml"))
     ap.add_argument("--report", default="GATE-REPORT.md")
     ap.add_argument("--privacy-dir", default=None, help="Verzeichnis mit DSGVO-Artefakten (aktiviert E5)")
+    ap.add_argument("--privacy-required", default=None,
+                    help="kommagetrennte Soll-Artefaktliste fuer E5 (statt Default-Set)")
     ap.add_argument("--exclude", default="", help="zusaetzliche Verzeichnisnamen, kommagetrennt")
     ap.add_argument("--ci", action="store_true", help="Exit-Code 1 bei ROT (fuer CI)")
     a = ap.parse_args(argv)
     exclude = set(common.DEFAULT_EXCLUDE_DIRS)
     if a.exclude:
         exclude |= {x.strip() for x in a.exclude.split(",") if x.strip()}
-    res = run_gates(a.gates, a.target, a.report, exclude_dirs=exclude, privacy_dir=a.privacy_dir)
+    required = [x.strip() for x in a.privacy_required.split(",")] if a.privacy_required else None
+    res = run_gates(a.gates, a.target, a.report, exclude_dirs=exclude,
+                    privacy_dir=a.privacy_dir, privacy_required=required)
     print("Gate-Runner: %s  (Report: %s)" % (res["overall"], a.report))
     if a.ci and res["overall"] == "ROT":
         return 1
