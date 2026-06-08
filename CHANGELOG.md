@@ -2,6 +2,14 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-09 — E6/E7 echt (DSFA-Erzwingung + Drittland) — 12 → 14 Gates
+- **E6** (Art. 35): bei hohem Risiko im DPIA-Screening (`[x]`/`| ja |`) MUSS DPIA.md vorhanden+gefüllt sein;
+  kein hohes Risiko → PASS. **E7** (Kap. V): Drittlandtransfer → Garantie (SCC/Angemessenheit/BCR) nötig; EU-only → PASS.
+  Beide SKIP ohne Privacy-Kontext/Artefakt. +9 Tests.
+- **Latente Regression behoben:** seit H4 (T9) als Block-Gate fehlte den per-GP-Gate-Zielen eine
+  CHANGELOG.md → H4 rot. Jetzt hat jedes gegatete Bundle (GP01–06) eine CHANGELOG.md; alle GP-Läufe wieder GRUEN.
+- SOLL-IST: E6/E7 ✅ (14/41 Gates). Suite + Self-Lauf + alle 6 GP-Läufe + Thin-Slice GRUEN.
+
 ## 2026-06-08 — Durchstich: Thin-Slice 01→04 LIVE (BMAD-Methode bewiesen)
 - `examples/pilot-app/` „Einwilligungs-Logbuch" (Art. 7 DSGVO) durch den vollen WERKBANK-Loop:
   **01** BMAD-Templates → Brief/PRD/Architektur → `SPEC.md` (A-Gates grün) · **02** `app/consent_ledger.py`

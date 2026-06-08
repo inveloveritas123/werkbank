@@ -4,9 +4,9 @@
 > Maßstab: `WERKBANK-Blueprint.md` (§2 Autonomie, §3 Struktur) + BMAD + kiln-Muster.
 > Legende: ✅ implementiert · 🟡 teilweise/nur Doku · ❌ Platzhalter/nicht gebaut.
 
-> **Update T9 (2026-06-08):** C1/F1/H4 + **A1/A2/A3 (Spec-Integrität)** nachgebaut →
-> **12 von 41 Gates**. Echter **Ralph-Loop** (`ralph/`) + **Tier-Routing** + Workflows 01–04 als
-> echte Playbooks (BMAD-Skills benannt). Die Lücke „93 Tests, aber kein Gate" ist geschlossen.
+> **Update T9 (2026-06-08):** C1/F1/H4 + A1/A2/A3 + **E6/E7** nachgebaut → **14 von 41 Gates**.
+> Echter **Ralph-Loop** (`ralph/`) + **Tier-Routing** + Workflows 01–04 als echte Playbooks +
+> **BMAD-Durchstich** (Thin-Slice `examples/pilot-app/`). „93 Tests, aber kein Gate" geschlossen.
 
 ## Kurzfassung (die unbequeme Wahrheit)
 - **WERKBANK (Governance)** ist echt gebaut: Gate-Runner + **9 von 41 Gates**
@@ -50,7 +50,8 @@
 | D3 Secret-Scan | implementiert | ✅ |
 | E1 EU-Routing | implementiert (statisch) | ✅/🟡 |
 | E2 PII · E3 Tenant · E4 Audit-Schema · E5 Artefakte | implementiert | ✅ |
-| E6 DPIA-Erzwingung · E7 Drittland · E8 Datenminimierung | — | ❌ |
+| E6 DPIA-Erzwingung (Art. 35) · E7 Drittland (Kap. V) | implementiert (T9, `--privacy-dir`) | ✅ |
+| E8 Datenminimierung (llm) | — | ❌ |
 | F1 Modell-Pinning (kein 'latest') | implementiert (T9) | ✅ |
 | F2 Eval-on-Bump, F3 Snapshots | — | ❌ |
 | G Performance (G1–G3) | — | ❌ |
@@ -97,4 +98,5 @@ Die **drei Schichten als „Einheit"** existieren als Gerüst + Doku (`CLAUDE.md
 3. **B-Gates**: Lint/Typecheck/Build (ruff/mypy) — sobald ein echtes Projekt damit läuft.
 4. ~~**Ralph-Loop echt**~~ — **erledigt (T9): `ralph/ralph-loop.sh` + Stop-Hook + Drift-Pausegate.**
 5. ~~**BMAD wirklich nutzen**: 1 echter Durchstich~~ — **erledigt:** Thin-Slice `examples/pilot-app/` (Einwilligungs-Logbuch) durch 01→04.
-6. **I2/I3** (QA-Tribunal, Deployment-Validierung), **E6/E7** (DPIA/Drittland), **Budget/Kill-Switch**.
+6. ~~E6/E7 (DPIA/Drittland)~~ **erledigt.** Offen: **I2/I3** (QA-Tribunal, Deployment-Validierung),
+   **E8** (Datenminimierung-LLM), **B-Gates** (ruff/mypy), **C2** (Coverage), **Budget/Kill-Switch**, persistente Minds.

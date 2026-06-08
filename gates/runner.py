@@ -18,7 +18,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
 from checks import (common, e1_eu_routing, e2_pii_scan, d3_secret_scan,  # noqa: E402
-                    e3_tenant_isolation, e4_audit_log, e5_artefakte,
+                    e3_tenant_isolation, e4_audit_log, e5_artefakte, e6_dpia, e7_third_country,
                     c1_tests, f1_model_pinning, h4_changelog, a_spec)
 
 # Registry: Gate-ID -> Check-Funktion(target, exclude_dirs, exclude_abs, **ctx) -> CheckResult
@@ -33,6 +33,8 @@ REGISTRY = {
     "E3": e3_tenant_isolation.run,
     "E4": e4_audit_log.run,
     "E5": e5_artefakte.run,
+    "E6": e6_dpia.run,
+    "E7": e7_third_country.run,
     "F1": f1_model_pinning.run,
     "H4": h4_changelog.run,
 }
