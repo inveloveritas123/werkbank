@@ -4,6 +4,36 @@
 > Volle 100-Punkte-Matrix (SCORING-MATRIX.md) ab Golden-Project-Läufen (T2+). T1 = Infrastruktur:
 > gemessen an Testabdeckung der Checks + Repo-Gate-Lauf.
 
+## 2026-06-08 — T8 · Golden Project 06 (RAG mit PII-Filter) · Score 97/100
+**Lauf:** Mini-RAG (stdlib, kein LLM) mit deterministischem Keyword-Retrieval + PII-Filter.
+Antwort = wörtlicher Satz aus belegtem Dokument (keine Halluzination); PII maskiert; Index-Löschung.
+GP06-GATE-REPORT grün (E1/E2/D3/E5).
+
+**Soll-Ist (SPEC, alle grün):** Antwort korrekt ✓ · Quelle genannt ✓ · keine unnötige PII-Ausgabe ✓ ·
+keine Halluzination ohne Quelle ✓ · Löschung aus Index ✓.
+
+**100-Punkte-Matrix:**
+| Bereich | Pkt | Erreicht | Messung |
+|---|---:|---:|---|
+| Funktion erfüllt (5 Soll-Ist) | 20 | 20 | alle grün |
+| Tests grün | 15 | 15 | 84/84 (GP06 8 inkl. Review-Härtung) |
+| E2E-Flow | 10 | 9 | `demo.py` läuft; kein Browser (−1) |
+| Security-Gates grün | 15 | 15 | D3 + E2 + PII-Filter (gehärtet) + Anti-Halluzination |
+| DSGVO-Artefakte vollständig | 15 | 15 | DATA-FLOW + RETENTION-DELETION E5 PASS |
+| Keine PII (Antworten/Logs) | 10 | 10 | E2 PASS; Name/E-Mail in Antworten maskiert |
+| Resume/State | 5 | 3 | In-Memory-Index, deterministisch reproduzierbar; keine Persistenz (−2) |
+| Kosten/Laufzeit | 5 | 5 | stdlib, 0 LLM |
+| Doku/Changelog | 5 | 5 | README+Artefakte+CHANGELOG |
+| **Gesamt** | **100** | **97** | **≥ 85 ✓** |
+
+**Produktiv-Schwelle:** 97 ≥ 85 · 0 Block rot · 0 Secrets · 0 PII · **Regression GP01–05 GRUEN**.
+
+**ACT/Paar-Review (Reviewer ≠ Implementer) — 3 echte SPEC-Verstöße gefixt (RED→GREEN):**
+(1) PII-Filter übersah **Namen ohne Anrede** → Klartext-Name in Antwort; jetzt Erkennung
+großgeschriebener Wortpaare (STOPCAPS-Schutz, privacy-by-default über-maskieren). (2) **Quelle**
+wurde nicht redigiert → jetzt ebenfalls PII-maskiert. (3) **Halluzination mit Quelle** bei nur 1
+geteiltem Token → Schwelle als Token-Anteil (≥ 50 %). +3 Tests. Keine Regression.
+
 ## 2026-06-08 — T7 · Golden Project 05 (Breach/Incident-Runbook) · Score 98/100
 **Lauf:** Generator erzeugt aus einem Vorfall 4 Dokumente (BREACH-RUNBOOK, INCIDENT-TIMELINE,
 NOTIFICATION-CHECKLIST, LESSONS-LEARNED) + deterministischer „Fake-Rechtsaussagen"-Linter.

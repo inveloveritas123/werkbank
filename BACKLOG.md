@@ -36,7 +36,7 @@
 - [x] **T7 · Golden Project 05 — Breach/Incident-Runbook**.
   - Akzeptanz: 72h-Prüfung, betroffene Datenarten, begründete Meldeentscheidung, Maßnahmenliste, **keine Fake-Rechtsaussagen**; Score ≥ 85.
 
-- [ ] **T8 · Golden Project 06 — RAG mit PII-Filter**.
+- [x] **T8 · Golden Project 06 — RAG mit PII-Filter**.
   - Akzeptanz: korrekte Antwort + Quelle, keine unnötige PII-Ausgabe, keine Halluzination ohne Quelle, Löschung aus Index; Score ≥ 85; Regression GP01–05 grün.
 
 ---

@@ -2,6 +2,17 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-08 — T8 · Golden Project 06 (RAG mit PII-Filter) · Score 97/100 — Backlog vollständig
+- Mini-RAG `golden-projects/06-rag-pii-filter/app/` (stdlib, kein LLM): deterministisches
+  Keyword-Retrieval; Antwort = wörtlicher Satz aus belegtem Dokument (keine Halluzination);
+  ohne passende Quelle wird verweigert; jede Antwort nennt die Quelle; PII-Filter auf der Ausgabe;
+  `delete(doc_id)` entfernt aus dem Index.
+- 2 Artefakte (DATA-FLOW, RETENTION-DELETION); GP06-Gate-Lauf GRUEN (E1/E2/D3/E5).
+- **ACT/Paar-Review:** 3 SPEC-Verstöße gefixt — Namen ohne Anrede (Klartext-Leck), Quelle nicht
+  redigiert, Halluzination bei 1-Token-Überlappung (Schwelle jetzt Token-Anteil ≥ 50 %). +3 Tests.
+- **Tests 84/84 grün; Regression GP01–05 GRUEN; Repo-Self-Lauf GRUEN.** Score 97/100.
+- **Reifegrad: 6/6 Golden Projects grün — Sprint-Backlog (T0–T8) vollständig abgearbeitet.**
+
 ## 2026-06-08 — T7 · Golden Project 05 (Breach/Incident-Runbook) · Score 98/100
 - Breach-Runbook-Generator `golden-projects/05-breach-incident-runbook/app/`: aus einem Vorfall
   werden 4 Dokumente (BREACH-RUNBOOK, INCIDENT-TIMELINE, NOTIFICATION-CHECKLIST, LESSONS-LEARNED)
