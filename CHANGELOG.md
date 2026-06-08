@@ -2,6 +2,13 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-08 — Produktivfreigabe-Doku (Vorbereitung, post-Backlog)
+- `docs/produktivfreigabe/`: **GRENZEN-UND-HAFTUNG.md** (Scope/Disclaimer, was WERKBANK nicht garantiert),
+  **SECURITY-REVIEW.md** (Gate-Abdeckung, gefundene/gefixte Befunde, Restrisiken, Freigabefeld),
+  **DATENSCHUTZ-REVIEW.md** (DSGVO-Artikel-Abdeckung, Restlücken, DSB-Freigabefeld) + README.
+- Self-Assessments mit menschlichen Freigabefeldern — keine Selbst-Zertifizierung, kein Rechtsrat.
+- Repo-Self-Lauf GRUEN, 84/84 Tests, keine Secrets.
+
 ## 2026-06-08 — T8 · Golden Project 06 (RAG mit PII-Filter) · Score 97/100 — Backlog vollständig
 - Mini-RAG `golden-projects/06-rag-pii-filter/app/` (stdlib, kein LLM): deterministisches
   Keyword-Retrieval; Antwort = wörtlicher Satz aus belegtem Dokument (keine Halluzination);
