@@ -4,6 +4,37 @@
 > Volle 100-Punkte-Matrix (SCORING-MATRIX.md) ab Golden-Project-Läufen (T2+). T1 = Infrastruktur:
 > gemessen an Testabdeckung der Checks + Repo-Gate-Lauf.
 
+## 2026-06-08 — T6 · Golden Project 04 (Upload PII-Redaction) · Score 98/100
+**Lauf:** Upload-Dienst mit PII-Erkennung & Redaction (`pii_redactor.py` + `upload_service.py`) +
+Demo + DATA-FLOW. E2 ist hier HART. GP04-GATE-REPORT grün (E1/E2/D3/E5).
+
+**Soll-Ist (SPEC, alle grün):** PII erkannt ✓ · im Report maskiert ✓ · keine PII im Log ✓ ·
+keine PII im Prompt-Dump ✓ (Platzhalter) · Datei-Löschung ✓.
+
+**100-Punkte-Matrix:**
+| Bereich | Pkt | Erreicht | Messung |
+|---|---:|---:|---|
+| Funktion erfüllt (5 Soll-Ist) | 20 | 20 | alle grün |
+| Tests grün | 15 | 15 | 63/63 (GP04 6 + T6-Härtung 3) |
+| E2E-Flow | 10 | 9 | `demo.py` läuft; kein Browser (−1) |
+| Security-Gates grün | 15 | 15 | D3 + E2 hart (Redaction unabhängig per E2 verifiziert) |
+| DSGVO-Artefakte vollständig | 15 | 15 | DATA-FLOW E5 PASS |
+| Keine PII (Logs/Prompts/Reports) | 10 | 10 | E2 PASS auf echten Outputs (Evidence) |
+| Resume/State | 5 | 4 | Datei-Persistenz; nicht separat getestet (−1) |
+| Kosten/Laufzeit | 5 | 5 | stdlib, 0 LLM |
+| Doku/Changelog | 5 | 5 | README+DATA-FLOW+CHANGELOG |
+| **Gesamt** | **100** | **98** | **≥ 85 ✓** |
+
+**Produktiv-Schwelle:** 98 ≥ 85 · 0 Block rot · 0 Secrets · 0 PII · **Regression GP01–03 GRUEN**.
+
+**ACT/Paar-Review (Reviewer ≠ Implementer) — kritische False-Negatives gefunden & gefixt (RED→GREEN):**
+Für ein Redaction-Tool sind verpasste PII das Kernrisiko. Behoben in **Redactor UND E2** (Defense-in-Depth):
+(1) Telefon `+49 (0)151 …` rutschte durch → `(0)` im Muster erlaubt; (2) Namen ohne Anrede
+(„Mit freundlichen Grüßen, Anna Schmidt", „Mein Name ist …") leckten → Grußformel-/Selbstnennungs-Heuristik,
+**und E2 erkennt jetzt Namen** (vorher gar nicht — „falsches Grün"); (3) Auslands-IBAN (AT…) → IBAN beliebiges
+Land mit mod-97. Adversariales Korpus-Testset prüft, dass der Prompt-Dump per UNABHÄNGIGEM E2-Scan sauber ist.
+**Cross-cutting:** E2 wurde damit für ALLE Golden Projects breiter; FP-frei (GP01–04 + Repo grün). Keine Regression.
+
 ## 2026-06-08 — T5 · Golden Project 03 (Mini-CRM Mandantentrennung) · Score 98/100
 **Lauf:** Multi-Tenant Mini-CRM (stdlib) + Demo + TOMs. Zwei neue Gate-Checks: **E3**
 (Tenant-Isolation aus Audit-Log) und **E4** (Audit-Log schema-konform). GP03-GATE-REPORT grün.

@@ -89,7 +89,8 @@ class NoPiiInLog(unittest.TestCase):
             r = s.submit("Erika Mustermann", "erika@example.com", "Telefon 0151 23456789", tenant="t1")
             s.export(r.subject_id, r.access_token)
             s.delete(r.subject_id, r.access_token)
-            log_text = open(s.log_path, encoding="utf-8").read()
+            with open(s.log_path, encoding="utf-8") as fh:
+                log_text = fh.read()
             self.assertNotIn("erika@example.com", log_text)
             self.assertNotIn("0151 23456789", log_text)
             self.assertNotIn("Erika", log_text)

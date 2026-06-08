@@ -2,6 +2,17 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-08 — T6 · Golden Project 04 (Upload PII-Redaction) · Score 98/100
+- Upload-Dienst mit PII-Erkennung & Redaction `golden-projects/04-upload-pii-redaction/app/`
+  (`pii_redactor.py` + `upload_service.py` + Demo): erkennt E-Mail/Telefon/IBAN/Kreditkarte/Name,
+  maskiert im Report, erzeugt PII-freien Prompt-Dump (Platzhalter), PII-freies Log, Löschung.
+- DATA-FLOW-Artefakt; GP04-Gate-Lauf GRUEN (E1/E2/D3/E5), E2 hart über echte Outputs.
+- **Cross-cutting Gate-Härtung (Paar-Review):** Redactor UND E2 gegen reale False-Negatives gehärtet —
+  Telefon `+49 (0)…`, Namen ohne Anrede (Grußformel/Selbstnennung; **E2 erkennt jetzt Namen**),
+  Auslands-IBAN (beliebiges Land + mod-97). Defense-in-Depth: E2 unabhängig breiter als der Redactor.
+  Adversariales Korpus-Testset (Prompt-Dump per unabhängigem E2-Scan sauber).
+- **Tests 63/63 grün; Regression GP01–03 GRUEN; Repo-Self-Lauf GRUEN.** Score 98/100. Reifegrad: 4 GP grün.
+
 ## 2026-06-08 — T5 · Golden Project 03 (Mini-CRM Mandantentrennung) · Score 98/100
 - Multi-Tenant Mini-CRM `golden-projects/03-mini-crm-mandantentrennung/app/` (stdlib): Mandant kommt
   aus dem Principal, nie vom Client; Cross-Tenant- und manipulierte-`tenant_id`-Zugriffe → `AccessDenied`.

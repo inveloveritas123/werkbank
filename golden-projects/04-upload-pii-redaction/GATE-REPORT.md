@@ -1,4 +1,4 @@
-# GATE-REPORT — target=`golden-projects/01-dsgvo-projektstarter/artefakte` — 2026-06-08T08:53:38Z
+# GATE-REPORT — target=`golden-projects/04-upload-pii-redaction` — 2026-06-08T08:53:38Z
 
 ## Zusammenfassung
 - **Ergebnis:** GRUEN
@@ -30,7 +30,7 @@
 | 4_sovereignty_dsgvo | E2 | block,deterministic | PASS | keine Klartext-PII in Logs/Prompts/Outputs |
 | 4_sovereignty_dsgvo | E3 | block,deterministic | SKIP | kein Audit-Log (nicht anwendbar) |
 | 4_sovereignty_dsgvo | E4 | block,deterministic | SKIP | kein Audit-Log (nicht anwendbar) |
-| 4_sovereignty_dsgvo | E5 | block,deterministic | PASS | alle 7 Soll-Artefakte vorhanden, gefuellt, platzhalterfrei, EU |
+| 4_sovereignty_dsgvo | E5 | block,deterministic | PASS | alle 1 Soll-Artefakte vorhanden, gefuellt, platzhalterfrei, EU |
 | 4_sovereignty_dsgvo | E6 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 4_sovereignty_dsgvo | E7 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 4_sovereignty_dsgvo | E8 | warn,llm | SKIP | kein Check implementiert (offen) |

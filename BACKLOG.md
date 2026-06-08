@@ -30,7 +30,7 @@
 - [x] **T5 · Golden Project 03 — Mini-CRM mit Mandantentrennung**.
   - Akzeptanz: A↔B-Isolation, manipulierte `tenant_id` schlägt fehl, Audit-Log ohne unnötige PII; Score ≥ 85; Regression GP01–02 grün.
 
-- [ ] **T6 · Golden Project 04 — Upload mit PII-Redaction**.
+- [x] **T6 · Golden Project 04 — Upload mit PII-Redaction**.
   - Akzeptanz: PII erkannt & maskiert, keine PII in Log/Prompt-Dump, Löschung funktioniert; Score ≥ 85; Regression GP01–03 grün.
 
 - [ ] **T7 · Golden Project 05 — Breach/Incident-Runbook**.

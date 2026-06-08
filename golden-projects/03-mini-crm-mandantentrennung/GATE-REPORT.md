@@ -1,4 +1,4 @@
-# GATE-REPORT — target=`golden-projects/03-mini-crm-mandantentrennung/app` — 2026-06-08T08:35:32Z
+# GATE-REPORT — target=`golden-projects/03-mini-crm-mandantentrennung/app` — 2026-06-08T08:53:38Z
 
 ## Zusammenfassung
 - **Ergebnis:** GRUEN
