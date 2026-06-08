@@ -1,0 +1,24 @@
+# CI: Block-Gates müssen grün sein, bevor gemerged wird.
+# T0: Stub — der eigentliche Runner (gates/runner) wird in T1 implementiert.
+name: werkbank-gates
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  block-gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run WERKBANK gate runner (deterministic block-gates first)
+        run: |
+          if [ -x gates/runner ]; then
+            ./gates/runner --ci
+          elif [ -f gates/runner.sh ]; then
+            bash gates/runner.sh --ci
+          else
+            echo "::warning::gates/runner noch nicht vorhanden (T1 ausstehend) — Stub-Lauf."
+            exit 0
+          fi

@@ -12,7 +12,7 @@
 
 ## Sprint-Reihenfolge (nicht mit 62 Gates anfangen)
 
-- [ ] **T0 · Fundament** — BMAD installieren, Ziel-Struktur anlegen, `STATE.md` initialisieren.
+- [x] **T0 · Fundament** — BMAD installieren, Ziel-Struktur anlegen, `STATE.md` initialisieren.
   - Akzeptanz: Struktur aus Blueprint §3 existiert; `npx bmad-method install` gelaufen; STOPP vor T1.
 
 - [ ] **T1 · Gate-Runner + 3 deterministische Gates** — `gates/runner` + Checks `E1` (EU-Routing), `D3` (Secret-Scan), `E2` (PII-Scan). Kein LLM.
