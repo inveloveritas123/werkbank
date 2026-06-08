@@ -1,5 +1,10 @@
 # BOOTSTRAP v2.1 — WERKBANK arbeitet den Git-Backlog ab & verbessert sich gegen Golden Projects
 
+> **Stand 2026-06: WERKBANK ist gebaut** (T0–T8 + Ausbau: 19 Gates, Ralph-Loop, Tribunal, Feedback-Loop,
+> BMAD-Durchstich; 6/6 Golden Projects grün). Dieser Prompt ist für den **Weiterbau-/Selbst-Verbesserungslauf**
+> im WERKBANK-Repo. **Nur nutzen?** → neues System: `curl -fsSL …/bootstrap.sh | bash`; bestehend:
+> `~/werkbank/werkbank-init.sh /pfad/zum/projekt`, dann `claude` öffnen (liest `CLAUDE.md`).
+>
 > In Claude Code einfügen (Claude Max / Opus). Voraussetzung: `gh` angemeldet, Node 20+,
 > Repo `inveloveritas123/werkbank` erreichbar. Nichts Irreversibles ohne dein „GO".
 > **Neu ggü. v2:** Der Agent holt seine **Aufgaben aus dem Repo** (`BACKLOG.md`) und verbessert
