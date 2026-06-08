@@ -2,6 +2,13 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-08 — T9: Drei Gates echt gemacht (C1/F1/H4) — 6 → 9 implementiert
+- **C1** (Unit-Tests grün): führt die Test-Suite des Ziels als Block-Gate aus — schließt die Lücke
+  „Tests existieren, aber kein Gate führt sie aus" (Repo-Self-Lauf: C1 = 102 Tests grün).
+- **F1** (Modell-Pinning): FAIL bei `model: …latest` / `…-latest` — jetzt mit Tier-Routing relevant.
+- **H4** (CHANGELOG): vorhanden + newest-top. Installer legt für frische Projekte eine CHANGELOG.md an.
+- 9 neue Tests; clean-Fixture um CHANGELOG ergänzt; SOLL-IST-Abgleich aktualisiert. Keine Regression.
+
 ## 2026-06-08 — Modell-Tier-Routing (Kostenoptimierung der Subagenten)
 - `orchestrator/tier_router.py` + `werkbank.tiers.json`: deterministische Policy Aufgabentyp→Tier→Modell
   (doku/summary→haiku · impl/test→sonnet · review/security/privacy/plan→opus), `confirm_tier_from: opus`,

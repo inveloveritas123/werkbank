@@ -34,7 +34,14 @@ cp_safe() {  # quelle ziel
 }
 
 echo "▶ WERKBANK-Governance kopieren"
-cp_safe gates gates
+if [ ! -e "$TARGET/gates" ] || [ "$FORCE" -eq 1 ]; then
+  rm -rf "$TARGET/gates"; cp -R "$SRC/gates" "$TARGET/gates"
+  # WERKBANK-interne Tests NICHT mitliefern — das Zielprojekt bringt eigene Tests (unter tests/).
+  rm -rf "$TARGET/gates/checks/tests" "$TARGET/gates/checks/__pycache__"
+  echo "  ✓ gates (Runner+Checks, ohne interne Tests)"
+else
+  echo "  · gates existiert (übersprungen, --force zum Überschreiben)"
+fi
 cp_safe templates templates
 cp_safe agents agents
 cp_safe workflows workflows
@@ -56,6 +63,8 @@ EOF
   echo "  ✓ .werkbank/STATE.md"
 fi
 [ -f "$TARGET/.werkbank/BENCHMARK.md" ] || printf '# BENCHMARK (PDCA, neuster oben)\n' > "$TARGET/.werkbank/BENCHMARK.md"
+# CHANGELOG fuer Gate H4 (sonst rot beim ersten Lauf)
+[ -f "$TARGET/CHANGELOG.md" ] || printf '# CHANGELOG\n\n## %s — init\n- WERKBANK eingerichtet.\n' "$(date +%Y-%m-%d 2>/dev/null || echo 2026-01-01)" > "$TARGET/CHANGELOG.md"
 
 echo "▶ .gitignore härten"
 touch "$TARGET/.gitignore"

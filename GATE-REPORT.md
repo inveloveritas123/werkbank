@@ -1,10 +1,10 @@
-# GATE-REPORT — target=`.` — 2026-06-08T10:28:41Z
+# GATE-REPORT — target=`.` — 2026-06-08T10:36:55Z
 
 ## Zusammenfassung
 - **Ergebnis:** GRUEN
 - **Block-Gates rot:** 0
 - **Warn-Gates:** 0
-- **Gates ohne Check (offen, SKIP):** 36
+- **Gates ohne Check (offen, SKIP):** 33
 
 ## Detail je Stufe
 | Stufe | Gate | Flags | Ergebnis | Notiz |
@@ -20,7 +20,7 @@
 | 2_static | D2 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 2_static | D3 | block,deterministic | PASS | kein Secret gefunden |
 | 2_static | D4 | warn,deterministic | SKIP | kein Check implementiert (offen) |
-| 3_tests | C1 | block,deterministic | SKIP | kein Check implementiert (offen) |
+| 3_tests | C1 | block,deterministic | PASS | Tests grün (102 Tests in gates/checks/tests) |
 | 3_tests | C2 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 3_tests | C3 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 3_tests | C4 | block,deterministic | SKIP | kein Check implementiert (offen) |
@@ -34,7 +34,7 @@
 | 4_sovereignty_dsgvo | E6 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 4_sovereignty_dsgvo | E7 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 4_sovereignty_dsgvo | E8 | warn,llm | SKIP | kein Check implementiert (offen) |
-| 5_integrity | F1 | block,deterministic | SKIP | kein Check implementiert (offen) |
+| 5_integrity | F1 | block,deterministic | PASS | kein 'latest' — Modelle gepinnt |
 | 5_integrity | F2 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 5_integrity | F3 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 6_perf | G1 | warn,deterministic | SKIP | kein Check implementiert (offen) |
@@ -43,7 +43,7 @@
 | 7_maintainability | H1 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 7_maintainability | H2 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 7_maintainability | H3 | warn,deterministic | SKIP | kein Check implementiert (offen) |
-| 7_maintainability | H4 | block,deterministic | SKIP | kein Check implementiert (offen) |
+| 7_maintainability | H4 | block,deterministic | PASS | CHANGELOG vorhanden, 14 Einträge, newest-top |
 | 7_maintainability | H6 | block,llm | SKIP | kein Check implementiert (offen) |
 | 8_judgement | I1 | block,llm | SKIP | kein Check implementiert (offen) |
 | 8_judgement | I2 | block,llm | SKIP | kein Check implementiert (offen) |
