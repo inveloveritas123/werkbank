@@ -38,6 +38,7 @@ cp_safe gates gates
 cp_safe templates templates
 cp_safe agents agents
 cp_safe workflows workflows
+cp_safe orchestrator orchestrator
 mkdir -p "$TARGET/.github/workflows"
 cp_safe .github/workflows/werkbank-gates.yml .github/workflows/werkbank-gates.yml
 

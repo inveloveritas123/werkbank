@@ -1,3 +1,10 @@
+---
+name: kanzler
+tier: opus        # Ops/Eskalation -> teuerstes Tier, ABER default disabled
+model: opus
+enabled: false
+---
+
 # Agent: kanzler (Ops / Chief-of-Staff) — DEFAULT: DISABLED
 
 > Erst zuletzt bauen (Blueprint §3/§5: "Kanzler & restliche Gates später").

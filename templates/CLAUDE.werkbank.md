@@ -25,6 +25,25 @@ kiln ist ein **Muster**, kein installiertes Tool — es lebt in `.werkbank/STATE
 - Verification-first: kein Lauf ohne Orakel (Akzeptanz + Tests + Gates). Assertions nie aufweichen.
 - Selbstverbesserung nur kontrolliert (kleinste Änderung, größter Hebel, messen, Regression prüfen, sonst zurückrollen).
 
+## Modell-Tier-Routing (Kosten) — VERBINDLICH beim Spawnen von Subagenten
+Subagenten laufen NICHT automatisch auf dem günstigsten Modell — der Orchestrator muss das Tier
+**explizit setzen**. Quelle der Wahrheit ist der Tier-Router (`orchestrator/werkbank.tiers.json`).
+```bash
+python3 orchestrator/tier_router.py <label>     # z. B. review -> opus, doku -> haiku, impl -> sonnet
+python3 orchestrator/tier_router.py --table     # ganze Policy
+```
+Regel: Beim Agent-Spawn `model=` = `tier_router.route(<label>).model` setzen. Labels & Tiers:
+| Label | Tier/Modell |
+|---|---|
+| doku, summary, format, lint | **haiku** (günstig) |
+| impl, test, refactor, build | **sonnet** (mittel) |
+| plan, architecture, review, security, privacy, judge | **opus** (teuer) |
+
+- **Paar-Review immer mit anderem Modell als der Implementer** (Cross-Model) — Review-Tier = opus.
+- `confirm_tier_from: opus`: vor teuren (opus-)Spawns bestätigen lassen, wenn Budget knapp.
+- Belegt ist das Routing erst, wenn die **Kosten/Usage je Modell** (z. B. `/cost`) zur Zuweisung passen;
+  Selbstauskunft eines Subagenten über sein Modell ist nur indikativ.
+
 ## Die Gates (kurz)
 - **E1** EU-Routing (kein Non-EU-Endpunkt/Region in Code/Config) · **E2** keine Klartext-PII in Logs/Prompts/Outputs · **D3** keine Secrets · **E3** Mandantentrennung (Audit-Log) · **E4** Audit-Log-Schema · **E5** DSGVO-Artefakt-Vollständigkeit (`--privacy-dir`).
 - Nicht-implementierte Gates erscheinen als **SKIP** (ehrlich, nicht „grün"). E1 ist statisch (kein Laufzeit-Zwang); PII-Erkennung ist heuristisch — siehe WERKBANK-Grenzen.

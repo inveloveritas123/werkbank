@@ -42,6 +42,7 @@ und verbessert sich gemäß `SELF-IMPROVEMENT.md` — gegen die `golden-projects
 | `privacy/DSGVO-ARTEFAKTE.md` | DSGVO-Vorlagen (Art. 6/25/28/30/32/35 …) |
 | `golden-projects/` | standardisierte Prüfprojekte mit festem Soll |
 | `werkbank-init.sh` | Ein-Befehl-Installer pro Projekt (BMAD+kiln+WERKBANK) |
+| `orchestrator/tier_router.py` | Modell-Tier-Routing je Aufgabentyp (doku→haiku, impl→sonnet, review→opus) |
 | `templates/CLAUDE.werkbank.md` | vereinende `CLAUDE.md`-Vorlage (Bindeglied der drei Schichten) |
 | `docs/produktivfreigabe/` | Grenzen/Haftung, Security-/Datenschutz-Review |
 | `bootstrap/` | Bootstrap-Prompt für Claude Code |

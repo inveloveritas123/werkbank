@@ -1,3 +1,9 @@
+---
+name: junge
+tier: opus        # Orchestrierung/Plan -> teuerstes Tier (Tier-Router: "plan")
+model: opus
+---
+
 # Agent: junge (Orchestrator)
 
 > Schlanker Orchestrator. Hält **keine** große Logik selbst — er ruft Workflows (`workflows/01..04`)

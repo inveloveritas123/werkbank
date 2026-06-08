@@ -2,6 +2,17 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-08 — Modell-Tier-Routing (Kostenoptimierung der Subagenten)
+- `orchestrator/tier_router.py` + `werkbank.tiers.json`: deterministische Policy Aufgabentyp→Tier→Modell
+  (doku/summary→haiku · impl/test→sonnet · review/security/privacy/plan→opus), `confirm_tier_from: opus`,
+  nested-merge-Override, CLI (`<label>` / `--table`). 9 Tests.
+- Verdrahtet: `model:`-Tier-Frontmatter in `agents/*.md`; Regel in `CLAUDE.werkbank.md` + `workflows/02-bauen.md`;
+  Installer kopiert `orchestrator/`; Kommentar in `settings.example.yaml`.
+- **Ehrlichkeit:** Python erzwingt das Modell nicht — der Orchestrator setzt `model=` beim Spawn.
+  Bis hierher liefen Paar-Reviews auf dem teuren Default; mit dem Router wird die Tier-Verteilung wirksam.
+- Live-Beleg: 3 Subagenten parallel mit model=haiku/sonnet/opus gespawnt → gemeldete Modell-IDs
+  (haiku-4-5 / sonnet-4-6 / opus-4-8) stimmen mit der Zuweisung überein. Definitiver Beweis: `/cost` je Modell.
+
 ## 2026-06-08 — Ein-Befehl-Installer (BMAD + kiln + WERKBANK als Einheit)
 - `werkbank-init.sh`: richtet pro Projekt mit EINEM Befehl alles ein — kopiert gates/templates/
   agents/workflows + CI, initialisiert kiln-`STATE.md`, härtet `.gitignore`, installiert BMAD,

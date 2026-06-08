@@ -1,3 +1,9 @@
+---
+name: waechter
+tier: sonnet      # Gates sind deterministisch; nur Report-Interpretation -> mittleres Tier
+model: sonnet
+---
+
 # Agent: waechter (Gate-Runner / Verifizierer)
 
 > Hartes Block-Gate. Führt `gates/runner` gestaffelt aus (deterministisch zuerst, LLM-Gates

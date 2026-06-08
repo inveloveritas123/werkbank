@@ -1,3 +1,9 @@
+---
+name: privacy-analyst
+tier: opus        # DSGVO-Prüfung ist Urteil/Haftung -> teuerstes Tier (Tier-Router: "privacy")
+model: opus
+---
+
 # Agent: privacy-analyst (DSGVO-Prüfer)
 
 > Erzeugt und prüft die `privacy/`-Artefakte. Übersetzt Projektangaben in befüllte DSGVO-Vorlagen
