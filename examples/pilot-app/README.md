@@ -15,6 +15,11 @@ npx bmad-method@6.8.0 install --yes --directory . --modules bmm --tools claude-c
 
 Status prüfen: `npx bmad-method status`.
 
-## Status
-T0: BMAD installiert (core + bmm v6.8.0, 44 Skills, 6 Rollen: Analyst/PM/Architect/UX/Dev/Tech-Writer).
-Thin-Slice (Durchstich 01→04) folgt ab T2.
+## Status — Thin-Slice-Durchstich (01→04) LIVE
+BMAD installiert + **echter Durchstich gefahren**: „Einwilligungs-Logbuch" (Art. 7 DSGVO).
+- **01 Konzipieren (BMAD):** `docs/PRODUCT-BRIEF.md`, `docs/PRD.md`, `docs/ARCHITECTURE.md` → `SPEC.md` (A-Gates grün).
+- **02 Bauen:** `app/consent_ledger.py` + `tests/` (9 Tests, RED→GREEN), Ralph-Loop schließt GRUEN+promise.
+- **03 Prüfen:** voller Gate-Lauf GRUEN (A1/A2/A3, C1, D3, E1/E2, F1, H4) — `GATE-REPORT.md`.
+- **04 Übergeben:** PR (kein Selbst-Merge). Cross-Model-Review (opus) fand keine Live-Bugs, ergänzte Art.-7-Tests.
+
+Lauf: `python3 app/consent_ledger.py` (Bibliothek) · Tests: `python3 -m unittest discover -s tests`.

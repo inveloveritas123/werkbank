@@ -35,8 +35,8 @@ def run(target, **_):
         return common.CheckResult(GATE, common.SKIP, "kein Testverzeichnis gefunden")
     try:
         proc = subprocess.run(
-            [sys.executable, "-m", "unittest", "discover", "-s", testdir, "-p", "test_*.py"],
-            cwd=target, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=600)
+            [sys.executable, "-m", "unittest", "discover", "-s", os.path.abspath(testdir), "-p", "test_*.py"],
+            cwd=os.path.abspath(target), stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=600)
     except (subprocess.SubprocessError, OSError) as ex:
         return common.CheckResult(GATE, common.FAIL, "Testlauf nicht möglich: %s" % ex)
     out = (proc.stderr or "") + (proc.stdout or "")

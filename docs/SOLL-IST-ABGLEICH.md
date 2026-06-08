@@ -21,7 +21,7 @@
 | Soll (Blueprint §1/§2) | Ist | Status |
 |---|---|---|
 | BMAD installiert (Rollen/Skills) | core+bmm v6.8.0, 6 Rollen, 44 Skills | ✅ |
-| Konzipieren über BMAD: Brief→PRD→Architektur→Stories | **Workflow 01 ruft jetzt BMAD-Skills (bmad-prd / -architecture / -epics-and-stories); SPEC wird per A-Gates geprüft** | 🟡 verdrahtet (1 echter Durchstich steht aus) |
+| Konzipieren über BMAD: Brief→PRD→Architektur→Stories | **Echter Durchstich gefahren** (Thin-Slice „Einwilligungs-Logbuch" in `examples/pilot-app/`): BMAD-Templates → Brief/PRD/Architektur → SPEC (A-Gates grün) → Build → Gates → Review → PR | ✅ |
 | BMAD Scrum-Master/Dev-Story-Fluss | nicht genutzt | ❌ |
 | TEA (Test-Architect), Code-Review-Rolle | nicht genutzt | ❌ |
 | Handoff PM→Architect (Gate A3) | nie exerziert | ❌ |
@@ -79,7 +79,7 @@
 | `templates/` | ✅ Vorlagen |
 | `privacy/` Artefakt-Vorlagen | ✅ |
 | `.werkbank/STATE.md`,`BENCHMARK.md` | ✅ (manuell gepflegt) |
-| `examples/pilot-app/` Thin-Slice durch 01→04 | ❌ **nie gebaut** — Golden Projects ersetzten ihn |
+| `examples/pilot-app/` Thin-Slice durch 01→04 | ✅ **gebaut** — „Einwilligungs-Logbuch", voller 01→04-Durchstich, Gates GRUEN |
 | `.github/workflows/werkbank-gates.yml` | ✅ (CI läuft) |
 | `settings.example.yaml` Werte | 🟡 Platzhalter (by design) |
 | `orchestrator/tier_router.py` | ✅ (neu) — aber Orchestrator setzt `model=` manuell |
@@ -96,5 +96,5 @@ Die **drei Schichten als „Einheit"** existieren als Gerüst + Doku (`CLAUDE.md
 2. ~~**H4** CHANGELOG · **F1** Modell-Pinning~~ — **erledigt (T9)**.
 3. **B-Gates**: Lint/Typecheck/Build (ruff/mypy) — sobald ein echtes Projekt damit läuft.
 4. ~~**Ralph-Loop echt**~~ — **erledigt (T9): `ralph/ralph-loop.sh` + Stop-Hook + Drift-Pausegate.**
-5. **BMAD wirklich nutzen**: 01-konzipieren an die BMAD-Rollen anbinden (1 echter Durchstich). ← nächster großer Brocken
+5. ~~**BMAD wirklich nutzen**: 1 echter Durchstich~~ — **erledigt:** Thin-Slice `examples/pilot-app/` (Einwilligungs-Logbuch) durch 01→04.
 6. **I2/I3** (QA-Tribunal, Deployment-Validierung), **E6/E7** (DPIA/Drittland), **Budget/Kill-Switch**.

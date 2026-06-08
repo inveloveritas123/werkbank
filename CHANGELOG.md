@@ -2,6 +2,14 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-08 — Durchstich: Thin-Slice 01→04 LIVE (BMAD-Methode bewiesen)
+- `examples/pilot-app/` „Einwilligungs-Logbuch" (Art. 7 DSGVO) durch den vollen WERKBANK-Loop:
+  **01** BMAD-Templates → Brief/PRD/Architektur → `SPEC.md` (A-Gates grün) · **02** `app/consent_ledger.py`
+  + 9 Tests (RED→GREEN), Ralph-Loop schließt GRUEN+promise · **03** voller Gate-Lauf GRUEN (A1/A2/A3,
+  C1, D3, E1/E2, F1, H4) · **04** PR, Cross-Model-Review (opus) → keine Live-Bugs, Art.-7-Nachweis-Tests ergänzt.
+- **Bug gefangen & gefixt:** C1 verdoppelte den Testpfad bei `--target <subdir>` (rel+cwd) → absoluter Pfad.
+- SOLL-IST: BMAD ✅, Thin-Slice ✅. Methode→Spec→Bau→Gate→Review→PR jetzt end-to-end bewiesen.
+
 ## 2026-06-08 — T9 (Substanz): BMAD-Anbindung + A-Gates (Spec-Integrität)
 - **A1/A2/A3** echt gemacht (`gates/checks/a_spec.py`, Runner-Flag `--spec-file`): A1 Pflichtfelder
   gefüllt/platzhalterfrei · A2 Akzeptanzkriterien testbar · A3 Handoff PM→Architect erfüllt.
