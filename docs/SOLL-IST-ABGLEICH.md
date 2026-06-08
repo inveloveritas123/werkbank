@@ -4,9 +4,12 @@
 > Maßstab: `WERKBANK-Blueprint.md` (§2 Autonomie, §3 Struktur) + BMAD + kiln-Muster.
 > Legende: ✅ implementiert · 🟡 teilweise/nur Doku · ❌ Platzhalter/nicht gebaut.
 
-> **Update T9 (2026-06-08):** C1/F1/H4 + A1/A2/A3 + **E6/E7** nachgebaut → **14 von 41 Gates**.
-> Echter **Ralph-Loop** (`ralph/`) + **Tier-Routing** + Workflows 01–04 als echte Playbooks +
-> **BMAD-Durchstich** (Thin-Slice `examples/pilot-app/`). „93 Tests, aber kein Gate" geschlossen.
+> **Update (2026-06-09) — Stand jetzt:** Aus dem Bauplan wurde ein lauffähiges System.
+> Implementiert: **A1/A2/A3 · B1/B2/B3 · C1/C2 · D3 · E1–E8 · F1 · H4** (deterministisch real, wo
+> nicht tool-/LLM-gated), **I1/I2-Tribunal · I3-Deployment-Validierung** (Harness, Cross-Model),
+> **Ralph-Loop** (Drift + Kill-Switch), **Tier-Routing**, **persistente Minds** (kiln), **BMAD-Durchstich**
+> (Thin-Slice live), **Budget/Kill-Switch**, Ein-Befehl-Installer. Die untenstehenden ❌/🟡 sind der
+> *historische* T0-Stand; die aktuellen Zeilen sind aktualisiert.
 
 ## Kurzfassung (die unbequeme Wahrheit)
 - **WERKBANK (Governance)** ist echt gebaut: Gate-Runner + **9 von 41 Gates**
@@ -34,7 +37,7 @@
 | Ralph-Loop: Stop-Hook + `completion-promise GRUEN` + `--max-iterations` | **implementiert (T9): `ralph/ralph-loop.sh` Fresh-Context-Motor + `stop_hook.py` + Engine, 10 Tests** | ✅ |
 | Drift-Pausegate (Qualität sinkt → anhalten) | **implementiert in `ralph_decide` (rote Gates gestiegen → HALT)** | ✅ |
 | `STATE.md` crash-sicher (Pipeline-Position) | Datei existiert, manuell gepflegt; kein Code liest/schreibt | 🟡 |
-| Persistente Minds + frische Worker | frische Worker (Subagenten) ja; persistente Minds nein | 🟡 |
+| Persistente Minds + frische Worker | **implementiert** (`orchestrator/mind.py`: Reviewer/Architekt behalten Historie, Builder frisch); frische Worker via Subagenten | ✅ |
 | 3 Review-Ebenen: Paar→QA-Tribunal→Deployment-Val. | nur Ebene 1 (Paar-Review/GP) | 🟡 (2/3 fehlen) |
 | Cross-Model-Diversität (Reviewer ≠ Implementer) | im Bau lief BEIDES auf Opus; Diversität erst jetzt per Tier-Router möglich, nicht nachgeholt | ❌ war nicht erfüllt |
 
@@ -102,5 +105,6 @@ Die **drei Schichten als „Einheit"** existieren als Gerüst + Doku (`CLAUDE.md
 4. ~~**Ralph-Loop echt**~~ — **erledigt (T9): `ralph/ralph-loop.sh` + Stop-Hook + Drift-Pausegate.**
 5. ~~**BMAD wirklich nutzen**: 1 echter Durchstich~~ — **erledigt:** Thin-Slice `examples/pilot-app/` (Einwilligungs-Logbuch) durch 01→04.
 6. ~~E6/E7 (DPIA/Drittland)~~ **erledigt.** Offen: **I2/I3** (QA-Tribunal, Deployment-Validierung),
-   nur noch **persistente Minds** (kiln) als nennenswerter Rest.
-   (B-Gates, C2, Budget/Kill-Switch, I2-Tribunal, I3-Deployment-Val., E8: erledigt.)
+   **alle nennenswerten Posten erledigt.** Verbleibend nur LLM-Substanz-Tiefe (Urteilsqualität)
+   und echte CI-Tool-Installation (ruff/mypy/coverage) im Zielprojekt — beides umgebungsabhängig.
+   (Persistente Minds, B-Gates, C2, Budget/Kill-Switch, I1/I2/I3, E1–E8, A-Gates, Ralph-Loop, BMAD: erledigt.)

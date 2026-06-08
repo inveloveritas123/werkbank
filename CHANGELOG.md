@@ -2,6 +2,13 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-09 — Persistente Minds (kiln) — Substanz-Backlog abgeschlossen
+- `orchestrator/mind.py`: Reviewer/Architekt/Judge behalten Historie über Chunks (`context`/`append`,
+  Sequenz statt Clock); Builder/Impl/Dev bleiben **frisch** (`is_persistent`=False). Mind-State lokal
+  in `.werkbank/minds/` (gitignored). +9 Tests. In CLAUDE.md + Workflow 02 verdrahtet.
+- Damit ist die kiln-Schicht vollständig (frische Worker + persistente Minds). SOLL-IST: alle
+  nennenswerten Posten erledigt.
+
 ## 2026-06-09 — I3 (Deployment-Validierung) + E8 (Datenminimierung)
 - **E8** (Art. 25, `gates/checks/e8_minimization.py`): deterministischer Dokumentations-Check —
   Datenminimierung dokumentiert? Art-9-Daten ohne DSFA? warn-Gate, SKIP ohne Kontext. Materielle

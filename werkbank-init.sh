@@ -74,7 +74,7 @@ fi
 
 echo "▶ .gitignore härten"
 touch "$TARGET/.gitignore"
-for line in ".env" ".env.*" "*.key" "*.pem" "secrets/" ".werkbank/STATE.md" "node_modules/" "__pycache__/" "_bmad/" "_bmad-output/" ".claude/"; do
+for line in ".env" ".env.*" "*.key" "*.pem" "secrets/" ".werkbank/STATE.md" ".werkbank/minds/" ".werkbank/budget.json" "node_modules/" "__pycache__/" "_bmad/" "_bmad-output/" ".claude/"; do
   grep -qxF "$line" "$TARGET/.gitignore" 2>/dev/null || echo "$line" >> "$TARGET/.gitignore"
 done
 echo "  ✓ .gitignore"

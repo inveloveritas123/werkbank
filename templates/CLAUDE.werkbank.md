@@ -44,6 +44,16 @@ Regel: Beim Agent-Spawn `model=` = `tier_router.route(<label>).model` setzen. La
 - Belegt ist das Routing erst, wenn die **Kosten/Usage je Modell** (z. B. `/cost`) zur Zuweisung passen;
   Selbstauskunft eines Subagenten über sein Modell ist nur indikativ.
 
+## Persistente Minds + frische Worker (kiln)
+- **Builder/Impl = frisch** je Chunk (sauberer Kontext, kein Mind).
+- **Reviewer/Architekt/Judge = persistent**: vor dem Spawn die Historie injizieren, danach Erkenntnis anhängen.
+```bash
+python3 orchestrator/mind.py context reviewer            # Historie -> in den Reviewer-Prompt
+python3 orchestrator/mind.py append  reviewer "Befund X"  # nach dem Review festhalten
+```
+`is_persistent(role)` entscheidet (reviewer/architect/judge/privacy-analyst/tribunal/qa = persistent).
+Mind-State liegt lokal in `.werkbank/minds/` (gitignored).
+
 ## Die Gates (kurz)
 - **E1** EU-Routing (kein Non-EU-Endpunkt/Region in Code/Config) · **E2** keine Klartext-PII in Logs/Prompts/Outputs · **D3** keine Secrets · **E3** Mandantentrennung (Audit-Log) · **E4** Audit-Log-Schema · **E5** DSGVO-Artefakt-Vollständigkeit (`--privacy-dir`).
 - Nicht-implementierte Gates erscheinen als **SKIP** (ehrlich, nicht „grün"). E1 ist statisch (kein Laufzeit-Zwang); PII-Erkennung ist heuristisch — siehe WERKBANK-Grenzen.

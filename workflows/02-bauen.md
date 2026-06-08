@@ -8,7 +8,8 @@
 2. Pro Chunk Paar-Review: **Reviewer-Modell ≠ Implementer-Modell** (Cross-Model, Gate I1).
    Modellwahl über den Tier-Router: Implementer `model=$(tier_router.py impl)` (sonnet),
    Reviewer `model=$(tier_router.py review)` (opus). Doku-Tasks → haiku. So greift die Tier-Verteilung.
-3. Frischer Worker pro Chunk (Kontext-Isolation); persistente Reviewer/Architekt-Minds.
+3. Frischer Worker pro Chunk (Kontext-Isolation); **persistente Reviewer/Architekt-Minds**:
+   `orchestrator/mind.py context reviewer` vor dem Spawn injizieren, danach `mind.py append reviewer "<Befund>"`.
 4. **Drift-Pausegate:** sinkt Test/Gate ggü. Vorrunde → anhalten, Ursache nennen, eskalieren.
 5. `.werkbank/STATE.md` nach jeder Runde aktualisieren.
 
