@@ -48,6 +48,7 @@ cp_safe agents agents
 cp_safe workflows workflows
 cp_safe orchestrator orchestrator
 cp_safe ralph ralph
+cp_safe tribunal tribunal
 mkdir -p "$TARGET/.github/workflows"
 cp_safe .github/workflows/werkbank-gates.yml .github/workflows/werkbank-gates.yml
 

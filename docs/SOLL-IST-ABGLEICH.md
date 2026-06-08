@@ -57,7 +57,8 @@
 | G Performance (G1–G3) | — | ❌ |
 | H4 CHANGELOG-Gate (vorhanden, newest-top) | implementiert (T9) | ✅ |
 | H1–H3, H6 Drift-Audit | — | ❌ |
-| I LLM-Urteil: I1 Vier-Augen, I2 QA-Tribunal, I3 Deployment-Val. | manuell als Paar-Review gemacht, nicht verdrahtet | ❌ |
+| I1 Vier-Augen + I2 QA-Tribunal | **Harness `tribunal/` (Cross-Model-Fan-out + deterministische Reconciliation), live bewiesen (haiku/sonnet/opus → pass)** | 🟡 Harness da; LLM-Urteil nicht-deterministisch |
+| I3 Deployment-Validierung (Argus-Stil) | — | ❌ |
 
 ## 4 · WERKBANK-Features (Blueprint §1 „dein Moat") — SOLL vs IST
 | Soll | Ist | Status |

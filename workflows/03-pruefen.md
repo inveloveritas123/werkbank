@@ -19,7 +19,18 @@ python3 gates/runner.py --target . --report GATE-REPORT.md \
   --privacy-dir <artefakte> --privacy-required <liste> \
   --audit-log <evidence/audit.log>     # E3/E4 falls Multi-Tenant
 ```
-Implementiert: A1/A2/A3 · C1 · D3 · E1/E2/E3/E4/E5 · F1 · H4. Rest SKIP (ehrlich).
+Implementiert: A1/A2/A3 · C1 · D3 · E1/E2/E3/E4/E5/E6/E7 · F1 · H4. Rest SKIP (ehrlich).
+
+## QA-Tribunal (I2, Meilenstein — Cross-Model, LLM)
+Nach grünen deterministischen Gates auf grünem Rest:
+```bash
+tribunal/tribunal.sh \
+  --reviewer 'claude -p --model opus  "Review <ziel> adversarial; letzte Zeile VERDICT: pass|fail|uncertain"' \
+  --reviewer 'claude -p --model sonnet "..."' \
+  --reviewer 'claude -p --model haiku  "..."'
+```
+Anonymisierte Reconciliation (`tribunal/reconcile.py`): nur klare Pass-Mehrheit besteht. Exit 0/3.
+LLM-Urteile sind nicht deterministisch (ehrlich); die Reconciliation ist es.
 
 ## Übergabe an
 `workflows/04-uebergeben.md`

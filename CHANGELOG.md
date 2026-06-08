@@ -2,6 +2,15 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-09 — I2 QA-Tribunal (Cross-Model) + Reconciliation
+- `tribunal/reconcile.py`: deterministische, **anonymisierte** Reconciliation (nur klare Pass-Mehrheit
+  besteht; `uncertain`/Gleichstand → konservativ block). `tribunal/tribunal.sh`: Fresh-Context-Fan-out,
+  ruft N Reviewer (real: `claude -p --model …`), sammelt `VERDICT:`-Zeilen. +8 Tests.
+- **Live bewiesen:** haiku+sonnet+opus urteilten unabhängig über den Thin-Slice → einstimmig pass →
+  reconcile pass. Damit ist die früher fehlende **Cross-Model-Diversität** real.
+- Verdrahtet in Workflow 03 (Meilenstein-Gate); Installer kopiert `tribunal/`. Ehrlich: LLM-Urteile
+  nicht-deterministisch, Reconciliation ist es. SOLL-IST: I1/I2 als Harness ✅ (🟡 LLM-Anteil).
+
 ## 2026-06-09 — E6/E7 echt (DSFA-Erzwingung + Drittland) — 12 → 14 Gates
 - **E6** (Art. 35): bei hohem Risiko im DPIA-Screening (`[x]`/`| ja |`) MUSS DPIA.md vorhanden+gefüllt sein;
   kein hohes Risiko → PASS. **E7** (Kap. V): Drittlandtransfer → Garantie (SCC/Angemessenheit/BCR) nötig; EU-only → PASS.
