@@ -4,6 +4,33 @@
 > Volle 100-Punkte-Matrix (SCORING-MATRIX.md) ab Golden-Project-Läufen (T2+). T1 = Infrastruktur:
 > gemessen an Testabdeckung der Checks + Repo-Gate-Lauf.
 
+## 2026-06-08 — T2 · Golden Project 01 (DSGVO-Projektstarter) · Score 97/100
+**Lauf:** Artefakte erzeugt (7 DSGVO-Artefakte + INPUT + GATE-REPORT), gegen E1/E2/D3/E5 gemessen.
+Neuer Check **E5** (Artefakt-Vollständigkeit) implementiert.
+
+**100-Punkte-Matrix (SCORING-MATRIX.md, GP01-SCORING.md):**
+| Bereich | Pkt | Erreicht | Messung |
+|---|---:|---:|---|
+| Funktion erfüllt (EXPECTED_OUTPUTS vollständig, keine Platzhalter) | 20 | 20 | E5 PASS, 7/7 + GATE-REPORT |
+| Tests grün | 15 | 15 | 28/28 unit/integration |
+| E2E-Flow / Ersatz: Generierungs-Lauf reproduzierbar | 10 | 8 | Lauf 2× identisch; kein echtes UI-E2E (−2) |
+| Security-Gates grün (D3 + SECURITY_SEEDS) | 15 | 15 | D3 PASS + **Catch-Rate 3/3** |
+| DSGVO-Artefakte vollständig | 15 | 15 | 7/7 gefüllt, EU, Review-bestätigt konsistent |
+| Keine PII in Logs/Prompts/Reports | 10 | 10 | E2 PASS, Report redigiert |
+| Resume/State | 5 | 4 | STATE crash-sicher + deterministischer Re-run; kein Abbruch-Sim-Harness (−1) |
+| Kosten/Laufzeit | 5 | 5 | Gates deterministisch, 0 LLM-Kosten, <1 s |
+| Doku/Changelog | 5 | 5 | CHANGELOG+BENCHMARK+STATE+INPUT+Artefakte |
+| **Gesamt** | **100** | **97** | **≥ 85 ✓** |
+
+**Produktiv-Schwelle:** Score 97 ≥ 85 · 0 Block-Gates rot · 0 Secrets · 0 kritische DSGVO-Funde · keine Regression. **grün.**
+
+**ACT-1 (E5 härten, erlaubt: Heuristik verbessern):** Paar-Review fand E5-False-Negatives
+(Klartext-Platzhalter `____`/`[bitte ausfüllen]`, Prosa-Non-EU `USA`/`Drittland: ja`) und einen
+False-Positive (Angle-Regex auf `<mail@x>`/`<->`). Behoben + 6 Tests. Artefakte bleiben grün → übernommen.
+**ACT-2 (Artefakt-Ehrlichkeit):** Review-Befund Überzeichnung — TOMs-Status als Selbsteinschätzung
+gekennzeichnet, Subprozessoren präzisiert (Sinch AB/Schweden statt vager „EU-Infrastruktur"). Keine Regression.
+**Regression GP:** keine früheren grünen Golden Projects (GP01 ist das erste).
+
 ## 2026-06-08 — T1 ACT-1 · E1 Non-EU-Marker erweitert
 - **Hebel:** Paar-Review (Reviewer ≠ Implementer) fand: E1 (Moat-Gate) übersah Azure-US-Regionen
   (`eastus`, `westus2`) und US-Cross-Region-Model-IDs (`us.anthropic.*`). Eine reale Config-Zeile

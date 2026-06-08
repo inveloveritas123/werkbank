@@ -17,13 +17,14 @@ from datetime import datetime, timezone
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-from checks import common, e1_eu_routing, e2_pii_scan, d3_secret_scan  # noqa: E402
+from checks import common, e1_eu_routing, e2_pii_scan, d3_secret_scan, e5_artefakte  # noqa: E402
 
-# Registry: Gate-ID -> Check-Funktion(target, exclude_dirs) -> CheckResult
+# Registry: Gate-ID -> Check-Funktion(target, exclude_dirs, exclude_abs, **ctx) -> CheckResult
 REGISTRY = {
     "E1": e1_eu_routing.run,
     "E2": e2_pii_scan.run,
     "D3": d3_secret_scan.run,
+    "E5": e5_artefakte.run,
 }
 
 
@@ -109,10 +110,11 @@ def _self_tooling_exclude(target):
     return set()
 
 
-def run_gates(gates_path, target, report_path, exclude_dirs=None):
+def run_gates(gates_path, target, report_path, exclude_dirs=None, privacy_dir=None):
     spec = load_gates(gates_path)
     fail_fast = spec["meta"].get("fail_fast", True)
     exclude_abs = _self_tooling_exclude(target)
+    ctx = {"privacy_dir": privacy_dir}
     results, stage_log = {}, []
     overall_red = False
 
@@ -123,7 +125,7 @@ def run_gates(gates_path, target, report_path, exclude_dirs=None):
             gid, flags = g["id"], g["flags"]
             is_block = "block" in flags
             if gid in REGISTRY:
-                res = REGISTRY[gid](target, exclude_dirs=exclude_dirs, exclude_abs=exclude_abs)
+                res = REGISTRY[gid](target, exclude_dirs=exclude_dirs, exclude_abs=exclude_abs, **ctx)
             else:
                 res = common.CheckResult(gid, common.SKIP, "kein Check implementiert (offen)")
             results[gid] = {"status": res.status, "summary": res.summary,
@@ -192,13 +194,14 @@ def main(argv=None):
     ap.add_argument("--target", default=".", help="zu pruefendes Verzeichnis")
     ap.add_argument("--gates", default=os.path.join(HERE, "gates.yaml"))
     ap.add_argument("--report", default="GATE-REPORT.md")
+    ap.add_argument("--privacy-dir", default=None, help="Verzeichnis mit DSGVO-Artefakten (aktiviert E5)")
     ap.add_argument("--exclude", default="", help="zusaetzliche Verzeichnisnamen, kommagetrennt")
     ap.add_argument("--ci", action="store_true", help="Exit-Code 1 bei ROT (fuer CI)")
     a = ap.parse_args(argv)
     exclude = set(common.DEFAULT_EXCLUDE_DIRS)
     if a.exclude:
         exclude |= {x.strip() for x in a.exclude.split(",") if x.strip()}
-    res = run_gates(a.gates, a.target, a.report, exclude_dirs=exclude)
+    res = run_gates(a.gates, a.target, a.report, exclude_dirs=exclude, privacy_dir=a.privacy_dir)
     print("Gate-Runner: %s  (Report: %s)" % (res["overall"], a.report))
     if a.ci and res["overall"] == "ROT":
         return 1

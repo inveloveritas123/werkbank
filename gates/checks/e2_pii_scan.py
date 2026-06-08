@@ -51,7 +51,7 @@ def _scan_line(line):
     return out
 
 
-def run(target, exclude_dirs=None, exclude_abs=None):
+def run(target, exclude_dirs=None, exclude_abs=None, **_):
     findings = []
     for ap, rel in common.iter_files(target, name_suffixes=NAME_SUFFIXES,
                                      path_contains=PATH_CONTAINS,

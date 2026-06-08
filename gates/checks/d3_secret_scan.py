@@ -104,7 +104,7 @@ def _dedup(findings):
     return out
 
 
-def run(target, exclude_dirs=None, exclude_abs=None):
+def run(target, exclude_dirs=None, exclude_abs=None, **_):
     findings = _dedup(_scan_builtin(target, exclude_dirs, exclude_abs)
                       + _scan_gitleaks(target, exclude_dirs, exclude_abs))
     if findings:

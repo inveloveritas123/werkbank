@@ -2,6 +2,19 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-08 — T2 · Golden Project 01 (DSGVO-Projektstarter) · Score 97/100
+- Beispielprojekt `golden-projects/01-dsgvo-projektstarter/INPUT.md` → 7 gefüllte DSGVO-Artefakte
+  in `artefakte/` (DATA-FLOW, PROCESSING-REGISTER, LAWFUL-BASIS, DPIA-SCREENING, TOMs,
+  PROCESSORS-SUBPROCESSORS, RETENTION-DELETION) — keine Platzhalter, EU-only, intern konsistent.
+- Neuer Check **E5** (Artefakt-Vollständigkeit): prüft Vorhandensein/Füllung/Platzhalterfreiheit/EU-Region;
+  „nicht anwendbar → SKIP", damit Läufe ohne DSGVO-Kontext grün bleiben. Runner-Flag `--privacy-dir`.
+- GP01-Gate-Lauf: **GRUEN** (E1/E2/D3/E5 PASS), `golden-projects/01-.../GATE-REPORT.md`.
+- **SECURITY_SEEDS Catch-Rate 3/3** (E-Mail→E2, Dummy-Token→D3, US-Endpunkt→E1; zur Laufzeit synthetisiert).
+- **Tests:** 28/28 grün (T1 19 + GP01 9).
+- **ACT/PDCA:** Paar-Review → E5-Erkennung gehärtet (Klartext-Platzhalter, Prosa-Non-EU, FP-Fix) +
+  Artefakt-Überzeichnung entfernt (TOMs-Selbsteinschätzung, Subprozessor-Präzision). Keine Regression.
+- **Score 97/100** (≥85), 0 Block-Gates rot, 0 Secrets, 0 kritische DSGVO-Funde. Details: `.werkbank/BENCHMARK.md`.
+
 ## 2026-06-08 — T1 · Gate-Runner + 3 deterministische Gates (E1/D3/E2)
 - `gates/runner.py` (+ `gates/runner`-Shim): liest `gates.yaml` (eigener YAML-Subset-Parser, kein Dependency),
   führt Gates gestaffelt aus (fail-fast bei Block-FAIL), schreibt `GATE-REPORT.md`. Nicht-implementierte Gates → SKIP (ehrlich).

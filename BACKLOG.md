@@ -18,7 +18,7 @@
 - [x] **T1 · Gate-Runner + 3 deterministische Gates** — `gates/runner` + Checks `E1` (EU-Routing), `D3` (Secret-Scan), `E2` (PII-Scan). Kein LLM.
   - Akzeptanz: `runner` läuft über `gates/gates.yaml`, schreibt `GATE-REPORT.md`; E1/D3/E2 erkennen je einen bewusst gesetzten Verstoß (Negativtest grün).
 
-- [ ] **T2 · Golden Project 01 — DSGVO-Projektstarter** (`golden-projects/01-...`).
+- [x] **T2 · Golden Project 01 — DSGVO-Projektstarter** (`golden-projects/01-...`).
   - Akzeptanz: alle Soll-Artefakte erzeugt, Pflichtfelder gefüllt, keine TODO/TBD-Platzhalter, E-Gates grün, Score ≥ 85.
 
 - [ ] **T3 · Benchmark + erste kontrollierte Selbstverbesserung (PDCA)**.

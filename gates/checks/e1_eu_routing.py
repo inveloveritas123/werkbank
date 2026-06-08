@@ -30,7 +30,7 @@ NON_EU_PATTERNS = [
 ]
 
 
-def run(target, exclude_dirs=None, exclude_abs=None):
+def run(target, exclude_dirs=None, exclude_abs=None, **_):
     findings = []
     for ap, rel in common.iter_files(target, exts=CODE_EXTS,
                                      name_suffixes=NAME_SUFFIXES,
