@@ -15,7 +15,7 @@
 - [x] **T0 · Fundament** — BMAD installieren, Ziel-Struktur anlegen, `STATE.md` initialisieren.
   - Akzeptanz: Struktur aus Blueprint §3 existiert; `npx bmad-method install` gelaufen; STOPP vor T1.
 
-- [ ] **T1 · Gate-Runner + 3 deterministische Gates** — `gates/runner` + Checks `E1` (EU-Routing), `D3` (Secret-Scan), `E2` (PII-Scan). Kein LLM.
+- [x] **T1 · Gate-Runner + 3 deterministische Gates** — `gates/runner` + Checks `E1` (EU-Routing), `D3` (Secret-Scan), `E2` (PII-Scan). Kein LLM.
   - Akzeptanz: `runner` läuft über `gates/gates.yaml`, schreibt `GATE-REPORT.md`; E1/D3/E2 erkennen je einen bewusst gesetzten Verstoß (Negativtest grün).
 
 - [ ] **T2 · Golden Project 01 — DSGVO-Projektstarter** (`golden-projects/01-...`).
