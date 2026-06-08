@@ -1,10 +1,10 @@
-# GATE-REPORT — target=`.` — 2026-06-08T08:36:55Z
+# GATE-REPORT — target=`golden-projects/03-mini-crm-mandantentrennung/app` — 2026-06-08T08:35:32Z
 
 ## Zusammenfassung
 - **Ergebnis:** GRUEN
 - **Block-Gates rot:** 0
 - **Warn-Gates:** 0
-- **Gates ohne Check (offen, SKIP):** 36
+- **Gates ohne Check (offen, SKIP):** 33
 
 ## Detail je Stufe
 | Stufe | Gate | Flags | Ergebnis | Notiz |
@@ -28,9 +28,9 @@
 | 3_tests | C6 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 4_sovereignty_dsgvo | E1 | block,deterministic | PASS | kein Non-EU-Endpunkt/Region referenziert |
 | 4_sovereignty_dsgvo | E2 | block,deterministic | PASS | keine Klartext-PII in Logs/Prompts/Outputs |
-| 4_sovereignty_dsgvo | E3 | block,deterministic | SKIP | kein Audit-Log (nicht anwendbar) |
-| 4_sovereignty_dsgvo | E4 | block,deterministic | SKIP | kein Audit-Log (nicht anwendbar) |
-| 4_sovereignty_dsgvo | E5 | block,deterministic | SKIP | kein Privacy-Kontext (nicht anwendbar) |
+| 4_sovereignty_dsgvo | E3 | block,deterministic | PASS | keine Tenant-übergreifenden Zugriffe (Audit-Log) |
+| 4_sovereignty_dsgvo | E4 | block,deterministic | PASS | Audit-Log schema-konform (7 Einträge) |
+| 4_sovereignty_dsgvo | E5 | block,deterministic | PASS | alle 1 Soll-Artefakte vorhanden, gefuellt, platzhalterfrei, EU |
 | 4_sovereignty_dsgvo | E6 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 4_sovereignty_dsgvo | E7 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 4_sovereignty_dsgvo | E8 | warn,llm | SKIP | kein Check implementiert (offen) |

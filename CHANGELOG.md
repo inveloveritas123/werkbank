@@ -2,6 +2,17 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-08 — T5 · Golden Project 03 (Mini-CRM Mandantentrennung) · Score 98/100
+- Multi-Tenant Mini-CRM `golden-projects/03-mini-crm-mandantentrennung/app/` (stdlib): Mandant kommt
+  aus dem Principal, nie vom Client; Cross-Tenant- und manipulierte-`tenant_id`-Zugriffe → `AccessDenied`.
+- Schema-konformes, PII-freies Audit-Log (`templates/AUDIT-LOG.schema.json`); Demo + Evidence.
+- **Zwei neue deterministische Gates:** **E3** (Tenant-Isolation aus Audit-Log: kein Cross-Tenant-Erfolg)
+  und **E4** (Audit-Log schema-valide, strikte Typprüfung). Runner-Flags `--audit-log`/`--audit-schema`.
+- Soll-Ist 6/6 grün (A↔B-Isolation, manipulierte tenant_id scheitert, Audit ohne PII).
+- **ACT/Paar-Review:** 2 Härtungs-Bugs in E3/E4 gefixt (E3-Regex-Evasion via verkürzter Ressource/`*`;
+  E4 ohne Typprüfung ließ `pii_present:0` durch). +6 Tests.
+- **Tests 54/54 grün; Regression GP01–02 GRUEN; Repo-Self-Lauf GRUEN.** Score 98/100. Reifegrad: 3 GP grün.
+
 ## 2026-06-08 — T4 · Golden Project 02 (Kontaktformular DSAR) · Score 99/100
 - Erstes Golden Project mit echtem Code: `golden-projects/02-kontaktformular-dsar/app/`
   (stdlib-only Kontakt-/DSAR-Dienst + `demo.py`). Betroffenenrechte Export (Art. 15/20) & Löschung

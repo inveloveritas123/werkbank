@@ -1,4 +1,4 @@
-# GATE-REPORT — target=`golden-projects/02-kontaktformular-dsar/app` — 2026-06-08T08:24:16Z
+# GATE-REPORT — target=`golden-projects/02-kontaktformular-dsar/app` — 2026-06-08T08:35:53Z
 
 ## Zusammenfassung
 - **Ergebnis:** GRUEN
@@ -28,8 +28,8 @@
 | 3_tests | C6 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 4_sovereignty_dsgvo | E1 | block,deterministic | PASS | kein Non-EU-Endpunkt/Region referenziert |
 | 4_sovereignty_dsgvo | E2 | block,deterministic | PASS | keine Klartext-PII in Logs/Prompts/Outputs |
-| 4_sovereignty_dsgvo | E3 | block,deterministic | SKIP | kein Check implementiert (offen) |
-| 4_sovereignty_dsgvo | E4 | block,deterministic | SKIP | kein Check implementiert (offen) |
+| 4_sovereignty_dsgvo | E3 | block,deterministic | SKIP | kein Audit-Log (nicht anwendbar) |
+| 4_sovereignty_dsgvo | E4 | block,deterministic | SKIP | kein Audit-Log (nicht anwendbar) |
 | 4_sovereignty_dsgvo | E5 | block,deterministic | PASS | alle 3 Soll-Artefakte vorhanden, gefuellt, platzhalterfrei, EU |
 | 4_sovereignty_dsgvo | E6 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 4_sovereignty_dsgvo | E7 | warn,deterministic | SKIP | kein Check implementiert (offen) |

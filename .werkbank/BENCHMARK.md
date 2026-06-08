@@ -4,6 +4,38 @@
 > Volle 100-Punkte-Matrix (SCORING-MATRIX.md) ab Golden-Project-Läufen (T2+). T1 = Infrastruktur:
 > gemessen an Testabdeckung der Checks + Repo-Gate-Lauf.
 
+## 2026-06-08 — T5 · Golden Project 03 (Mini-CRM Mandantentrennung) · Score 98/100
+**Lauf:** Multi-Tenant Mini-CRM (stdlib) + Demo + TOMs. Zwei neue Gate-Checks: **E3**
+(Tenant-Isolation aus Audit-Log) und **E4** (Audit-Log schema-konform). GP03-GATE-REPORT grün.
+
+**Soll-Ist (SPEC, alle grün):** A liest A ✓ · A liest B NICHT ✓ · B liest B ✓ · B liest A NICHT ✓ ·
+manipulierte tenant_id schlägt fehl ✓ · Audit-Log ohne unnötige PII ✓.
+
+**100-Punkte-Matrix:**
+| Bereich | Pkt | Erreicht | Messung |
+|---|---:|---:|---|
+| Funktion erfüllt (Soll-Ist) | 20 | 20 | alle Checks grün |
+| Tests grün | 15 | 15 | 54/54 (GP03: 13 inkl. Gate-Härtung + forge) |
+| E2E-Flow | 10 | 9 | `demo.py` läuft end-to-end; kein Browser (−1) |
+| Security-Gates grün | 15 | 15 | D3 + E3 (Isolation) + Cross-Tenant-Negativtest + gehärtete E3/E4 |
+| DSGVO-Artefakte vollständig | 15 | 15 | TOMs E5 PASS |
+| Keine PII (Logs/Audit) | 10 | 10 | E2 PASS; Audit-Log nur IDs/Mandant/Event |
+| Resume/State | 5 | 4 | Datenspeicher persistent (wie GP02); für GP03 nicht separat getestet (−1) |
+| Kosten/Laufzeit | 5 | 5 | stdlib, 0 LLM |
+| Doku/Changelog | 5 | 5 | README+TOMs+CHANGELOG |
+| **Gesamt** | **100** | **98** | **≥ 85 ✓** |
+
+**Produktiv-Schwelle:** 98 ≥ 85 · 0 Block rot · 0 Secrets · 0 PII · **Regression GP01–02 GRUEN**.
+
+**Neue Gates:** E3 prüft das Audit-Log auf Tenant-übergreifende ERFOLGE (denied-Versuche erlaubt);
+E4 validiert jede Zeile gegen `templates/AUDIT-LOG.schema.json`. Runner-Flags `--audit-log`/`--audit-schema`.
+
+**ACT/Paar-Review (Reviewer ≠ Implementer):** App selbst leckfrei. Aber 2 Härtungs-Bugs in den
+**Gates** gefunden & gefixt (RED→GREEN): (1) E3-Regex verlangte `/` nach Mandant und nahm `*`/`unknown`
+aus → verkürzte Ressource/Wildcard hätten ein Cross-Tenant-Leck durchgelassen; jetzt jeder Cross-Tenant-
+Erfolg fängt. (2) E4 prüfte keine Typen → `pii_present:0` / falsche Typen rutschten durch; jetzt strikte
+Typprüfung (boolean ≠ 0/1). +6 Tests. Keine Regression.
+
 ## 2026-06-08 — T4 · Golden Project 02 (Kontaktformular DSAR) · Score 99/100
 **Lauf:** Erstes Golden Project mit echtem Code. App `app/contact_service.py` (stdlib) +
 Demo + 3 DSGVO-Artefakte. Gegen E1/E2/D3/E5 gemessen, GP02-GATE-REPORT grün.

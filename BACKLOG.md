@@ -27,7 +27,7 @@
 - [x] **T4 · Golden Project 02 — Kontaktformular mit Auskunft & Löschung** (DSAR).
   - Akzeptanz: Speichern/Export/Löschung/Fremdzugriff-Block/keine-PII-im-Log/Retention-Job — alle Soll-Ist-Checks grün; Score ≥ 85; Regression über GP01 weiterhin grün.
 
-- [ ] **T5 · Golden Project 03 — Mini-CRM mit Mandantentrennung**.
+- [x] **T5 · Golden Project 03 — Mini-CRM mit Mandantentrennung**.
   - Akzeptanz: A↔B-Isolation, manipulierte `tenant_id` schlägt fehl, Audit-Log ohne unnötige PII; Score ≥ 85; Regression GP01–02 grün.
 
 - [ ] **T6 · Golden Project 04 — Upload mit PII-Redaction**.
