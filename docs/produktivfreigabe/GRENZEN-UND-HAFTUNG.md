@@ -53,6 +53,8 @@ Richtigkeit der Meldeentscheidungen und die Sicherheit der produktiven Systeme v
 Lizenz: siehe `LICENSE`.
 
 ---
-**Freigabe (menschlich auszufüllen):**
-- Verantwortlicher / GF: __________________  Datum: __________
-- Zur Kenntnis genommen, Grenzen akzeptiert: ☐
+**Freigabe (menschlich):**
+- Verantwortlicher / GF: **Robert Hargesheimer** (robert@totokaa.de)  Datum: **2026-06-08**
+- Zur Kenntnis genommen, Grenzen akzeptiert: **☑**
+- **Freigegebener Einsatzzweck: intern, OHNE echte personenbezogene Kundendaten.**
+  Einsatz mit echten Kundendaten erst nach Umsetzung der Auflagen (s. SECURITY-/DATENSCHUTZ-REVIEW).

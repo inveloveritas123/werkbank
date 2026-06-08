@@ -2,6 +2,14 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-08 — Freigaben erteilt (intern, ohne echte Kundendaten)
+- Menschliche Freigaben durch Robert Hargesheimer in den Freigabefeldern eingetragen:
+  Grenzen/Haftung akzeptiert · Security-Restrisiken akzeptiert · DSB freigegeben **mit Auflagen**.
+- **Geltungsbereich: interner Einsatz OHNE echte personenbezogene Kundendaten.**
+- Auflagen für echte Kundendaten (offen): D1/D2, Laufzeit-EU-Routing, manipulationssicheres Audit-Log,
+  At-rest-Verschlüsselung; E6 (DSFA) + E7 (Drittland) als Gates implementieren.
+- Merge von PR #1 (werkbank-build → main) durch menschliche Freigabe autorisiert.
+
 ## 2026-06-08 — Produktivfreigabe-Doku (Vorbereitung, post-Backlog)
 - `docs/produktivfreigabe/`: **GRENZEN-UND-HAFTUNG.md** (Scope/Disclaimer, was WERKBANK nicht garantiert),
   **SECURITY-REVIEW.md** (Gate-Abdeckung, gefundene/gefixte Befunde, Restrisiken, Freigabefeld),

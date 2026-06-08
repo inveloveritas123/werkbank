@@ -57,6 +57,8 @@
 5. I1–I3 (LLM-Urteils-Gates) verdrahten. 6. PII-Korpus erweitern (mehr Sprachen/Formate).
 
 ## 7 · Freigabe (menschlich)
-- Security-Verantwortlicher: __________________  Datum: __________
-- Restrisiken zur Kenntnis genommen und akzeptiert: ☐
-- Auflagen vor Produktivbetrieb (falls): __________________
+- Security-Verantwortlicher: **Robert Hargesheimer** (robert@totokaa.de)  Datum: **2026-06-08**
+- Restrisiken zur Kenntnis genommen und akzeptiert: **☑ — für internen Einsatz OHNE echte Kundendaten.**
+- Auflagen vor Produktivbetrieb mit echten Kundendaten: **D1/D2 (SAST/SCA) als Block-Gates,
+  EU-Routing zur Laufzeit erzwingen (Proxy), manipulationssicheres Audit-Log (WORM/Signatur),
+  Verschlüsselung at-rest + Secrets-Manager — vor Einsatz mit echten Kundendaten umzusetzen.**

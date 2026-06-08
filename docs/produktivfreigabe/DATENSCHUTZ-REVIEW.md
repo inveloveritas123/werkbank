@@ -40,7 +40,10 @@
   Artefakten ausdrücklich vermerkt; keine erfundenen Rechtsaussagen (GP05-Linter).
 
 ## 5 · Freigabe (DSB)
-- DSB / Datenschutz-Kontakt: __________________  Datum: __________
-- Bewertung: ☐ freigegeben  ☐ freigegeben mit Auflagen  ☐ nicht freigegeben
-- Auflagen / offene Punkte (insb. E6/E7, EU-Routing-Laufzeit): __________________
+- DSB / Datenschutz-Kontakt: **Robert Hargesheimer** (robert@totokaa.de)  Datum: **2026-06-08**
+- Bewertung: ☐ freigegeben  **☑ freigegeben mit Auflagen**  ☐ nicht freigegeben
+- **Geltungsbereich der Freigabe: interner Einsatz OHNE echte personenbezogene Kundendaten.**
+- Auflagen / offene Punkte: **E6 (DSFA-Erzwingung) und E7 (Drittland) sind vor Einsatz mit echten
+  Kundendaten als Gates zu implementieren; die heuristische, nicht erschöpfende PII-Erkennung ist
+  organisatorisch abzusichern.** E6/E7 bis dahin als Vorlage akzeptiert.
 - Hinweis: Diese Vorbereitung ersetzt nicht die eigenständige rechtliche Würdigung durch DSB/Anwalt.
