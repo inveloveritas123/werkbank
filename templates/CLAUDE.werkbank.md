@@ -67,6 +67,12 @@ ralph/ralph-loop.sh --build-cmd 'claude -p "<Story abarbeiten; bei fertig <promi
 Stoppt erst bei **GRUEN + `<promise>GRUEN</promise>`**; hält an bei `--max-iterations` oder
 **Drift** (mehr rote Gates als in der Vorrunde). In-Session-Variante: `ralph/stop_hook.py` (opt-in).
 
+## Selbstheilende Rückkopplung (feedback)
+Rote Gates werden automatisch zu Arbeit: `feedback/feedback.py` parst `GATE-REPORT.md`, hängt
+**Gate-ID-deduplizierte** `[ ]`-Aufgaben in `BACKLOG.md` (und optional GitHub-Issues, `--gh-issues`),
+und hakt bei PASS wieder ab/schließt (`--close-resolved`). **Egress-Redaction** maskiert Secrets/PII/Pfade
+vor jedem Ausgang. Default Dry-Run. So schließt sich der Kreis: rot → Backlog/Issue → Ralph-Loop → grün → erledigt.
+
 ## Befehle
 ```bash
 python3 gates/runner.py --target . --report GATE-REPORT.md   # Gate-Lauf

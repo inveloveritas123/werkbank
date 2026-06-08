@@ -32,5 +32,14 @@ tribunal/tribunal.sh \
 Anonymisierte Reconciliation (`tribunal/reconcile.py`): nur klare Pass-Mehrheit besteht. Exit 0/3.
 LLM-Urteile sind nicht deterministisch (ehrlich); die Reconciliation ist es.
 
+## Selbstheilende Rückkopplung (feedback)
+Nach dem Gate-Lauf rote Befunde automatisch als Arbeit zurückspeisen (Egress-redigiert, Gate-ID-dedupliziert):
+```bash
+python3 feedback/feedback.py --report GATE-REPORT.md --backlog BACKLOG.md            # Dry-Run
+python3 feedback/feedback.py --report GATE-REPORT.md --backlog BACKLOG.md \
+        --apply --close-resolved [--gh-issues]   # Backlog/Issues anlegen + grüne abhaken/schließen
+```
+Damit schließt sich der Kreis: rote Gates → Backlog/Issue → Ralph-Loop arbeitet sie ab → grün → abgehakt/geschlossen.
+
 ## Übergabe an
 `workflows/04-uebergeben.md`

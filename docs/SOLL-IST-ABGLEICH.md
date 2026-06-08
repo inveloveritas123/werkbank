@@ -91,6 +91,11 @@
 | `settings.example.yaml` Werte | 🟡 Platzhalter (by design) |
 | `orchestrator/tier_router.py` | ✅ (neu) — aber Orchestrator setzt `model=` manuell |
 
+## 5b · Selbstheilende Rückkopplung (neu)
+| Soll | Ist | Status |
+|---|---|---|
+| Fehler automatisch → Backlog/Issues; Loop arbeitet sie ab | **`feedback/feedback.py`**: rote Gates → Gate-ID-deduplizierte Backlog-Aufgaben + optional GH-Issues; PASS → abhaken/schließen; **Egress-Redaction**; Dry-Run-Default. In Workflow 03 verdrahtet. 3-Experten-Review bestanden (2. Runde). | ✅ |
+
 ## 6 · Was das praktisch bedeutet
 Die **drei Schichten als „Einheit"** existieren als Gerüst + Doku (`CLAUDE.md`), aber:
 - **BMAD und kiln sind nicht automatisiert** — sie werden von der menschlich gestarteten Claude-Code-

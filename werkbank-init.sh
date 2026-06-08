@@ -50,6 +50,7 @@ cp_safe orchestrator orchestrator
 cp_safe ralph ralph
 cp_safe tribunal tribunal
 cp_safe deploy deploy
+cp_safe feedback feedback
 mkdir -p "$TARGET/.github/workflows"
 cp_safe .github/workflows/werkbank-gates.yml .github/workflows/werkbank-gates.yml
 

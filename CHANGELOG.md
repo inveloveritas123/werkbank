@@ -2,6 +2,15 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-09 — Selbstheilende Rückkopplung: feedback (rote Gates → Backlog/GH-Issues)
+- `feedback/feedback.py`: parst `GATE-REPORT.md`, legt **Gate-ID-deduplizierte** `[ ]`-Aufgaben in
+  `BACKLOG.md` an (`--apply`), optional GitHub-Issues (`--gh-issues`, Label `werkbank-gate`); bei PASS
+  abhaken/schließen (`--close-resolved`). Default **Dry-Run**. In Workflow 03 + CLAUDE.md verdrahtet. +11 Tests.
+- **3-Experten-Bewertung vor dem Push** (DevSecOps / SRE / DSGVO): erste Runde 2× fail → v2-Fixes:
+  Gate-ID-Dedup statt Notiz-Text (kein Zähler-Spam) · robuste Regex (mehrstellige Gates) ·
+  **Egress-Redaction** (Secrets/PII/Pfade maskiert vor GitHub) · gh-Fehler signalisiert · Loop-Closure.
+- Damit schließt sich der Kreis: rote Gates → Arbeit → Ralph-Loop → grün → erledigt. 176 Tests grün.
+
 ## 2026-06-09 — Persistente Minds (kiln) — Substanz-Backlog abgeschlossen
 - `orchestrator/mind.py`: Reviewer/Architekt/Judge behalten Historie über Chunks (`context`/`append`,
   Sequenz statt Clock); Builder/Impl/Dev bleiben **frisch** (`is_persistent`=False). Mind-State lokal
