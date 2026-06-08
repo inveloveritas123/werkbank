@@ -6,3 +6,10 @@ secrets/
 .werkbank/STATE.md
 node_modules/
 __pycache__/
+
+# BMAD-Install (reinstallierbar via `npx bmad-method install` — nicht vendoren, Blueprint §1: "installieren, nicht nachbauen")
+examples/pilot-app/_bmad/
+examples/pilot-app/_bmad-output/
+examples/pilot-app/.claude/
+examples/*/_bmad/
+examples/*/.claude/

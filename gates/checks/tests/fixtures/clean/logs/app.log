@@ -1,0 +1,4 @@
+2026-06-08T10:00:00Z INFO  request received id=req-001 tenant=t-42 region=eu-central-1
+2026-06-08T10:00:00Z INFO  model_call endpoint=eu-central-1 tokens_in=128 tokens_out=64
+2026-06-08T10:00:01Z INFO  response sent id=req-001 status=200 user=user-7f3a (pseudonymisiert)
+2026-06-08T10:00:02Z INFO  gate_run result=GRUEN blocks_red=0

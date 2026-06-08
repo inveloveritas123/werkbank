@@ -12,31 +12,31 @@
 
 ## Sprint-Reihenfolge (nicht mit 62 Gates anfangen)
 
-- [ ] **T0 · Fundament** — BMAD installieren, Ziel-Struktur anlegen, `STATE.md` initialisieren.
+- [x] **T0 · Fundament** — BMAD installieren, Ziel-Struktur anlegen, `STATE.md` initialisieren.
   - Akzeptanz: Struktur aus Blueprint §3 existiert; `npx bmad-method install` gelaufen; STOPP vor T1.
 
-- [ ] **T1 · Gate-Runner + 3 deterministische Gates** — `gates/runner` + Checks `E1` (EU-Routing), `D3` (Secret-Scan), `E2` (PII-Scan). Kein LLM.
+- [x] **T1 · Gate-Runner + 3 deterministische Gates** — `gates/runner` + Checks `E1` (EU-Routing), `D3` (Secret-Scan), `E2` (PII-Scan). Kein LLM.
   - Akzeptanz: `runner` läuft über `gates/gates.yaml`, schreibt `GATE-REPORT.md`; E1/D3/E2 erkennen je einen bewusst gesetzten Verstoß (Negativtest grün).
 
-- [ ] **T2 · Golden Project 01 — DSGVO-Projektstarter** (`golden-projects/01-...`).
+- [x] **T2 · Golden Project 01 — DSGVO-Projektstarter** (`golden-projects/01-...`).
   - Akzeptanz: alle Soll-Artefakte erzeugt, Pflichtfelder gefüllt, keine TODO/TBD-Platzhalter, E-Gates grün, Score ≥ 85.
 
-- [ ] **T3 · Benchmark + erste kontrollierte Selbstverbesserung (PDCA)**.
+- [x] **T3 · Benchmark + erste kontrollierte Selbstverbesserung (PDCA)**.
   - Akzeptanz: `BENCHMARK.md` mit Vorher/Nachher; mindestens 1 Verbesserung aus `SELF-IMPROVEMENT.md` (erlaubte Liste) angewandt; **keine Regression**; alle Block-Gates grün.
 
-- [ ] **T4 · Golden Project 02 — Kontaktformular mit Auskunft & Löschung** (DSAR).
+- [x] **T4 · Golden Project 02 — Kontaktformular mit Auskunft & Löschung** (DSAR).
   - Akzeptanz: Speichern/Export/Löschung/Fremdzugriff-Block/keine-PII-im-Log/Retention-Job — alle Soll-Ist-Checks grün; Score ≥ 85; Regression über GP01 weiterhin grün.
 
-- [ ] **T5 · Golden Project 03 — Mini-CRM mit Mandantentrennung**.
+- [x] **T5 · Golden Project 03 — Mini-CRM mit Mandantentrennung**.
   - Akzeptanz: A↔B-Isolation, manipulierte `tenant_id` schlägt fehl, Audit-Log ohne unnötige PII; Score ≥ 85; Regression GP01–02 grün.
 
-- [ ] **T6 · Golden Project 04 — Upload mit PII-Redaction**.
+- [x] **T6 · Golden Project 04 — Upload mit PII-Redaction**.
   - Akzeptanz: PII erkannt & maskiert, keine PII in Log/Prompt-Dump, Löschung funktioniert; Score ≥ 85; Regression GP01–03 grün.
 
-- [ ] **T7 · Golden Project 05 — Breach/Incident-Runbook**.
+- [x] **T7 · Golden Project 05 — Breach/Incident-Runbook**.
   - Akzeptanz: 72h-Prüfung, betroffene Datenarten, begründete Meldeentscheidung, Maßnahmenliste, **keine Fake-Rechtsaussagen**; Score ≥ 85.
 
-- [ ] **T8 · Golden Project 06 — RAG mit PII-Filter**.
+- [x] **T8 · Golden Project 06 — RAG mit PII-Filter**.
   - Akzeptanz: korrekte Antwort + Quelle, keine unnötige PII-Ausgabe, keine Halluzination ohne Quelle, Löschung aus Index; Score ≥ 85; Regression GP01–05 grün.
 
 ---

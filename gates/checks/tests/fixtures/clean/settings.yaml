@@ -1,0 +1,6 @@
+# Clean baseline fixture — EU-geroutet, secret-frei, PII-frei.
+routing:
+  primary_endpoint: eu-central-1.bedrock.example
+  other_tiers_router: https://eu-router.example/v1
+  primary_key_env: PRIMARY_API_KEY   # nur Variablenname, kein Wert
+region: eu-central-1

@@ -1,0 +1,4 @@
+query grounded=True source=FAQ#rueckgabe answer=Die Rueckgabefrist betraegt 14 Tage ab Erhalt der Ware.
+query grounded=True source=Intern#kontakt answer=Fuer Reklamationen ist Herr [NAME] zustaendig, erreichbar unter [EMAIL].
+query grounded=False source=None answer=Keine belegte Antwort im Index gefunden.
+after_delete grounded=False
