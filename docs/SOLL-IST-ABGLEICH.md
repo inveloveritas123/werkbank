@@ -70,7 +70,7 @@
 | DSGVO-Artefakte | Vorlagen + E5 | ✅ |
 | Audit-Log | nur in GP03; kein globales WERKBANK-Audit eigener Aktionen | 🟡 |
 | Mandantentrennung (Plattform) | in GP03 demonstriert, keine Plattform-Funktion | 🟡 |
-| Budget/Kill-Switch | **kein Code**; settings-Werte 0 | ❌ |
+| Budget/Kill-Switch | **implementiert** (`orchestrator/budget.py` + State `.werkbank/budget.json`); Kill-Switch hält den Ralph-Loop an. Spend wird eingespeist (kein Auto-Metering) | 🟡 ✅ |
 | Kanzler (Ops) | Stub, disabled | ❌ (bewusst) |
 | Branchen-Module (bau/finanzen/gis/iot) | leer | ❌ |
 
@@ -102,4 +102,5 @@ Die **drei Schichten als „Einheit"** existieren als Gerüst + Doku (`CLAUDE.md
 4. ~~**Ralph-Loop echt**~~ — **erledigt (T9): `ralph/ralph-loop.sh` + Stop-Hook + Drift-Pausegate.**
 5. ~~**BMAD wirklich nutzen**: 1 echter Durchstich~~ — **erledigt:** Thin-Slice `examples/pilot-app/` (Einwilligungs-Logbuch) durch 01→04.
 6. ~~E6/E7 (DPIA/Drittland)~~ **erledigt.** Offen: **I2/I3** (QA-Tribunal, Deployment-Validierung),
-   **E8** (Datenminimierung-LLM), **B-Gates** (ruff/mypy), **C2** (Coverage), **Budget/Kill-Switch**, persistente Minds.
+   **E8** (Datenminimierung-LLM), **I3** (Deployment-Validierung-LLM), persistente Minds.
+   (B-Gates, C2, Budget/Kill-Switch, I2-Tribunal: erledigt.)

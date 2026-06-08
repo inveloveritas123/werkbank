@@ -66,6 +66,8 @@ EOF
   echo "  ✓ .werkbank/STATE.md"
 fi
 [ -f "$TARGET/.werkbank/BENCHMARK.md" ] || printf '# BENCHMARK (PDCA, neuster oben)\n' > "$TARGET/.werkbank/BENCHMARK.md"
+# Budget/Kill-Switch-State (0 = nicht gesetzt -> inert; Orchestrator speist Spend via budget.py add)
+[ -f "$TARGET/.werkbank/budget.json" ] || printf '{"spent_eur": 0, "period_cap_eur": 0, "kill_switch_eur": 0}\n' > "$TARGET/.werkbank/budget.json"
 # CHANGELOG fuer Gate H4 (sonst rot beim ersten Lauf)
 [ -f "$TARGET/CHANGELOG.md" ] || printf '# CHANGELOG\n\n## %s — init\n- WERKBANK eingerichtet.\n' "$(date +%Y-%m-%d 2>/dev/null || echo 2026-01-01)" > "$TARGET/CHANGELOG.md"
 

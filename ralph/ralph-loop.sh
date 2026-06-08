@@ -36,6 +36,14 @@ while :; do
   iter=$((iter+1))
   echo "── Runde $iter ─────────────────────────────"
 
+  # 0) Budget/Kill-Switch — stoppt den autonomen Lauf hart, bevor weiter gearbeitet wird.
+  budget_state="$TARGET/.werkbank/budget.json"
+  if [ -f "$budget_state" ]; then
+    if ! python3 "$SELF/../orchestrator/budget.py" check "$budget_state" >/dev/null 2>&1; then
+      echo "⛔ Budget/Kill-Switch erreicht — Lauf angehalten."; exit 3
+    fi
+  fi
+
   # 1) Worker (frischer Kontext je Aufruf, wenn build-cmd = 'claude -p ...')
   build_out="$(eval "$BUILD_CMD" 2>&1)"; echo "$build_out" | tail -3
   if printf '%s' "$build_out" | grep -qF "$PROMISE"; then promise=1; else promise=0; fi

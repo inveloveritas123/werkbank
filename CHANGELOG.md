@@ -2,6 +2,11 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-09 — Budget / Kill-Switch
+- `orchestrator/budget.py`: `check(spent, cap, kill)` → ok/warn/kill (0 = inert). State `.werkbank/budget.json`;
+  Spend via `budget.py add <eur>` (kein Auto-Metering, ehrlich). **In den Ralph-Loop integriert:**
+  Kill-Switch hält den autonomen Lauf an (HALT vor jeder Runde). Installer legt inerten State an. +7 Tests.
+
 ## 2026-06-09 — B-Gates + C2 (statisch/Coverage)
 - **B3** (Build, py_compile, stdlib): kompiliert alle .py des Ziels — real (Self-Lauf: 20 .py sauber).
 - **B1** (ruff) · **B2** (mypy) · **C2** (coverage.py): verdrahtet, laufen wenn das Tool da ist,
