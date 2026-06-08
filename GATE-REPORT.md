@@ -1,4 +1,4 @@
-# GATE-REPORT — target=`.` — 2026-06-08T22:58:47Z
+# GATE-REPORT — target=`.` — 2026-06-08T23:06:06Z
 
 ## Zusammenfassung
 - **Ergebnis:** GRUEN
@@ -43,7 +43,7 @@
 | 7_maintainability | H1 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 7_maintainability | H2 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 7_maintainability | H3 | warn,deterministic | SKIP | kein Check implementiert (offen) |
-| 7_maintainability | H4 | block,deterministic | PASS | CHANGELOG vorhanden, 24 Einträge, newest-top |
+| 7_maintainability | H4 | block,deterministic | PASS | CHANGELOG vorhanden, 25 Einträge, newest-top |
 | 7_maintainability | H6 | block,llm | SKIP | kein Check implementiert (offen) |
 | 8_judgement | I1 | block,llm | SKIP | kein Check implementiert (offen) |
 | 8_judgement | I2 | block,llm | SKIP | kein Check implementiert (offen) |

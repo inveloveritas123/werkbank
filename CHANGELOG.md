@@ -2,6 +2,13 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-09 — Fresh-System-Bootstrap + README/Doku aktualisiert
+- `bootstrap.sh`: WERKBANK auf neuem System mit EINEM Befehl (`curl … | bash`) — klont + richtet
+  Projekt ein, Prereq-Checks (git/python3 Pflicht; node/gh/gitleaks optional, degradiert sauber).
+  End-to-end gegen GitHub-`main` getestet (Klon → Projekt → Gate GRUEN, alle Tools da).
+- README: „Knopfdruck"-Einzeiler, aktualisierte Inhalts-/Reife-Tabelle (19 Gates, ralph/tribunal/
+  deploy/feedback/orchestrator). Bootstrap-Prompt-Kopf: Hinweis „gebaut" + Nutzungseinstieg.
+
 ## 2026-06-09 — Selbstheilende Rückkopplung: feedback (rote Gates → Backlog/GH-Issues)
 - `feedback/feedback.py`: parst `GATE-REPORT.md`, legt **Gate-ID-deduplizierte** `[ ]`-Aufgaben in
   `BACKLOG.md` an (`--apply`), optional GitHub-Issues (`--gh-issues`, Label `werkbank-gate`); bei PASS
