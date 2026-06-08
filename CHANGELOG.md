@@ -2,6 +2,11 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-09 — B-Gates + C2 (statisch/Coverage)
+- **B3** (Build, py_compile, stdlib): kompiliert alle .py des Ziels — real (Self-Lauf: 20 .py sauber).
+- **B1** (ruff) · **B2** (mypy) · **C2** (coverage.py): verdrahtet, laufen wenn das Tool da ist,
+  sonst **SKIP** (ehrlich, kein Vortäuschen). +5 Tests. Alle GP-Läufe + Thin-Slice + Self-Lauf GRUEN.
+
 ## 2026-06-09 — I2 QA-Tribunal (Cross-Model) + Reconciliation
 - `tribunal/reconcile.py`: deterministische, **anonymisierte** Reconciliation (nur klare Pass-Mehrheit
   besteht; `uncertain`/Gleichstand → konservativ block). `tribunal/tribunal.sh`: Fresh-Context-Fan-out,

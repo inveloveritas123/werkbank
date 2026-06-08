@@ -43,9 +43,11 @@
 |---|---|---|
 | A1 Pflichtfelder · A2 Akzeptanz testbar · A3 Handoff | implementiert (T9, `--spec-file`) | ✅ |
 | A4 Spec-Widersprüche (llm) | — | ❌ |
-| B Statisch (B1 Lint, B2 Typecheck, B3 Build) | — | ❌ |
+| B3 Build (py_compile, stdlib) | implementiert (T9) | ✅ |
+| B1 Lint (ruff) · B2 Typecheck (mypy) | verdrahtet; SKIP ohne Tool (kein Vortäuschen) | 🟡 |
 | C1 Unit-Tests (Suite läuft als Gate) | implementiert (T9) | ✅ |
-| C2 Coverage, C3 Integration, C4 E2E, C5/C6 | — | ❌ |
+| C2 Coverage (coverage.py) | verdrahtet; SKIP ohne Tool | 🟡 |
+| C3 Integration, C4 E2E, C5/C6 | — | ❌ |
 | D Sicherheit: D1 SAST, D2 SCA, D4 Lizenz | — | ❌ |
 | D3 Secret-Scan | implementiert | ✅ |
 | E1 EU-Routing | implementiert (statisch) | ✅/🟡 |

@@ -1,4 +1,4 @@
-# GATE-REPORT — target=`golden-projects/01-dsgvo-projektstarter/artefakte` — 2026-06-08T22:11:49Z
+# GATE-REPORT — target=`golden-projects/01-dsgvo-projektstarter/artefakte` — 2026-06-08T22:20:47Z
 
 ## Zusammenfassung
 - **Ergebnis:** GRUEN
@@ -13,15 +13,15 @@
 | 1_spec | A2 | block,deterministic | SKIP | kein SPEC (nicht anwendbar) |
 | 1_spec | A3 | block,deterministic | SKIP | kein SPEC (nicht anwendbar) |
 | 1_spec | A4 | warn,llm | SKIP | kein Check implementiert (offen) |
-| 2_static | B1 | block,deterministic | SKIP | kein Check implementiert (offen) |
-| 2_static | B2 | block,deterministic | SKIP | kein Check implementiert (offen) |
-| 2_static | B3 | block,deterministic | SKIP | kein Check implementiert (offen) |
+| 2_static | B1 | block,deterministic | SKIP | ruff nicht installiert |
+| 2_static | B2 | block,deterministic | SKIP | mypy nicht installiert |
+| 2_static | B3 | block,deterministic | SKIP | kein Python-Code |
 | 2_static | D1 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 2_static | D2 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 2_static | D3 | block,deterministic | PASS | kein Secret gefunden |
 | 2_static | D4 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 3_tests | C1 | block,deterministic | SKIP | kein Testverzeichnis gefunden |
-| 3_tests | C2 | block,deterministic | SKIP | kein Check implementiert (offen) |
+| 3_tests | C2 | block,deterministic | SKIP | coverage nicht installiert |
 | 3_tests | C3 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 3_tests | C4 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 3_tests | C5 | warn,deterministic | SKIP | kein Check implementiert (offen) |
