@@ -5,6 +5,8 @@ routing:
   other_tiers_router: <eu-router-url>       # EU-Router der uebrigen Tiers
   llm_proxy_url: http://localhost:8080
   primary_key_env: PRIMARY_API_KEY          # NUR der Variablenname, nie der Key
+# Tier-Zielverteilung (Richtwert). Die VERBINDLICHE Aufgabentyp->Modell-Policy steht in
+# orchestrator/werkbank.tiers.json und wird vom Tier-Router angewandt (kein Auto-Raten).
 tiers: { haiku_pct: 80, sonnet_pct: 15, opus_pct: 5, confirm_gate_from: S5 }
 budget: { period_cap_eur: 0, kill_switch_eur: 0 }
 conventions: { changelog: CHANGELOG.md, index_first: true }

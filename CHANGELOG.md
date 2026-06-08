@@ -2,6 +2,110 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-09 — Selbstheilende Rückkopplung: feedback (rote Gates → Backlog/GH-Issues)
+- `feedback/feedback.py`: parst `GATE-REPORT.md`, legt **Gate-ID-deduplizierte** `[ ]`-Aufgaben in
+  `BACKLOG.md` an (`--apply`), optional GitHub-Issues (`--gh-issues`, Label `werkbank-gate`); bei PASS
+  abhaken/schließen (`--close-resolved`). Default **Dry-Run**. In Workflow 03 + CLAUDE.md verdrahtet. +11 Tests.
+- **3-Experten-Bewertung vor dem Push** (DevSecOps / SRE / DSGVO): erste Runde 2× fail → v2-Fixes:
+  Gate-ID-Dedup statt Notiz-Text (kein Zähler-Spam) · robuste Regex (mehrstellige Gates) ·
+  **Egress-Redaction** (Secrets/PII/Pfade maskiert vor GitHub) · gh-Fehler signalisiert · Loop-Closure.
+- Damit schließt sich der Kreis: rote Gates → Arbeit → Ralph-Loop → grün → erledigt. 176 Tests grün.
+
+## 2026-06-09 — Persistente Minds (kiln) — Substanz-Backlog abgeschlossen
+- `orchestrator/mind.py`: Reviewer/Architekt/Judge behalten Historie über Chunks (`context`/`append`,
+  Sequenz statt Clock); Builder/Impl/Dev bleiben **frisch** (`is_persistent`=False). Mind-State lokal
+  in `.werkbank/minds/` (gitignored). +9 Tests. In CLAUDE.md + Workflow 02 verdrahtet.
+- Damit ist die kiln-Schicht vollständig (frische Worker + persistente Minds). SOLL-IST: alle
+  nennenswerten Posten erledigt.
+
+## 2026-06-09 — I3 (Deployment-Validierung) + E8 (Datenminimierung)
+- **E8** (Art. 25, `gates/checks/e8_minimization.py`): deterministischer Dokumentations-Check —
+  Datenminimierung dokumentiert? Art-9-Daten ohne DSFA? warn-Gate, SKIP ohne Kontext. Materielle
+  Prüfung bleibt DSB/LLM (ehrlich). +5 Tests; alle GP-Läufe E8 PASS.
+- **I3** (`deploy/deploy_validate.py` + `.sh`): Deployment-Validierung gegen kritische User-Flows —
+  **alle müssen pass** (strenger als das Tribunal), deterministische Aggregation; Fan-out via
+  `claude -p` je Flow. +6 Tests. In Workflow 04 verdrahtet; Installer kopiert `deploy/`.
+
+## 2026-06-09 — Budget / Kill-Switch
+- `orchestrator/budget.py`: `check(spent, cap, kill)` → ok/warn/kill (0 = inert). State `.werkbank/budget.json`;
+  Spend via `budget.py add <eur>` (kein Auto-Metering, ehrlich). **In den Ralph-Loop integriert:**
+  Kill-Switch hält den autonomen Lauf an (HALT vor jeder Runde). Installer legt inerten State an. +7 Tests.
+
+## 2026-06-09 — B-Gates + C2 (statisch/Coverage)
+- **B3** (Build, py_compile, stdlib): kompiliert alle .py des Ziels — real (Self-Lauf: 20 .py sauber).
+- **B1** (ruff) · **B2** (mypy) · **C2** (coverage.py): verdrahtet, laufen wenn das Tool da ist,
+  sonst **SKIP** (ehrlich, kein Vortäuschen). +5 Tests. Alle GP-Läufe + Thin-Slice + Self-Lauf GRUEN.
+
+## 2026-06-09 — I2 QA-Tribunal (Cross-Model) + Reconciliation
+- `tribunal/reconcile.py`: deterministische, **anonymisierte** Reconciliation (nur klare Pass-Mehrheit
+  besteht; `uncertain`/Gleichstand → konservativ block). `tribunal/tribunal.sh`: Fresh-Context-Fan-out,
+  ruft N Reviewer (real: `claude -p --model …`), sammelt `VERDICT:`-Zeilen. +8 Tests.
+- **Live bewiesen:** haiku+sonnet+opus urteilten unabhängig über den Thin-Slice → einstimmig pass →
+  reconcile pass. Damit ist die früher fehlende **Cross-Model-Diversität** real.
+- Verdrahtet in Workflow 03 (Meilenstein-Gate); Installer kopiert `tribunal/`. Ehrlich: LLM-Urteile
+  nicht-deterministisch, Reconciliation ist es. SOLL-IST: I1/I2 als Harness ✅ (🟡 LLM-Anteil).
+
+## 2026-06-09 — E6/E7 echt (DSFA-Erzwingung + Drittland) — 12 → 14 Gates
+- **E6** (Art. 35): bei hohem Risiko im DPIA-Screening (`[x]`/`| ja |`) MUSS DPIA.md vorhanden+gefüllt sein;
+  kein hohes Risiko → PASS. **E7** (Kap. V): Drittlandtransfer → Garantie (SCC/Angemessenheit/BCR) nötig; EU-only → PASS.
+  Beide SKIP ohne Privacy-Kontext/Artefakt. +9 Tests.
+- **Latente Regression behoben:** seit H4 (T9) als Block-Gate fehlte den per-GP-Gate-Zielen eine
+  CHANGELOG.md → H4 rot. Jetzt hat jedes gegatete Bundle (GP01–06) eine CHANGELOG.md; alle GP-Läufe wieder GRUEN.
+- SOLL-IST: E6/E7 ✅ (14/41 Gates). Suite + Self-Lauf + alle 6 GP-Läufe + Thin-Slice GRUEN.
+
+## 2026-06-08 — Durchstich: Thin-Slice 01→04 LIVE (BMAD-Methode bewiesen)
+- `examples/pilot-app/` „Einwilligungs-Logbuch" (Art. 7 DSGVO) durch den vollen WERKBANK-Loop:
+  **01** BMAD-Templates → Brief/PRD/Architektur → `SPEC.md` (A-Gates grün) · **02** `app/consent_ledger.py`
+  + 9 Tests (RED→GREEN), Ralph-Loop schließt GRUEN+promise · **03** voller Gate-Lauf GRUEN (A1/A2/A3,
+  C1, D3, E1/E2, F1, H4) · **04** PR, Cross-Model-Review (opus) → keine Live-Bugs, Art.-7-Nachweis-Tests ergänzt.
+- **Bug gefangen & gefixt:** C1 verdoppelte den Testpfad bei `--target <subdir>` (rel+cwd) → absoluter Pfad.
+- SOLL-IST: BMAD ✅, Thin-Slice ✅. Methode→Spec→Bau→Gate→Review→PR jetzt end-to-end bewiesen.
+
+## 2026-06-08 — T9 (Substanz): BMAD-Anbindung + A-Gates (Spec-Integrität)
+- **A1/A2/A3** echt gemacht (`gates/checks/a_spec.py`, Runner-Flag `--spec-file`): A1 Pflichtfelder
+  gefüllt/platzhalterfrei · A2 Akzeptanzkriterien testbar · A3 Handoff PM→Architect erfüllt.
+  SKIP ohne SPEC. **9 → 12 Gates.** +6 Tests.
+- **Workflows 01–04** von Stubs zu echten Playbooks: 01 ruft BMAD-Skills (bmad-prd/-architecture/
+  -epics-and-stories) und erzeugt einen A-Gate-tauglichen SPEC; 02 nutzt den Ralph-Loop + Tier-Routing;
+  03 den vollen Gate-Lauf; 04 PR (kein Selbst-Merge). Agenten-Status-Zeilen ehrlich aktualisiert.
+- Damit ist die „Methode→Spec→Gate"-Kette real; 1 vollständiger BMAD-Durchstich bleibt als nächster Schritt.
+
+## 2026-06-08 — T9 (Substanz): Echter Ralph-Loop (Autonomie-Motor)
+- `ralph/ralph_decide.py` — deterministische Entscheidungs-Engine (fertig/weiter/anhalten),
+  inkl. **Drift-Pausegate** (rote Gates gestiegen → HALT) und max-iterations-Netz. Eine Quelle der Wahrheit.
+- `ralph/ralph-loop.sh` — **Fresh-Context-Motor** (Blueprint-bevorzugt): Worker je Runde mit frischem
+  Kontext, re-invoziert bis **alle Block-Gates grün UND `<promise>GRUEN</promise>`**. Exit 0/3/2.
+- `ralph/stop_hook.py` (+ `settings.stop-hook.json`) — In-Session-Stop-Hook (opt-in via `--ralph-hook`).
+- **10 Tests** (Engine + Bash-Motor end-to-end + Stop-Hook). Installer kopiert `ralph/`.
+- Ehrlich: Stop-Hook `block` pausiert, re-invoziert interaktiv nicht garantiert — daher ist der
+  Bash-Motor der vollautonome Weg (genau die Blueprint-Empfehlung). SOLL-IST: Ralph-Loop ✅.
+
+## 2026-06-08 — T9: Drei Gates echt gemacht (C1/F1/H4) — 6 → 9 implementiert
+- **C1** (Unit-Tests grün): führt die Test-Suite des Ziels als Block-Gate aus — schließt die Lücke
+  „Tests existieren, aber kein Gate führt sie aus" (Repo-Self-Lauf: C1 = 102 Tests grün).
+- **F1** (Modell-Pinning): FAIL bei `model: …latest` / `…-latest` — jetzt mit Tier-Routing relevant.
+- **H4** (CHANGELOG): vorhanden + newest-top. Installer legt für frische Projekte eine CHANGELOG.md an.
+- 9 neue Tests; clean-Fixture um CHANGELOG ergänzt; SOLL-IST-Abgleich aktualisiert. Keine Regression.
+
+## 2026-06-08 — Modell-Tier-Routing (Kostenoptimierung der Subagenten)
+- `orchestrator/tier_router.py` + `werkbank.tiers.json`: deterministische Policy Aufgabentyp→Tier→Modell
+  (doku/summary→haiku · impl/test→sonnet · review/security/privacy/plan→opus), `confirm_tier_from: opus`,
+  nested-merge-Override, CLI (`<label>` / `--table`). 9 Tests.
+- Verdrahtet: `model:`-Tier-Frontmatter in `agents/*.md`; Regel in `CLAUDE.werkbank.md` + `workflows/02-bauen.md`;
+  Installer kopiert `orchestrator/`; Kommentar in `settings.example.yaml`.
+- **Ehrlichkeit:** Python erzwingt das Modell nicht — der Orchestrator setzt `model=` beim Spawn.
+  Bis hierher liefen Paar-Reviews auf dem teuren Default; mit dem Router wird die Tier-Verteilung wirksam.
+- Live-Beleg: 3 Subagenten parallel mit model=haiku/sonnet/opus gespawnt → gemeldete Modell-IDs
+  (haiku-4-5 / sonnet-4-6 / opus-4-8) stimmen mit der Zuweisung überein. Definitiver Beweis: `/cost` je Modell.
+
+## 2026-06-08 — Ein-Befehl-Installer (BMAD + kiln + WERKBANK als Einheit)
+- `werkbank-init.sh`: richtet pro Projekt mit EINEM Befehl alles ein — kopiert gates/templates/
+  agents/workflows + CI, initialisiert kiln-`STATE.md`, härtet `.gitignore`, installiert BMAD,
+  legt Branch `werkbank-build` an und macht einen Gate-Baseline-Lauf. Idempotent; `--no-bmad`/`--force`.
+- `templates/CLAUDE.werkbank.md`: vereinende `CLAUDE.md` — beschreibt die drei Schichten (Methode/
+  Autonomie/Governance) + den Loop, damit der Agent sie als EINE Einheit behandelt.
+- README-Quickstart ergänzt. Getestet gegen Wegwerf-Projekt (Setup + Gate-Baseline GRUEN, idempotent).
+
 ## 2026-06-08 — Freigaben erteilt (intern, ohne echte Kundendaten)
 - Menschliche Freigaben durch Robert Hargesheimer in den Freigabefeldern eingetragen:
   Grenzen/Haftung akzeptiert · Security-Restrisiken akzeptiert · DSB freigegeben **mit Auflagen**.

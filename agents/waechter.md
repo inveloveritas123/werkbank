@@ -1,3 +1,9 @@
+---
+name: waechter
+tier: sonnet      # Gates sind deterministisch; nur Report-Interpretation -> mittleres Tier
+model: sonnet
+---
+
 # Agent: waechter (Gate-Runner / Verifizierer)
 
 > Hartes Block-Gate. Führt `gates/runner` gestaffelt aus (deterministisch zuerst, LLM-Gates
@@ -19,4 +25,4 @@
 Block-Gate rot ⇒ kein Push, kein Abhaken. E-Gate (E*) rot ⇒ STOPP + Mensch.
 
 ## Status
-Stub (T0). Runner + Checks E1/D3/E2 werden in T1 implementiert.
+Aktiv: `gates/runner.py` + Checks A1/A2/A3, C1, D3, E1–E5, F1, H4 implementiert (12 Gates). Rest SKIP (ehrlich).

@@ -4,6 +4,8 @@
 *.pem
 secrets/
 .werkbank/STATE.md
+.werkbank/minds/
+.werkbank/budget.json
 node_modules/
 __pycache__/
 
