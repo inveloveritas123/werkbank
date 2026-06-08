@@ -2,6 +2,14 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-09 — I3 (Deployment-Validierung) + E8 (Datenminimierung)
+- **E8** (Art. 25, `gates/checks/e8_minimization.py`): deterministischer Dokumentations-Check —
+  Datenminimierung dokumentiert? Art-9-Daten ohne DSFA? warn-Gate, SKIP ohne Kontext. Materielle
+  Prüfung bleibt DSB/LLM (ehrlich). +5 Tests; alle GP-Läufe E8 PASS.
+- **I3** (`deploy/deploy_validate.py` + `.sh`): Deployment-Validierung gegen kritische User-Flows —
+  **alle müssen pass** (strenger als das Tribunal), deterministische Aggregation; Fan-out via
+  `claude -p` je Flow. +6 Tests. In Workflow 04 verdrahtet; Installer kopiert `deploy/`.
+
 ## 2026-06-09 — Budget / Kill-Switch
 - `orchestrator/budget.py`: `check(spent, cap, kill)` → ok/warn/kill (0 = inert). State `.werkbank/budget.json`;
   Spend via `budget.py add <eur>` (kein Auto-Metering, ehrlich). **In den Ralph-Loop integriert:**

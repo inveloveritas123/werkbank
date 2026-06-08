@@ -1,4 +1,4 @@
-# GATE-REPORT — target=`examples/pilot-app` — 2026-06-08T22:20:48Z
+# GATE-REPORT — target=`examples/pilot-app` — 2026-06-08T22:32:15Z
 
 ## Zusammenfassung
 - **Ergebnis:** GRUEN
@@ -33,7 +33,7 @@
 | 4_sovereignty_dsgvo | E5 | block,deterministic | SKIP | kein Privacy-Kontext (nicht anwendbar) |
 | 4_sovereignty_dsgvo | E6 | block,deterministic | SKIP | kein Privacy-Kontext (nicht anwendbar) |
 | 4_sovereignty_dsgvo | E7 | warn,deterministic | SKIP | kein Privacy-Kontext (nicht anwendbar) |
-| 4_sovereignty_dsgvo | E8 | warn,llm | SKIP | kein Check implementiert (offen) |
+| 4_sovereignty_dsgvo | E8 | warn,llm | SKIP | kein Privacy-Kontext (nicht anwendbar) |
 | 5_integrity | F1 | block,deterministic | PASS | kein 'latest' — Modelle gepinnt |
 | 5_integrity | F2 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 5_integrity | F3 | warn,deterministic | SKIP | kein Check implementiert (offen) |

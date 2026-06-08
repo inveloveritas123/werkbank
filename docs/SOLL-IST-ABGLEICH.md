@@ -53,14 +53,14 @@
 | E1 EU-Routing | implementiert (statisch) | ✅/🟡 |
 | E2 PII · E3 Tenant · E4 Audit-Schema · E5 Artefakte | implementiert | ✅ |
 | E6 DPIA-Erzwingung (Art. 35) · E7 Drittland (Kap. V) | implementiert (T9, `--privacy-dir`) | ✅ |
-| E8 Datenminimierung (llm) | — | ❌ |
+| E8 Datenminimierung (Art. 25) | deterministischer Dokumentations-Check (T9); materielle Prüfung bleibt DSB/LLM | 🟡 ✅ |
 | F1 Modell-Pinning (kein 'latest') | implementiert (T9) | ✅ |
 | F2 Eval-on-Bump, F3 Snapshots | — | ❌ |
 | G Performance (G1–G3) | — | ❌ |
 | H4 CHANGELOG-Gate (vorhanden, newest-top) | implementiert (T9) | ✅ |
 | H1–H3, H6 Drift-Audit | — | ❌ |
 | I1 Vier-Augen + I2 QA-Tribunal | **Harness `tribunal/` (Cross-Model-Fan-out + deterministische Reconciliation), live bewiesen (haiku/sonnet/opus → pass)** | 🟡 Harness da; LLM-Urteil nicht-deterministisch |
-| I3 Deployment-Validierung (Argus-Stil) | — | ❌ |
+| I3 Deployment-Validierung (Argus-Stil) | **Harness `deploy/` (alle kritischen Flows müssen pass; deterministische Aggregation)** | 🟡 Harness da; LLM/Test-Urteil |
 
 ## 4 · WERKBANK-Features (Blueprint §1 „dein Moat") — SOLL vs IST
 | Soll | Ist | Status |
@@ -102,5 +102,5 @@ Die **drei Schichten als „Einheit"** existieren als Gerüst + Doku (`CLAUDE.md
 4. ~~**Ralph-Loop echt**~~ — **erledigt (T9): `ralph/ralph-loop.sh` + Stop-Hook + Drift-Pausegate.**
 5. ~~**BMAD wirklich nutzen**: 1 echter Durchstich~~ — **erledigt:** Thin-Slice `examples/pilot-app/` (Einwilligungs-Logbuch) durch 01→04.
 6. ~~E6/E7 (DPIA/Drittland)~~ **erledigt.** Offen: **I2/I3** (QA-Tribunal, Deployment-Validierung),
-   **E8** (Datenminimierung-LLM), **I3** (Deployment-Validierung-LLM), persistente Minds.
-   (B-Gates, C2, Budget/Kill-Switch, I2-Tribunal: erledigt.)
+   nur noch **persistente Minds** (kiln) als nennenswerter Rest.
+   (B-Gates, C2, Budget/Kill-Switch, I2-Tribunal, I3-Deployment-Val., E8: erledigt.)

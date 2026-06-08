@@ -1,10 +1,10 @@
-# GATE-REPORT — target=`golden-projects/03-mini-crm-mandantentrennung/app` — 2026-06-08T22:20:47Z
+# GATE-REPORT — target=`golden-projects/03-mini-crm-mandantentrennung/app` — 2026-06-08T22:32:14Z
 
 ## Zusammenfassung
 - **Ergebnis:** GRUEN
 - **Block-Gates rot:** 0
 - **Warn-Gates:** 0
-- **Gates ohne Check (offen, SKIP):** 30
+- **Gates ohne Check (offen, SKIP):** 29
 
 ## Detail je Stufe
 | Stufe | Gate | Flags | Ergebnis | Notiz |
@@ -33,7 +33,7 @@
 | 4_sovereignty_dsgvo | E5 | block,deterministic | PASS | alle 1 Soll-Artefakte vorhanden, gefuellt, platzhalterfrei, EU |
 | 4_sovereignty_dsgvo | E6 | block,deterministic | SKIP | kein DPIA-Screening vorhanden |
 | 4_sovereignty_dsgvo | E7 | warn,deterministic | SKIP | kein Drittland-Artefakt vorhanden |
-| 4_sovereignty_dsgvo | E8 | warn,llm | SKIP | kein Check implementiert (offen) |
+| 4_sovereignty_dsgvo | E8 | warn,llm | PASS | Datenminimierung dokumentiert; Art-9-Disziplin ok |
 | 5_integrity | F1 | block,deterministic | PASS | kein 'latest' — Modelle gepinnt |
 | 5_integrity | F2 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 5_integrity | F3 | warn,deterministic | SKIP | kein Check implementiert (offen) |

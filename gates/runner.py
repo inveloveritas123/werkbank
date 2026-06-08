@@ -19,7 +19,7 @@ sys.path.insert(0, HERE)
 
 from checks import (common, e1_eu_routing, e2_pii_scan, d3_secret_scan,  # noqa: E402
                     e3_tenant_isolation, e4_audit_log, e5_artefakte, e6_dpia, e7_third_country,
-                    c1_tests, c2_coverage, f1_model_pinning, h4_changelog, a_spec, b_gates)
+                    e8_minimization, c1_tests, c2_coverage, f1_model_pinning, h4_changelog, a_spec, b_gates)
 
 # Registry: Gate-ID -> Check-Funktion(target, exclude_dirs, exclude_abs, **ctx) -> CheckResult
 REGISTRY = {
@@ -39,6 +39,7 @@ REGISTRY = {
     "E5": e5_artefakte.run,
     "E6": e6_dpia.run,
     "E7": e7_third_country.run,
+    "E8": e8_minimization.run,
     "F1": f1_model_pinning.run,
     "H4": h4_changelog.run,
 }
