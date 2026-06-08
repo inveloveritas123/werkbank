@@ -4,6 +4,37 @@
 > Volle 100-Punkte-Matrix (SCORING-MATRIX.md) ab Golden-Project-Läufen (T2+). T1 = Infrastruktur:
 > gemessen an Testabdeckung der Checks + Repo-Gate-Lauf.
 
+## 2026-06-08 — T7 · Golden Project 05 (Breach/Incident-Runbook) · Score 98/100
+**Lauf:** Generator erzeugt aus einem Vorfall 4 Dokumente (BREACH-RUNBOOK, INCIDENT-TIMELINE,
+NOTIFICATION-CHECKLIST, LESSONS-LEARNED) + deterministischer „Fake-Rechtsaussagen"-Linter.
+GP05-GATE-REPORT grün (E1/E2/D3/E5).
+
+**Soll-Ist (SPEC, alle grün):** 72h-Prüfung ✓ · Datenarten genannt ✓ · Meldeentscheidung begründet ✓ ·
+Maßnahmenliste ✓ · KEINE Fake-Rechtsaussagen ✓.
+
+**100-Punkte-Matrix:**
+| Bereich | Pkt | Erreicht | Messung |
+|---|---:|---:|---|
+| Funktion erfüllt (5 Soll-Ist) | 20 | 20 | alle grün |
+| Tests grün | 15 | 15 | 76/76 (GP05 13 inkl. Bald-Claim-Härtung) |
+| E2E-Flow | 10 | 9 | `demo.py` läuft; Doku-Generator (−1) |
+| Security/Korrektheit-Gates | 15 | 15 | Linter + Negativtest + Review-Gate (GDPR-Korrektheit PASS) |
+| DSGVO-Artefakte vollständig | 15 | 15 | 4/4 E5 PASS |
+| Keine PII | 10 | 10 | E2 PASS, keine PII in Dokumenten |
+| Resume/State | 5 | 4 | deterministische Generierung reproduzierbar (−1 kein persistenter State) |
+| Kosten/Laufzeit | 5 | 5 | stdlib, 0 LLM |
+| Doku/Changelog | 5 | 5 | README+Artefakte+CHANGELOG |
+| **Gesamt** | **100** | **98** | **≥ 85 ✓** |
+
+**Produktiv-Schwelle:** 98 ≥ 85 · 0 Block rot · 0 Secrets · 0 PII · **Regression GP01–04 GRUEN**.
+
+**Review-Gate (inhaltliche Korrektheit):** Unabhängiger Reviewer bestätigte GDPR-Korrektheit
+(72h ab Erkennung Art. 33(1); Art. 33 Behörde/„Risiko" vs. Art. 34 Betroffene/„hohes Risiko" korrekt;
+keine rechtlich falsche Aussage). **ACT:** Linter-Lücke gefunden & gefixt (RED→GREEN) — er übersah
+KAHLE unhedged Aussagen („nicht meldepflichtig", „nicht erforderlich", „auf der sicheren Seite");
+jetzt hedge-bewusst (flaggt nur ohne Bedingungswörter). +3 Tests, inkl. bislang ungetestetem
+high_risk=False-Zweig. Generierte Dokumente bleiben sauber. Keine Regression.
+
 ## 2026-06-08 — T6 · Golden Project 04 (Upload PII-Redaction) · Score 98/100
 **Lauf:** Upload-Dienst mit PII-Erkennung & Redaction (`pii_redactor.py` + `upload_service.py`) +
 Demo + DATA-FLOW. E2 ist hier HART. GP04-GATE-REPORT grün (E1/E2/D3/E5).

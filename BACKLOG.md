@@ -33,7 +33,7 @@
 - [x] **T6 · Golden Project 04 — Upload mit PII-Redaction**.
   - Akzeptanz: PII erkannt & maskiert, keine PII in Log/Prompt-Dump, Löschung funktioniert; Score ≥ 85; Regression GP01–03 grün.
 
-- [ ] **T7 · Golden Project 05 — Breach/Incident-Runbook**.
+- [x] **T7 · Golden Project 05 — Breach/Incident-Runbook**.
   - Akzeptanz: 72h-Prüfung, betroffene Datenarten, begründete Meldeentscheidung, Maßnahmenliste, **keine Fake-Rechtsaussagen**; Score ≥ 85.
 
 - [ ] **T8 · Golden Project 06 — RAG mit PII-Filter**.

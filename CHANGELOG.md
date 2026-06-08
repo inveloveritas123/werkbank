@@ -2,6 +2,16 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-08 — T7 · Golden Project 05 (Breach/Incident-Runbook) · Score 98/100
+- Breach-Runbook-Generator `golden-projects/05-breach-incident-runbook/app/`: aus einem Vorfall
+  werden 4 Dokumente (BREACH-RUNBOOK, INCIDENT-TIMELINE, NOTIFICATION-CHECKLIST, LESSONS-LEARNED)
+  erzeugt — 72h-Frist (Art. 33) berechnet, Meldeentscheidung als begründete Einschätzung (kein Rechtsrat).
+- Deterministischer **„Fake-Rechtsaussagen"-Linter** (`legal_claims.py`): flaggt absolute Rechts-/
+  Meldegarantien, Haftungsausschlüsse, fehlenden Disclaimer — und (nach Review) **kahle unhedged
+  Meldeaussagen** („nicht meldepflichtig"/„nicht erforderlich") hedge-bewusst.
+- GP05-Gate-Lauf GRUEN (E1/E2/D3/E5). Review-Gate: GDPR-Korrektheit unabhängig bestätigt.
+- **Tests 76/76 grün; Regression GP01–04 GRUEN; Repo-Self-Lauf GRUEN.** Score 98/100. Reifegrad: **5 GP grün**.
+
 ## 2026-06-08 — T6 · Golden Project 04 (Upload PII-Redaction) · Score 98/100
 - Upload-Dienst mit PII-Erkennung & Redaction `golden-projects/04-upload-pii-redaction/app/`
   (`pii_redactor.py` + `upload_service.py` + Demo): erkennt E-Mail/Telefon/IBAN/Kreditkarte/Name,
