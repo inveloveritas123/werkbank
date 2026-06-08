@@ -21,7 +21,7 @@
 - [x] **T2 · Golden Project 01 — DSGVO-Projektstarter** (`golden-projects/01-...`).
   - Akzeptanz: alle Soll-Artefakte erzeugt, Pflichtfelder gefüllt, keine TODO/TBD-Platzhalter, E-Gates grün, Score ≥ 85.
 
-- [ ] **T3 · Benchmark + erste kontrollierte Selbstverbesserung (PDCA)**.
+- [x] **T3 · Benchmark + erste kontrollierte Selbstverbesserung (PDCA)**.
   - Akzeptanz: `BENCHMARK.md` mit Vorher/Nachher; mindestens 1 Verbesserung aus `SELF-IMPROVEMENT.md` (erlaubte Liste) angewandt; **keine Regression**; alle Block-Gates grün.
 
 - [ ] **T4 · Golden Project 02 — Kontaktformular mit Auskunft & Löschung** (DSAR).

@@ -4,6 +4,28 @@
 > Volle 100-Punkte-Matrix (SCORING-MATRIX.md) ab Golden-Project-Läufen (T2+). T1 = Infrastruktur:
 > gemessen an Testabdeckung der Checks + Repo-Gate-Lauf.
 
+## 2026-06-08 — T3 · PDCA-Zyklus 1 · E2-Telefonerkennung (DE-Nationalformate)
+**Plan:** Höchster offener Hebel aus der Lernpunkt-Historie: E2 fing nur `+49`; deutsche
+Nationalformate (`0151…`, `0351-…`) und `0049` fehlten → hohes False-Negative-Risiko für ein
+DE-DSGVO-Tool. Erlaubt nach SELF-IMPROVEMENT.md: „Regex/Heuristik eines PII-Scans verbessern".
+
+**Metrik (Telefon-Format-Abdeckung, 5 repräsentative Formate):**
+| | Vorher | Nachher |
+|---|---:|---:|
+| `+49 151 23456789` (intl) | ✅ | ✅ |
+| `+4915123456789` (intl kompakt) | ✅ | ✅ |
+| `0151 23456789` (national mobil) | ❌ | ✅ |
+| `0351-1234567` (national fest) | ❌ | ✅ |
+| `0049 151 23456789` (intl alt) | ❌ | ✅ |
+| **Catch-Rate** | **2/5** | **5/5** |
+
+**Check/Act:** National-Muster verlangt einen Trenner nach der Vorwahl → False-Positive-Schutz
+gegen Log-Zahlen (`status=200`, `id=req-001`, Zeitstempel, IBAN-Fragmente). 2 neue Tests (Coverage + FP).
+**Regression:** Tests 30/30 grün · **GP01 bleibt GRUEN** (E2/E5 PASS, Seeds 3/3) · Repo-Self-Lauf GRUEN.
+→ **besser (2/5→5/5) + keine Regression + Block-Gates grün → übernommen.**
+**Stop-Kriterium:** weitere Lernpunkte (D3 JWT/Stripe) für künftige Zyklen vermerkt — ein
+gemessener, regressionsfreier Zyklus erfüllt T3; kein endloses Wühlen.
+
 ## 2026-06-08 — T2 · Golden Project 01 (DSGVO-Projektstarter) · Score 97/100
 **Lauf:** Artefakte erzeugt (7 DSGVO-Artefakte + INPUT + GATE-REPORT), gegen E1/E2/D3/E5 gemessen.
 Neuer Check **E5** (Artefakt-Vollständigkeit) implementiert.

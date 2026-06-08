@@ -2,6 +2,14 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-08 — T3 · PDCA-Zyklus 1 (E2-Telefonerkennung)
+- Kontrollierte Selbstverbesserung gegen die BENCHMARK-Historie: E2 erkennt jetzt deutsche
+  Telefon-Nationalformate (`0151…`, `0351-…`) und `0049` zusätzlich zu `+49`.
+- **Metrik Vorher→Nachher: 2/5 → 5/5** Telefonformate. False-Positive-Schutz (National-Muster
+  verlangt Trenner nach Vorwahl → keine Treffer auf `status=200`, Zeitstempel, IBAN-Fragmente).
+- 2 neue Tests (Coverage + FP). **Tests 30/30 grün; GP01 bleibt GRUEN (Regression frei); Block-Gates grün.**
+- Vollständige Vorher/Nachher-Messung: `.werkbank/BENCHMARK.md`.
+
 ## 2026-06-08 — T2 · Golden Project 01 (DSGVO-Projektstarter) · Score 97/100
 - Beispielprojekt `golden-projects/01-dsgvo-projektstarter/INPUT.md` → 7 gefüllte DSGVO-Artefakte
   in `artefakte/` (DATA-FLOW, PROCESSING-REGISTER, LAWFUL-BASIS, DPIA-SCREENING, TOMs,

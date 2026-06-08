@@ -18,7 +18,13 @@ NAME_SUFFIXES = (".log", ".out", ".prompt")
 PATH_CONTAINS = ("logs/", "log/", "prompts/", "prompt/", "outputs/", "output/")
 
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}")
-PHONE_RE = re.compile(r"\+49[\s\-/]?\d{2,4}[\s\-/]?\d{3,}[\s\-/]?\d{2,}")
+# Telefon: international (+49/0049) UND deutsche Nationalformate (0151…, 0351-…).
+# National verlangt einen Trenner nach der Vorwahl -> reine Ziffernläufe (IBAN-Fragment,
+# Zeitstempel, status=200) lösen nicht aus.
+PHONE_PATTERNS = [
+    ("phone-intl",     re.compile(r"(?:\+49|0049)[\s\-/]?\(?\d{2,5}\)?[\s\-/]?\d{3,}(?:[\s\-/]?\d{2,})?")),
+    ("phone-national", re.compile(r"(?<![\d/])0\d{1,4}[\s/\-]\d{3,}(?:[\s/\-]?\d{2,})?\b")),
+]
 IBAN_RE = re.compile(r"\bDE\d{2}(?:\s?\d{4}){4}\s?\d{2}\b")
 CC_RE = re.compile(r"\b(?:\d[ -]?){13,16}\b")
 
@@ -40,8 +46,13 @@ def _scan_line(line):
     out = []
     for m in EMAIL_RE.finditer(line):
         out.append(("email", m.group(0)))
-    for m in PHONE_RE.finditer(line):
-        out.append(("phone-de", m.group(0)))
+    phone_spans = []
+    for kind, pat in PHONE_PATTERNS:
+        for m in pat.finditer(line):
+            if any(m.start() < e and m.end() > s for s, e in phone_spans):
+                continue  # ueberlappt bereits gefundene Nummer (z. B. 0049 von beiden Mustern)
+            phone_spans.append((m.start(), m.end()))
+            out.append((kind, m.group(0)))
     for m in IBAN_RE.finditer(line):
         out.append(("iban-de", m.group(0)))
     for m in CC_RE.finditer(line):
