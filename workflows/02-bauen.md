@@ -12,12 +12,17 @@
 4. **Drift-Pausegate:** sinkt Test/Gate ggü. Vorrunde → anhalten, Ursache nennen, eskalieren.
 5. `.werkbank/STATE.md` nach jeder Runde aktualisieren.
 
+## Motor (verdrahtet)
+```bash
+ralph/ralph-loop.sh --build-cmd 'claude -p "<Story bauen; bei fertig <promise>GRUEN</promise>>"' \
+  --target . --max-iterations 15
+```
+Stoppt erst bei **GRUEN + promise**; HALT bei max-iterations oder **Drift** (`ralph/ralph_decide.py`).
+Modellwahl je Schritt über `orchestrator/tier_router.py` (impl→sonnet, review→opus, doku→haiku).
+
 ## Abbruch / Stopp
-- max-iterations erreicht ohne GRUEN ⇒ anhalten, Lage melden.
-- Block-Gate rot ⇒ kein Fortschritt, zurück in den Loop oder STOPP.
+- max-iterations / Drift ⇒ Loop hält an, Lage melden, Mensch entscheidet.
+- Block-Gate rot ⇒ kein Fortschritt.
 
 ## Übergabe an
 `workflows/03-pruefen.md`
-
-## Status
-Stub (T0). Loop-Mechanik wird ab T2 verdrahtet.

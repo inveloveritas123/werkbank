@@ -2,6 +2,15 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-08 — T9 (Substanz): BMAD-Anbindung + A-Gates (Spec-Integrität)
+- **A1/A2/A3** echt gemacht (`gates/checks/a_spec.py`, Runner-Flag `--spec-file`): A1 Pflichtfelder
+  gefüllt/platzhalterfrei · A2 Akzeptanzkriterien testbar · A3 Handoff PM→Architect erfüllt.
+  SKIP ohne SPEC. **9 → 12 Gates.** +6 Tests.
+- **Workflows 01–04** von Stubs zu echten Playbooks: 01 ruft BMAD-Skills (bmad-prd/-architecture/
+  -epics-and-stories) und erzeugt einen A-Gate-tauglichen SPEC; 02 nutzt den Ralph-Loop + Tier-Routing;
+  03 den vollen Gate-Lauf; 04 PR (kein Selbst-Merge). Agenten-Status-Zeilen ehrlich aktualisiert.
+- Damit ist die „Methode→Spec→Gate"-Kette real; 1 vollständiger BMAD-Durchstich bleibt als nächster Schritt.
+
 ## 2026-06-08 — T9 (Substanz): Echter Ralph-Loop (Autonomie-Motor)
 - `ralph/ralph_decide.py` — deterministische Entscheidungs-Engine (fertig/weiter/anhalten),
   inkl. **Drift-Pausegate** (rote Gates gestiegen → HALT) und max-iterations-Netz. Eine Quelle der Wahrheit.

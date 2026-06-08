@@ -27,4 +27,5 @@ Liest `.werkbank/STATE.md`, nimmt auf, wo der letzte Lauf stoppte (crash-sicher)
 - schreibt: `.werkbank/STATE.md` (nach jeder Runde)
 
 ## Status
-Stub (T0). Verdrahtung der Loop-Mechanik erfolgt ab T1 (Gate-Runner) / T2 (erster Golden-Run).
+Aktiv: Loop verdrahtet über `ralph/ralph-loop.sh` (Motor) + `ralph/ralph_decide.py` (Drift/max-iter)
++ `orchestrator/tier_router.py` (Modellwahl). Orchestrierung folgt den Workflows 01–04.

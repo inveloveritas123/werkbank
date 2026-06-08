@@ -19,10 +19,13 @@ sys.path.insert(0, HERE)
 
 from checks import (common, e1_eu_routing, e2_pii_scan, d3_secret_scan,  # noqa: E402
                     e3_tenant_isolation, e4_audit_log, e5_artefakte,
-                    c1_tests, f1_model_pinning, h4_changelog)
+                    c1_tests, f1_model_pinning, h4_changelog, a_spec)
 
 # Registry: Gate-ID -> Check-Funktion(target, exclude_dirs, exclude_abs, **ctx) -> CheckResult
 REGISTRY = {
+    "A1": a_spec.run_a1,
+    "A2": a_spec.run_a2,
+    "A3": a_spec.run_a3,
     "C1": c1_tests.run,
     "D3": d3_secret_scan.run,
     "E1": e1_eu_routing.run,
@@ -118,12 +121,12 @@ def _self_tooling_exclude(target):
 
 
 def run_gates(gates_path, target, report_path, exclude_dirs=None, privacy_dir=None,
-              privacy_required=None, audit_log=None, schema_path=None):
+              privacy_required=None, audit_log=None, schema_path=None, spec_file=None):
     spec = load_gates(gates_path)
     fail_fast = spec["meta"].get("fail_fast", True)
     exclude_abs = _self_tooling_exclude(target)
     ctx = {"privacy_dir": privacy_dir, "required": privacy_required,
-           "audit_log": audit_log, "schema_path": schema_path}
+           "audit_log": audit_log, "schema_path": schema_path, "spec_file": spec_file}
     results, stage_log = {}, []
     overall_red = False
 
@@ -206,6 +209,7 @@ def main(argv=None):
     ap.add_argument("--privacy-dir", default=None, help="Verzeichnis mit DSGVO-Artefakten (aktiviert E5)")
     ap.add_argument("--privacy-required", default=None,
                     help="kommagetrennte Soll-Artefaktliste fuer E5 (statt Default-Set)")
+    ap.add_argument("--spec-file", default=None, help="SPEC.md -> aktiviert A1/A2/A3 (Spec-Integrität)")
     ap.add_argument("--audit-log", default=None, help="Audit-Log (JSONL) -> aktiviert E3/E4")
     ap.add_argument("--audit-schema", default=None, help="Schema fuer E4 (Default: templates/AUDIT-LOG.schema.json)")
     ap.add_argument("--exclude", default="", help="zusaetzliche Verzeichnisnamen, kommagetrennt")
@@ -217,7 +221,7 @@ def main(argv=None):
     required = [x.strip() for x in a.privacy_required.split(",")] if a.privacy_required else None
     res = run_gates(a.gates, a.target, a.report, exclude_dirs=exclude,
                     privacy_dir=a.privacy_dir, privacy_required=required,
-                    audit_log=a.audit_log, schema_path=a.audit_schema)
+                    audit_log=a.audit_log, schema_path=a.audit_schema, spec_file=a.spec_file)
     print("Gate-Runner: %s  (Report: %s)" % (res["overall"], a.report))
     if a.ci and res["overall"] == "ROT":
         return 1

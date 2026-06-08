@@ -12,8 +12,14 @@
 ## Done-Vorbedingung
 Score ≥ 85, 0 rote Block-Gates, 0 Secrets, 0 kritische Security-/DSGVO-Funde, keine Regression.
 
+## Lauf (verdrahtet)
+```bash
+python3 gates/runner.py --target . --report GATE-REPORT.md \
+  --spec-file templates/SPEC.md \
+  --privacy-dir <artefakte> --privacy-required <liste> \
+  --audit-log <evidence/audit.log>     # E3/E4 falls Multi-Tenant
+```
+Implementiert: A1/A2/A3 · C1 · D3 · E1/E2/E3/E4/E5 · F1 · H4. Rest SKIP (ehrlich).
+
 ## Übergabe an
 `workflows/04-uebergeben.md`
-
-## Status
-Stub (T0). Runner real ab T1, Scoring real ab T2.

@@ -4,8 +4,9 @@
 > Maßstab: `WERKBANK-Blueprint.md` (§2 Autonomie, §3 Struktur) + BMAD + kiln-Muster.
 > Legende: ✅ implementiert · 🟡 teilweise/nur Doku · ❌ Platzhalter/nicht gebaut.
 
-> **Update T9 (2026-06-08):** C1 (Tests), F1 (Modell-Pinning), H4 (CHANGELOG) nachgebaut →
-> **9 von 41 Gates** implementiert. Die Lücke „93 Tests, aber kein Gate führt sie aus" ist geschlossen.
+> **Update T9 (2026-06-08):** C1/F1/H4 + **A1/A2/A3 (Spec-Integrität)** nachgebaut →
+> **12 von 41 Gates**. Echter **Ralph-Loop** (`ralph/`) + **Tier-Routing** + Workflows 01–04 als
+> echte Playbooks (BMAD-Skills benannt). Die Lücke „93 Tests, aber kein Gate" ist geschlossen.
 
 ## Kurzfassung (die unbequeme Wahrheit)
 - **WERKBANK (Governance)** ist echt gebaut: Gate-Runner + **9 von 41 Gates**
@@ -20,7 +21,7 @@
 | Soll (Blueprint §1/§2) | Ist | Status |
 |---|---|---|
 | BMAD installiert (Rollen/Skills) | core+bmm v6.8.0, 6 Rollen, 44 Skills | ✅ |
-| Konzipieren über BMAD: Brief→PRD→Architektur→Stories | nie ausgeführt; direkt gebaut | ❌ vergessen |
+| Konzipieren über BMAD: Brief→PRD→Architektur→Stories | **Workflow 01 ruft jetzt BMAD-Skills (bmad-prd / -architecture / -epics-and-stories); SPEC wird per A-Gates geprüft** | 🟡 verdrahtet (1 echter Durchstich steht aus) |
 | BMAD Scrum-Master/Dev-Story-Fluss | nicht genutzt | ❌ |
 | TEA (Test-Architect), Code-Review-Rolle | nicht genutzt | ❌ |
 | Handoff PM→Architect (Gate A3) | nie exerziert | ❌ |
@@ -40,7 +41,8 @@
 ## 3 · WERKBANK Gates — SOLL (41 in gates.yaml) vs IST (6)
 | Stufe | Gates | Status |
 |---|---|---|
-| A Spec-Integrität (A1–A4) | „vor jedem Bau" gefordert | ❌ kein Check |
+| A1 Pflichtfelder · A2 Akzeptanz testbar · A3 Handoff | implementiert (T9, `--spec-file`) | ✅ |
+| A4 Spec-Widersprüche (llm) | — | ❌ |
 | B Statisch (B1 Lint, B2 Typecheck, B3 Build) | — | ❌ |
 | C1 Unit-Tests (Suite läuft als Gate) | implementiert (T9) | ✅ |
 | C2 Coverage, C3 Integration, C4 E2E, C5/C6 | — | ❌ |
@@ -72,8 +74,8 @@
 | Pfad | Status |
 |---|---|
 | `gates/` Runner+Checks | ✅ |
-| `agents/*.md` (junge/waechter/kanzler/privacy-analyst) | 🟡 **deskriptive Stubs** — kein lauffähiger Orchestrator, keine `.claude/agents/`-Definitionen |
-| `workflows/01–04` | 🟡 **Stubs** („Aktiv ab T2" — nie verdrahtet) |
+| `agents/*.md` (junge/waechter/kanzler/privacy-analyst) | 🟡 Rollen-Doku mit `model:`-Tier; verweisen auf reale Tools (ralph/, gates/, tier_router). Kein eigener Daemon — Orchestrator = die Claude-Code-Session |
+| `workflows/01–04` | ✅ **echte Playbooks** (BMAD-Skills, Ralph-Loop, Gate-Lauf, PR) — keine Stubs mehr |
 | `templates/` | ✅ Vorlagen |
 | `privacy/` Artefakt-Vorlagen | ✅ |
 | `.werkbank/STATE.md`,`BENCHMARK.md` | ✅ (manuell gepflegt) |

@@ -10,6 +10,4 @@
 
 ## Sicherung
 - Kein Push bei rotem Block-Gate. Kein Selbst-Merge. Rollback bei Regression.
-
-## Status
-Stub (T0). Aktiv ab T2.
+- Geltung beachten: intern, ohne echte Kundendaten (siehe `docs/produktivfreigabe/`).

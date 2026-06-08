@@ -22,4 +22,4 @@ model: opus
 - meldet an: `agents/waechter.md` (Artefakt-Vollständigkeit für E5/E6)
 
 ## Status
-Stub (T0). Aktive Artefakt-Erzeugung ab T2 (Golden Project 01).
+Aktiv: Artefakt-Erzeugung in GP01–GP06 erprobt; Vollständigkeit per Gate **E5** geprüft.
