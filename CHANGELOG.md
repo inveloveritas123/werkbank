@@ -2,6 +2,16 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-09 — Autonomer 01→04-Pipeline-Runner (#4) + BMAD-Einbindung (#5)
+- `pipeline/run_pipeline.sh`: ein Kommando fährt **01 Konzipieren (BMAD)** → **02 Bauen (Ralph-Loop)**
+  → **03 Prüfen (alle Gates)** → **04 Übergeben** autonom. Gates als Orakel zwischen Phasen; rot →
+  feedback (Issues/Backlog) + Halt. Phasen-Kommandos pluggbar (real `claude -p`, Test-Fakes). +3 Tests.
+- **Phase 01 treibt BMAD** (Default-`--konzipieren-cmd` ruft bmad-prd/-architecture/-epics-and-stories;
+  A-Gates prüfen das SPEC). Installer kopiert `pipeline/`; in CLAUDE.md verdrahtet.
+- **bash-3.2-Portabilität gefixt:** `bootstrap.sh` leere-Array-Expansion unter `set -u` (Knopfdruck-Pfad
+  auf macOS-Default-bash hätte abgestürzt) → set-u-sicheres Idiom. Alle Skripte `bash -n`-sauber.
+- 186 Tests grün; Self-Lauf GRUEN.
+
 ## 2026-06-09 — Auto-Labeler (schließt Issue #5): Tier-Routing automatisch
 - `orchestrator/autolabel.py`: Aufgabentext → Label → Tier-Modell (`route()`), entfernt die manuelle
   Modellwahl; `--lint <agents-dir>` flaggt Agent-Defs ohne `model:`-Frontmatter. +9 Tests.

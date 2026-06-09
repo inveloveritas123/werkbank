@@ -12,6 +12,15 @@
 
 kiln ist ein **Muster**, kein installiertes Tool — es lebt in `.werkbank/STATE.md`, den `agents/`/`workflows/`-Definitionen und diesem Loop.
 
+## Autonomer Durchlauf — ein Kommando (01→04)
+```bash
+pipeline/run_pipeline.sh --project . --brief "<was gebaut werden soll>" \
+  --privacy-dir <artefakte> --privacy-required <liste> [--audit-log <f>] [--apply] [--gh-issues]
+```
+Fährt **01 Konzipieren (BMAD)** → **02 Bauen (Ralph-Loop)** → **03 Prüfen (alle Gates)** →
+**04 Übergeben** autonom; Gates sind das Orakel zwischen den Phasen; rot → feedback (Issues/Backlog) + Halt.
+Phasen-Kommandos `--konzipieren-cmd`/`--bauen-cmd` sind pluggbar (real `claude -p`, Test-Fakes). Exit 0/3/2.
+
 ## Der Arbeitsloop (BMAD → kiln → WERKBANK)
 1. **Konzipieren (BMAD):** Story/PRD/Architektur über die BMAD-Rollen (`workflows/01-konzipieren.md`).
 2. **Bauen (kiln/Ralph):** Test zuerst (RED → GREEN → REFACTOR). Pro Chunk **Paar-Review: Reviewer-Modell ≠ Implementer**. `STATE.md` nach jeder Runde. Drift-Pausegate: sinkt Test/Gate ggü. Vorrunde → anhalten.

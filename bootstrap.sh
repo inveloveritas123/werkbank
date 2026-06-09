@@ -39,7 +39,7 @@ fi
 
 # --- Zielprojekt einrichten ---
 echo "▶ Projekt einrichten"
-bash "$WERKBANK_HOME/werkbank-init.sh" "$TARGET" "${INIT_FLAGS[@]}"
+bash "$WERKBANK_HOME/werkbank-init.sh" "$TARGET" ${INIT_FLAGS[@]+"${INIT_FLAGS[@]}"}
 
 cat <<EOF
 
