@@ -1,4 +1,4 @@
-# GATE-REPORT — target=`.` — 2026-06-09T12:12:47Z
+# GATE-REPORT — target=`.` — 2026-06-09T13:48:00Z
 
 ## Zusammenfassung
 - **Ergebnis:** GRUEN
@@ -20,7 +20,7 @@
 | 2_static | D2 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 2_static | D3 | block,deterministic | PASS | kein Secret gefunden |
 | 2_static | D4 | warn,deterministic | SKIP | kein Check implementiert (offen) |
-| 3_tests | C1 | block,deterministic | PASS | Tests grün (183 Tests in gates/checks/tests) |
+| 3_tests | C1 | block,deterministic | PASS | Tests grün (186 Tests in gates/checks/tests) |
 | 3_tests | C2 | block,deterministic | SKIP | coverage nicht installiert |
 | 3_tests | C3 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 3_tests | C4 | block,deterministic | SKIP | kein Check implementiert (offen) |
@@ -43,7 +43,7 @@
 | 7_maintainability | H1 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 7_maintainability | H2 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 7_maintainability | H3 | warn,deterministic | SKIP | kein Check implementiert (offen) |
-| 7_maintainability | H4 | block,deterministic | PASS | CHANGELOG vorhanden, 26 Einträge, newest-top |
+| 7_maintainability | H4 | block,deterministic | PASS | CHANGELOG vorhanden, 28 Einträge, newest-top |
 | 7_maintainability | H6 | block,llm | SKIP | kein Check implementiert (offen) |
 | 8_judgement | I1 | block,llm | SKIP | kein Check implementiert (offen) |
 | 8_judgement | I2 | block,llm | SKIP | kein Check implementiert (offen) |

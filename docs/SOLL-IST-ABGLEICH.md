@@ -96,12 +96,18 @@
 |---|---|---|
 | Fehler automatisch → Backlog/Issues; Loop arbeitet sie ab | **`feedback/feedback.py`**: rote Gates → Gate-ID-deduplizierte Backlog-Aufgaben + optional GH-Issues; PASS → abhaken/schließen; **Egress-Redaction**; Dry-Run-Default. In Workflow 03 verdrahtet. 3-Experten-Review bestanden (2. Runde). | ✅ |
 
+## 5c · Autonome Pipeline + BMAD-Einbindung (neu)
+| Soll | Ist | Status |
+|---|---|---|
+| Ein Kommando 01→04 (autonomer Durchlauf) | **`pipeline/run_pipeline.sh`**: Konzipieren→Bauen→Prüfen→Übergeben; Gates als Orakel zwischen Phasen, Halt+Feedback bei rot; Fresh-Context (`claude -p`), pluggbare Phasen. 3 Tests (Happy/Halt-Spec/Halt-Gates). | ✅ |
+| BMAD kontinuierlich eingebunden | Phase 01 ruft BMAD-Skills (Default-`--konzipieren-cmd`); A-Gates prüfen das SPEC-Ergebnis | ✅ (im Pipeline-Lauf; echte LLM-Phase token-/CLI-abhängig) |
+
 ## 6 · Was das praktisch bedeutet
-Die **drei Schichten als „Einheit"** existieren als Gerüst + Doku (`CLAUDE.md`), aber:
-- **BMAD und kiln sind nicht automatisiert** — sie werden von der menschlich gestarteten Claude-Code-
-  Session (mir) „gespielt". Es gibt keinen selbstlaufenden Loop und keinen echten BMAD-Aufruf.
-- Der **Governance-Kern** (Gates E1–E5/D3 + Golden Projects + Installer + Tier-Policy) ist das, was
-  wirklich steht und trägt.
+Die **drei Schichten** sind jetzt über `pipeline/run_pipeline.sh` zu **einem autonomen Durchlauf**
+verbunden (BMAD=Phase 01, kiln/Ralph=Phase 02, Gates=Phase 03, Übergabe+Feedback=Phase 04).
+**Ehrlich:** die kreativen Phasen sind `claude -p`-Aufrufe (Token/CLI nötig); die **Orchestrierung**
+(Sequenz, Gate-Orakel, Halt, Feedback, Closure) ist deterministisch und getestet. Kein Dauer-Daemon —
+aber **ein Kommando** startet den ganzen Lauf.
 
 ## 7 · Empfohlene Schließreihenfolge (klein → großer Hebel)
 1. ~~**C-Gate**: Tests als Block-Gate~~ — **erledigt (T9, C1)**. Offen: C2 Coverage.
