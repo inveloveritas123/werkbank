@@ -32,7 +32,12 @@ Subagenten laufen NICHT automatisch auf dem günstigsten Modell — der Orchestr
 python3 orchestrator/tier_router.py <label>     # z. B. review -> opus, doku -> haiku, impl -> sonnet
 python3 orchestrator/tier_router.py --table     # ganze Policy
 ```
-Regel: Beim Agent-Spawn `model=` = `tier_router.route(<label>).model` setzen. Labels & Tiers:
+Regel: Beim Agent-Spawn `model=` automatisch bestimmen — **Auto-Labeler** statt manuell:
+```bash
+python3 orchestrator/autolabel.py "<aufgabentext>"   # -> "label  model" (z. B. review  opus)
+python3 orchestrator/autolabel.py --lint agents       # flaggt Agent-Defs ohne model:-Frontmatter
+```
+`route(task)` mappt Text → Label → Tier-Modell. Labels & Tiers:
 | Label | Tier/Modell |
 |---|---|
 | doku, summary, format, lint | **haiku** (günstig) |

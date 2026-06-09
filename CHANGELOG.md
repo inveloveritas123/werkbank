@@ -2,6 +2,13 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-09 — Auto-Labeler (schließt Issue #5): Tier-Routing automatisch
+- `orchestrator/autolabel.py`: Aufgabentext → Label → Tier-Modell (`route()`), entfernt die manuelle
+  Modellwahl; `--lint <agents-dir>` flaggt Agent-Defs ohne `model:`-Frontmatter. +9 Tests.
+- In CLAUDE.md/Workflow verdrahtet. agents/ alle gepinnt (Lint grün). Ehrlich: volle Erzwingung =
+  `model:`-Frontmatter je Agent; das Skript automatisiert + lintet, Claude-Code-Spawns kann es nicht abfangen.
+- Behebt den Audit-Befund aus dem Benchmark (Issue #5).
+
 ## 2026-06-09 — Self-CI (GitHub Action): Push → Gates → Issues automatisch
 - `.github/workflows/werkbank-gates.yml` erweitert: bei jedem Push/PR Gate-Lauf; auf `main` zusätzlich
   **Selbstheilung** via `feedback.py --gh-issues --close-resolved` (rote Gates → Issues `werkbank-gate`,
