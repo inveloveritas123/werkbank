@@ -2,6 +2,13 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-09 — Self-CI (GitHub Action): Push → Gates → Issues automatisch
+- `.github/workflows/werkbank-gates.yml` erweitert: bei jedem Push/PR Gate-Lauf; auf `main` zusätzlich
+  **Selbstheilung** via `feedback.py --gh-issues --close-resolved` (rote Gates → Issues `werkbank-gate`,
+  grüne → Issues schließen); Job schlägt bei roten Block-Gates fehl. `permissions: issues: write`,
+  Auth über `github.token`. Der Installer kopiert den Workflow → Selbstheilung in jedem Projekt.
+- Damit läuft der Heil-Loop auch serverseitig: rot → Issue → Fix → grün → Issue schließt sich.
+
 ## 2026-06-09 — Fresh-System-Bootstrap + README/Doku aktualisiert
 - `bootstrap.sh`: WERKBANK auf neuem System mit EINEM Befehl (`curl … | bash`) — klont + richtet
   Projekt ein, Prereq-Checks (git/python3 Pflicht; node/gh/gitleaks optional, degradiert sauber).

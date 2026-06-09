@@ -1,24 +1,43 @@
-# CI: Block-Gates müssen grün sein, bevor gemerged wird.
-# T0: Stub — der eigentliche Runner (gates/runner) wird in T1 implementiert.
+# WERKBANK Self-CI: Gate-Lauf -> Selbstheilung (rote Gates -> Issues, grüne -> schließen) -> Fail-on-red.
+# Block-Gates müssen grün sein, bevor gemerged wird. Issues werden nur auf main erstellt (kein Branch-Rauschen).
 name: werkbank-gates
 
 on:
+  push:
   pull_request:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
-  block-gates:
+  gates:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run WERKBANK gate runner (deterministic block-gates first)
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: WERKBANK Gate-Lauf (deterministisch, fail-fast)
+        id: gate
+        continue-on-error: true
+        run: python3 gates/runner.py --target . --report GATE-REPORT.md --ci
+
+      - name: Selbstheilung — rote Gates -> Issues, grüne -> schließen
+        if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          if [ -x gates/runner ]; then
-            ./gates/runner --ci
-          elif [ -f gates/runner.sh ]; then
-            bash gates/runner.sh --ci
-          else
-            echo "::warning::gates/runner noch nicht vorhanden (T1 ausstehend) — Stub-Lauf."
-            exit 0
+          if [ -f feedback/feedback.py ]; then
+            python3 feedback/feedback.py --report GATE-REPORT.md --backlog /tmp/backlog.md \
+              --apply --gh-issues --close-resolved || echo "::warning::feedback-Schritt übersprungen"
           fi
+
+      - name: Bei roten Block-Gates fehlschlagen
+        if: steps.gate.outcome == 'failure'
+        run: |
+          echo "::error::Block-Gates rot — siehe Issues (Label werkbank-gate) bzw. GATE-REPORT.md"
+          exit 1
