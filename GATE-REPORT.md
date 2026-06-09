@@ -1,4 +1,4 @@
-# GATE-REPORT — target=`.` — 2026-06-09T10:54:23Z
+# GATE-REPORT — target=`.` — 2026-06-09T12:12:47Z
 
 ## Zusammenfassung
 - **Ergebnis:** GRUEN
@@ -15,12 +15,12 @@
 | 1_spec | A4 | warn,llm | SKIP | kein Check implementiert (offen) |
 | 2_static | B1 | block,deterministic | SKIP | ruff nicht installiert |
 | 2_static | B2 | block,deterministic | SKIP | mypy nicht installiert |
-| 2_static | B3 | block,deterministic | PASS | Build/Compile sauber (27 .py) |
+| 2_static | B3 | block,deterministic | PASS | Build/Compile sauber (28 .py) |
 | 2_static | D1 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 2_static | D2 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 2_static | D3 | block,deterministic | PASS | kein Secret gefunden |
 | 2_static | D4 | warn,deterministic | SKIP | kein Check implementiert (offen) |
-| 3_tests | C1 | block,deterministic | PASS | Tests grün (178 Tests in gates/checks/tests) |
+| 3_tests | C1 | block,deterministic | PASS | Tests grün (183 Tests in gates/checks/tests) |
 | 3_tests | C2 | block,deterministic | SKIP | coverage nicht installiert |
 | 3_tests | C3 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 3_tests | C4 | block,deterministic | SKIP | kein Check implementiert (offen) |
