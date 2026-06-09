@@ -227,3 +227,9 @@ gekennzeichnet, Subprozessoren präzisiert (Sinch AB/Schweden statt vager „EU-
 - Implementiert: E1 (EU-Routing), E2 (PII), D3 (Secret, gitleaks+Built-in). Rest: SKIP (ehrlich).
 - **Tests:** 16/16 grün (Positiv clean-Fixture + Negativ je Verstoß zur Laufzeit synthetisiert).
 - **Repo-Gate-Lauf:** GRUEN, 0 Block-Gates rot, 0 Secrets, 0 PII. E1/E2/D3 = PASS.
+
+## 2026-06-09 — Benchmark-Lauf (umfangreich)
+- Programm: Multi-Tenant Einwilligungs-Portal. Gate-Abdeckung: **16 PASS** (alle implementierten det. Gates), 23 SKIP, GRUEN.
+- PDCA automatisch: E5 ROT→GRUEN, improved, keine Regression (ok). Harness-Bug (--ci) gefangen+gefixt.
+- Auditor: Agenten-Differenzierung 3/3 korrekt (doku→haiku, impl→sonnet, review→opus), token/kosten-sparsam. Befund→Issue #5.
+- Details: `benchmark/REPORT.md`.

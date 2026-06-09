@@ -1,26 +1,26 @@
-# GATE-REPORT — target=`.` — 2026-06-09T10:54:23Z
+# GATE-REPORT — target=`benchmark/project` — 2026-06-09T10:54:21Z
 
 ## Zusammenfassung
 - **Ergebnis:** GRUEN
 - **Block-Gates rot:** 0
 - **Warn-Gates:** 0
-- **Gates ohne Check (offen, SKIP):** 32
+- **Gates ohne Check (offen, SKIP):** 23
 
 ## Detail je Stufe
 | Stufe | Gate | Flags | Ergebnis | Notiz |
 |---|---|---|---|---|
-| 1_spec | A1 | block,deterministic | SKIP | kein SPEC (nicht anwendbar) |
-| 1_spec | A2 | block,deterministic | SKIP | kein SPEC (nicht anwendbar) |
-| 1_spec | A3 | block,deterministic | SKIP | kein SPEC (nicht anwendbar) |
+| 1_spec | A1 | block,deterministic | PASS | alle 6 Spec-Pflichtfelder gefüllt |
+| 1_spec | A2 | block,deterministic | PASS | 4 testbare Akzeptanzkriterien |
+| 1_spec | A3 | block,deterministic | PASS | Handoff PM→Architect erfüllt |
 | 1_spec | A4 | warn,llm | SKIP | kein Check implementiert (offen) |
 | 2_static | B1 | block,deterministic | SKIP | ruff nicht installiert |
 | 2_static | B2 | block,deterministic | SKIP | mypy nicht installiert |
-| 2_static | B3 | block,deterministic | PASS | Build/Compile sauber (27 .py) |
+| 2_static | B3 | block,deterministic | PASS | Build/Compile sauber (2 .py) |
 | 2_static | D1 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 2_static | D2 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 2_static | D3 | block,deterministic | PASS | kein Secret gefunden |
 | 2_static | D4 | warn,deterministic | SKIP | kein Check implementiert (offen) |
-| 3_tests | C1 | block,deterministic | PASS | Tests grün (178 Tests in gates/checks/tests) |
+| 3_tests | C1 | block,deterministic | PASS | Tests grün (4 Tests in tests) |
 | 3_tests | C2 | block,deterministic | SKIP | coverage nicht installiert |
 | 3_tests | C3 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 3_tests | C4 | block,deterministic | SKIP | kein Check implementiert (offen) |
@@ -28,12 +28,12 @@
 | 3_tests | C6 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 4_sovereignty_dsgvo | E1 | block,deterministic | PASS | kein Non-EU-Endpunkt/Region referenziert |
 | 4_sovereignty_dsgvo | E2 | block,deterministic | PASS | keine Klartext-PII in Logs/Prompts/Outputs |
-| 4_sovereignty_dsgvo | E3 | block,deterministic | SKIP | kein Audit-Log (nicht anwendbar) |
-| 4_sovereignty_dsgvo | E4 | block,deterministic | SKIP | kein Audit-Log (nicht anwendbar) |
-| 4_sovereignty_dsgvo | E5 | block,deterministic | SKIP | kein Privacy-Kontext (nicht anwendbar) |
-| 4_sovereignty_dsgvo | E6 | block,deterministic | SKIP | kein Privacy-Kontext (nicht anwendbar) |
-| 4_sovereignty_dsgvo | E7 | warn,deterministic | SKIP | kein Privacy-Kontext (nicht anwendbar) |
-| 4_sovereignty_dsgvo | E8 | warn,llm | SKIP | kein Privacy-Kontext (nicht anwendbar) |
+| 4_sovereignty_dsgvo | E3 | block,deterministic | PASS | keine Tenant-übergreifenden Zugriffe (Audit-Log) |
+| 4_sovereignty_dsgvo | E4 | block,deterministic | PASS | Audit-Log schema-konform (4 Einträge) |
+| 4_sovereignty_dsgvo | E5 | block,deterministic | PASS | alle 7 Soll-Artefakte vorhanden, gefuellt, platzhalterfrei, EU |
+| 4_sovereignty_dsgvo | E6 | block,deterministic | PASS | Screening: kein hohes Risiko — keine DSFA erforderlich |
+| 4_sovereignty_dsgvo | E7 | warn,deterministic | PASS | keine Drittlandübermittlung (EU/EWR-only) |
+| 4_sovereignty_dsgvo | E8 | warn,llm | PASS | Datenminimierung dokumentiert; Art-9-Disziplin ok |
 | 5_integrity | F1 | block,deterministic | PASS | kein 'latest' — Modelle gepinnt |
 | 5_integrity | F2 | block,deterministic | SKIP | kein Check implementiert (offen) |
 | 5_integrity | F3 | warn,deterministic | SKIP | kein Check implementiert (offen) |
@@ -43,7 +43,7 @@
 | 7_maintainability | H1 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 7_maintainability | H2 | warn,deterministic | SKIP | kein Check implementiert (offen) |
 | 7_maintainability | H3 | warn,deterministic | SKIP | kein Check implementiert (offen) |
-| 7_maintainability | H4 | block,deterministic | PASS | CHANGELOG vorhanden, 26 Einträge, newest-top |
+| 7_maintainability | H4 | block,deterministic | PASS | CHANGELOG vorhanden, 1 Einträge, newest-top |
 | 7_maintainability | H6 | block,llm | SKIP | kein Check implementiert (offen) |
 | 8_judgement | I1 | block,llm | SKIP | kein Check implementiert (offen) |
 | 8_judgement | I2 | block,llm | SKIP | kein Check implementiert (offen) |

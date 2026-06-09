@@ -1,0 +1,4 @@
+{"timestamp": "2026-06-09T08:00:00+00:00", "actor": "user:u-a", "action": "create", "resource": "tenant:tenantA/contact:074ee8f71784402dbebc148ed5c59466", "tenant_id": "tenantA", "result": "success", "routing_region": "EU", "pii_present": false}
+{"timestamp": "2026-06-09T08:00:00+00:00", "actor": "user:u-a", "action": "read", "resource": "tenant:tenantA/contact:074ee8f71784402dbebc148ed5c59466", "tenant_id": "tenantA", "result": "success", "routing_region": "EU", "pii_present": false}
+{"timestamp": "2026-06-09T08:00:00+00:00", "actor": "user:u-b", "action": "read", "resource": "tenant:tenantA/contact:074ee8f71784402dbebc148ed5c59466", "tenant_id": "tenantB", "result": "denied", "routing_region": "EU", "pii_present": false}
+{"timestamp": "2026-06-09T08:00:00+00:00", "actor": "user:u-a", "action": "update", "resource": "tenant:tenantA/contact:074ee8f71784402dbebc148ed5c59466", "tenant_id": "tenantA", "result": "success", "routing_region": "EU", "pii_present": false}
