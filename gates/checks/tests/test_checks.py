@@ -154,6 +154,7 @@ class RunnerEndToEnd(unittest.TestCase):
                 gates_path=os.path.join(REPO_ROOT, "gates", "gates.yaml"),
                 target=CLEAN,
                 report_path=report,
+                profile="static_min",  # Minimal-Profil: CLEAN erfuellt B3/D3/F1/H4 mit stdlib
             )
             self.assertEqual(result["overall"], "GRUEN")
             self.assertTrue(os.path.exists(report))

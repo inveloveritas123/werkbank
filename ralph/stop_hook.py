@@ -46,16 +46,20 @@ def _last_assistant_text(data):
 def _gates(cwd):
     report = os.path.join(cwd, "GATE-REPORT.md")
     runner = os.path.join(HERE, "..", "gates", "runner.py")
+    cmd = [sys.executable, runner, "--target", cwd, "--report", report, "--ci"]
+    if os.environ.get("WERKBANK_PROFILE"):
+        cmd += ["--profile", os.environ["WERKBANK_PROFILE"]]
+    if os.environ.get("WERKBANK_PFLICHTENHEFT"):
+        cmd += ["--pflichtenheft", os.environ["WERKBANK_PFLICHTENHEFT"]]
     try:
-        rc = subprocess.run([sys.executable, runner, "--target", cwd, "--report", report, "--ci"],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=600).returncode
+        rc = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=600).returncode
     except (subprocess.SubprocessError, OSError):
         return 0, 99
     red = 0
     try:
         with open(report, encoding="utf-8") as f:
             for ln in f:
-                if "Block-Gates rot:" in ln:
+                if "Pflicht-Gates ohne PASS:" in ln:
                     red = int("".join(c for c in ln if c.isdigit()) or "0")
                     break
     except OSError:

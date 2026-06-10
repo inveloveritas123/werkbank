@@ -13,6 +13,20 @@ FAIL = "FAIL"
 WARN = "WARN"
 SKIP = "SKIP"
 
+# SKIP-Gruende — unterscheiden, WARUM ein Gate nicht lief. Das entscheidet ueber
+# "hartes Gruen": ist ein Gate im Pflichtenheft des Profils gefordert, darf es NICHT
+# stillschweigend per SKIP gruen aussehen — egal aus welchem Grund (siehe gates/verdict.py).
+NOT_APPLICABLE = "not_applicable"    # Kontext fehlt legitim (kein Privacy-Kontext, kein SPEC)
+TOOL_MISSING = "tool_missing"        # Pflicht-Tool nicht installiert (ruff/mypy/coverage/bandit)
+NOT_IMPLEMENTED = "not_implemented"  # Gate deklariert, aber (noch) kein Checker hinterlegt
+
+# Menschlich lesbare Kurztexte fuer den Report.
+SKIP_REASON_LABEL = {
+    NOT_APPLICABLE: "nicht anwendbar (Kontext fehlt)",
+    TOOL_MISSING: "Pflicht-Tool nicht installiert",
+    NOT_IMPLEMENTED: "kein Check implementiert",
+}
+
 # Verzeichnisse, die Checks nie scannen (Build-/Vendor-/State-Artefakte).
 DEFAULT_EXCLUDE_DIRS = {
     ".git", "node_modules", "__pycache__", ".werkbank",
@@ -42,12 +56,19 @@ class CheckResult:
     status: str                     # PASS | FAIL | WARN | SKIP
     summary: str = ""
     findings: List[Finding] = field(default_factory=list)
+    skip_reason: Optional[str] = None  # nur bei status==SKIP gesetzt (NOT_APPLICABLE|TOOL_MISSING|NOT_IMPLEMENTED)
 
     def to_report_lines(self) -> List[str]:
         lines = ["- **%s** — %s — %s" % (self.gate, self.status, self.summary)]
         for f in self.findings:
             lines.append("    - `%s:%d` [%s] %s" % (f.file, f.line, f.kind, f.evidence))
         return lines
+
+
+def skipped(gate: str, summary: str, reason: str = NOT_APPLICABLE) -> "CheckResult":
+    """Konstruiert ein SKIP-Ergebnis MIT Grund. Checks sollen das statt eines nackten
+    CheckResult(..., SKIP, ...) nutzen, damit das Pflichtenheft den Grund auswerten kann."""
+    return CheckResult(gate, SKIP, summary, skip_reason=reason)
 
 
 def iter_files(target: str,

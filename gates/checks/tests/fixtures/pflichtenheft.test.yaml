@@ -1,0 +1,20 @@
+# Test-Pflichtenheft — HERMETISCH. Profile nutzen NUR stdlib-deterministische Gates,
+# damit die Mechanismus-Tests (Gruen propagiert, Rot haelt an) laufen, OHNE dass
+# ruff/mypy/coverage/bandit installiert sein muessen. Das gehoert bewusst NICHT ins
+# ausgelieferte pflichtenheft.yaml — dort sind die Tool-Gates Pflicht.
+
+default_profile: static_min
+
+profiles:
+
+  static_min:
+    desc: "Minimal — nur Build/Secret/Pinning/Changelog"
+    required: [B3, D3, F1, H4]
+
+  # DSGVO-Pflicht ohne externes Tooling: alle E-Gates sind stdlib-deterministisch und
+  # implementiert; A-Gates (Spec) und C1 (Tests, stdlib) ebenso. So testet die Pipeline
+  # den vollen DSGVO-Pfad hermetisch.
+  pii_stdlib:
+    desc: "DSGVO-Pfad hermetisch (Spec + Tests + EU/PII/Audit/Artefakte/DPIA), kein externes Tooling"
+    extends: static_min
+    required: [A1, A2, A3, C1, E1, E2, E4, E5, E6]

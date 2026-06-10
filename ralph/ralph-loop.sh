@@ -18,6 +18,7 @@ set -uo pipefail
 SELF="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 TARGET="."; MAXIT=15; PROMISE="<promise>GRUEN</promise>"; REPORT="GATE-REPORT.md"; BUILD_CMD=""
+PROFILE="${WERKBANK_PROFILE:-}"; PFLICHT="${WERKBANK_PFLICHTENHEFT:-}"
 while [ $# -gt 0 ]; do
   case "$1" in
     --build-cmd) BUILD_CMD="$2"; shift 2 ;;
@@ -25,6 +26,8 @@ while [ $# -gt 0 ]; do
     --max-iterations) MAXIT="$2"; shift 2 ;;
     --promise) PROMISE="$2"; shift 2 ;;
     --report) REPORT="$2"; shift 2 ;;
+    --profile) PROFILE="$2"; shift 2 ;;
+    --pflichtenheft) PFLICHT="$2"; shift 2 ;;
     *) echo "Unbekannte Option: $1" >&2; exit 2 ;;
   esac
 done
@@ -49,9 +52,12 @@ while :; do
   if printf '%s' "$build_out" | grep -qF "$PROMISE"; then promise=1; else promise=0; fi
 
   # 2) Gates
-  if python3 "$SELF/../gates/runner.py" --target "$TARGET" --report "$REPORT" --ci >/dev/null 2>&1; then
+  gate_args=(--target "$TARGET" --report "$REPORT" --ci)
+  [ -n "$PROFILE" ] && gate_args+=(--profile "$PROFILE")
+  [ -n "$PFLICHT" ] && gate_args+=(--pflichtenheft "$PFLICHT")
+  if python3 "$SELF/../gates/runner.py" "${gate_args[@]}" >/dev/null 2>&1; then
     gates_ok=1; else gates_ok=0; fi
-  cur_red="$(grep -m1 'Block-Gates rot:' "$REPORT" 2>/dev/null | grep -oE '[0-9]+' | head -1)"; cur_red="${cur_red:-0}"
+  cur_red="$(grep -m1 'Pflicht-Gates ohne PASS:' "$REPORT" 2>/dev/null | grep -oE '[0-9]+' | head -1)"; cur_red="${cur_red:-0}"
 
   # 3) Entscheidung (eine Quelle der Wahrheit)
   dec="$(python3 "$SELF/ralph_decide.py" "$gates_ok" "$promise" "$iter" "$MAXIT" "$prev_red" "$cur_red")"

@@ -17,10 +17,17 @@ LOOP = os.path.join(RALPH, "ralph-loop.sh")
 HOOK = os.path.join(RALPH, "stop_hook.py")
 
 
+# Hermetisches Profil: static_min = [B3, D3, F1, H4] — alles stdlib, kein ruff/mypy/coverage.
+ENV = dict(os.environ, WERKBANK_PROFILE="static_min")
+
+
 def _clean_target(d):
-    # Gate-sauberes Mini-Projekt: CHANGELOG (H4), keine Secrets/PII, keine Tests (C1 SKIP).
+    # Gate-sauberes Mini-Projekt fuer static_min: CHANGELOG (H4), kompilierbarer Code (B3),
+    # keine Secrets (D3), keine 'latest'-Modelle (F1).
     with open(os.path.join(d, "CHANGELOG.md"), "w", encoding="utf-8") as f:
         f.write("# CHANGELOG\n\n## 2026-06-08 — init\n- x\n")
+    with open(os.path.join(d, "app.py"), "w", encoding="utf-8") as f:
+        f.write("def main():\n    return 0\n")
 
 
 class Engine(unittest.TestCase):
@@ -46,7 +53,7 @@ class BashMotor(unittest.TestCase):
         return subprocess.run(
             ["bash", LOOP, "--target", target, "--build-cmd", build_cmd,
              "--max-iterations", str(maxit), "--report", os.path.join(target, "GATE-REPORT.md")],
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=120)
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=120, env=ENV)
 
     def test_stops_on_green_plus_promise(self):
         with tempfile.TemporaryDirectory() as d:
@@ -73,7 +80,7 @@ class BashMotor(unittest.TestCase):
 class StopHook(unittest.TestCase):
     def _hook(self, payload):
         return subprocess.run([sys.executable, HOOK], input=json.dumps(payload),
-                              stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=120)
+                              stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=120, env=ENV)
 
     def test_allows_stop_when_green_and_promise(self):
         with tempfile.TemporaryDirectory() as d:

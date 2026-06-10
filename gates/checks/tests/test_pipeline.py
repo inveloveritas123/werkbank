@@ -10,6 +10,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 PIPELINE = os.path.join(REPO_ROOT, "pipeline", "run_pipeline.sh")
 BENCH = os.path.join(REPO_ROOT, "benchmark", "project")
+# Hermetisches Test-Pflichtenheft: pii_stdlib (Abnahme, alle E-Gates stdlib) + static_min (Bau).
+PFLICHT = os.path.join(HERE, "fixtures", "pflichtenheft.test.yaml")
 REQ = ("DATA-FLOW.md,PROCESSING-REGISTER.md,LAWFUL-BASIS.md,DPIA-SCREENING.md,"
        "TOMs.md,PROCESSORS-SUBPROCESSORS.md,RETENTION-DELETION.md")
 
@@ -24,7 +26,8 @@ def _run(project, konz, bauen, maxit=3):
         ["bash", PIPELINE, "--project", project,
          "--konzipieren-cmd", konz, "--bauen-cmd", bauen, "--max-iterations", str(maxit),
          "--privacy-dir", os.path.join(project, "artefakte"), "--privacy-required", REQ,
-         "--audit-log", os.path.join(project, "evidence", "audit.log")],
+         "--audit-log", os.path.join(project, "evidence", "audit.log"),
+         "--pflichtenheft", PFLICHT, "--profile", "pii_stdlib", "--build-profile", "static_min"],
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=180)
 
 
