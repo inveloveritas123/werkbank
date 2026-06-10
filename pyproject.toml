@@ -1,0 +1,75 @@
+# Konfiguration der Dev-Werkzeuge (Lint, Typen, Coverage, SAST).
+#
+# Bewusst KEIN [build-system] / keine Packaging-Metadaten: WERKBANK ist kein
+# pip-Paket, sondern ein Framework/Toolchain. Diese Datei buendelt nur die
+# Tool-Konfiguration, damit `make check` und die CI deterministisch laufen.
+# Das Framework selbst bleibt stdlib-only; diese Tools sind dev-only.
+
+[tool.ruff]
+target-version = "py39"
+line-length = 120
+src = ["gates"]
+exclude = [
+    ".git",
+    "__pycache__",
+    "gates/checks/tests/fixtures",
+    "golden-projects",
+    "benchmark/project",
+    "examples",
+]
+
+[tool.ruff.lint]
+# Schlanke, aber sinnvolle Auswahl — auf einer realen Codebasis erreichbar gruen:
+#   E/W  pycodestyle (Stil), F pyflakes (echte Fehler), I Import-Sortierung,
+#   UP   pyupgrade (moderne py39-Syntax), B flake8-bugbear (Fallstricke).
+select = ["E", "F", "W", "I", "UP", "B"]
+# Rauschen vermeiden: E501 ist durch line-length abgedeckt; B008 (Default-Call)
+# und E203 (Slice-Whitespace, kollidiert mit Formatter) sind nicht aussagekraeftig.
+# UP031: Der Code nutzt durchgaengig und bewusst %-Formatierung (konsistenter Stil,
+#        passt zum stdlib-only-Ethos) — eine halbe f-string-Migration waere Laerm.
+# UP006/UP035: list[...]-Annotationen zur LAUFZEIT (dataclass-Felder) brauchen auf
+#        py3.9 typing.List; die pep585-Form wuerde dort brechen.
+ignore = ["E501", "E203", "B008", "UP031", "UP006", "UP035"]
+
+[tool.mypy]
+# Bewusst LENIENT: dieses Gate soll auf der bestehenden, weitgehend untypisierten
+# Codebasis gruen sein — kein Typisierungs-Kreuzzug, sondern ehrliche Basis-Pruefung.
+python_version = "3.9"
+ignore_missing_imports = true
+warn_unused_ignores = true
+# strict-Mode bewusst AUS (kein disallow_untyped_defs, kein no_implicit_optional-Zwang).
+exclude = [
+    "gates/checks/tests/fixtures",
+    "golden-projects",
+    "benchmark/project",
+    "examples",
+]
+
+[tool.coverage.run]
+source = ["gates"]
+omit = [
+    "gates/checks/tests/*",
+    "*/tests/*",
+    "*/fixtures/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "raise AssertionError",
+]
+
+[tool.bandit]
+# Tests/Fixtures/Beispiel-Projekte enthalten absichtlich "unsichere" Muster
+# (z. B. Secret-Fixtures fuer D3) und sind kein produktiver Framework-Code.
+exclude_dirs = [
+    "gates/checks/tests",
+    "golden-projects",
+    "benchmark/project",
+    "examples",
+]

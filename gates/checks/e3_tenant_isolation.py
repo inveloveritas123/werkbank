@@ -21,7 +21,7 @@ _OWNER_RE = re.compile(r"tenant:([^/\s]+)")
 
 def run(target, exclude_dirs=None, exclude_abs=None, audit_log=None, **_):
     if not audit_log or not os.path.isfile(audit_log):
-        return common.CheckResult(GATE, common.SKIP, "kein Audit-Log (nicht anwendbar)")
+        return common.skipped(GATE, "kein Audit-Log (nicht anwendbar)", common.NOT_APPLICABLE)
     findings = []
     with open(audit_log, encoding="utf-8") as f:
         for ln, line in enumerate(f, 1):

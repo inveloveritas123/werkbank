@@ -28,7 +28,7 @@ def _art9_present(text):
 
 def run(target, exclude_dirs=None, exclude_abs=None, privacy_dir=None, **_):
     if not privacy_dir:
-        return common.CheckResult(GATE, common.SKIP, "kein Privacy-Kontext (nicht anwendbar)")
+        return common.skipped(GATE, "kein Privacy-Kontext (nicht anwendbar)", common.NOT_APPLICABLE)
     parts = []
     for name in sorted(os.listdir(privacy_dir)) if os.path.isdir(privacy_dir) else []:
         if name.lower().endswith(".md"):
@@ -38,7 +38,7 @@ def run(target, exclude_dirs=None, exclude_abs=None, privacy_dir=None, **_):
             except OSError:
                 pass
     if not parts:
-        return common.CheckResult(GATE, common.SKIP, "keine Artefakte zum Prüfen")
+        return common.skipped(GATE, "keine Artefakte zum Prüfen", common.NOT_APPLICABLE)
     text = "\n".join(parts)
     findings = []
     if _art9_present(text) and not os.path.isfile(os.path.join(privacy_dir, "DPIA.md")):

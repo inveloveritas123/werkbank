@@ -1,12 +1,15 @@
-# WERKBANK Self-CI: Gate-Lauf -> Selbstheilung (rote Gates -> Issues, grüne -> schließen) -> Fail-on-red.
-# Block-Gates müssen grün sein, bevor gemerged wird. Issues werden nur auf main erstellt (kein Branch-Rauschen).
+# WERKBANK Self-CI — "hartes Gruen" real gemacht.
+#
+# Die Dev-Tools werden installiert und MUESSEN durchlaufen (ruff, mypy, bandit, Tests),
+# danach der harte Gate-Lauf gegen das Profil `werkbank_self`. Geht nur GRUEN, wenn
+# jedes Pflicht-Gate aktiv besteht — ein SKIP (Tool fehlt / kein Check / kein Kontext)
+# zaehlt als UNGEDECKT und faerbt ROT. Auf push (main) heilt der Feedback-Schritt
+# rote Gates in Issues; der Report wird als Artefakt hochgeladen.
 name: werkbank-gates
 
 on:
   push:
   pull_request:
-    branches: [main]
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,27 +20,44 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: "3.9"
 
-      - name: WERKBANK Gate-Lauf (deterministisch, fail-fast)
+      - name: Dev-Tools installieren
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Typen (mypy)
+        run: mypy gates
+
+      - name: SAST (bandit)
+        run: bandit -r gates -q
+
+      - name: Tests (unittest)
+        run: python3 -m unittest discover -s gates/checks/tests -p "test_*.py"
+
+      - name: WERKBANK Gate-Lauf — hartes Gruen (Profil werkbank_self)
         id: gate
-        continue-on-error: true
-        run: python3 gates/runner.py --target . --report GATE-REPORT.md --ci
+        run: python3 gates/runner.py --target . --report GATE-REPORT.md --profile werkbank_self --ci
 
-      - name: Selbstheilung — rote Gates -> Issues, grüne -> schließen
+      - name: Gate-Report als Artefakt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-report
+          path: GATE-REPORT.md
+          if-no-files-found: ignore
+
+      - name: Selbstheilung — rote Gates -> Issues, gruene -> schliessen
         if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           if [ -f feedback/feedback.py ]; then
             python3 feedback/feedback.py --report GATE-REPORT.md --backlog /tmp/backlog.md \
-              --apply --gh-issues --close-resolved || echo "::warning::feedback-Schritt übersprungen"
+              --apply --gh-issues --close-resolved || echo "::warning::feedback-Schritt uebersprungen"
           fi
-
-      - name: Bei roten Block-Gates fehlschlagen
-        if: steps.gate.outcome == 'failure'
-        run: |
-          echo "::error::Block-Gates rot — siehe Issues (Label werkbank-gate) bzw. GATE-REPORT.md"
-          exit 1

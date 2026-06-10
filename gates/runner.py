@@ -17,11 +17,26 @@ from datetime import datetime, timezone
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-from checks import (common, e1_eu_routing, e2_pii_scan, d3_secret_scan,  # noqa: E402
-                    e3_tenant_isolation, e4_audit_log, e5_artefakte, e6_dpia, e7_third_country,
-                    e8_minimization, c1_tests, c2_coverage, f1_model_pinning, h4_changelog, a_spec, b_gates,
-                    d1_sast)
 import verdict  # noqa: E402
+from checks import (  # noqa: E402
+    a_spec,
+    b_gates,
+    c1_tests,
+    c2_coverage,
+    common,
+    d1_sast,
+    d3_secret_scan,
+    e1_eu_routing,
+    e2_pii_scan,
+    e3_tenant_isolation,
+    e4_audit_log,
+    e5_artefakte,
+    e6_dpia,
+    e7_third_country,
+    e8_minimization,
+    f1_model_pinning,
+    h4_changelog,
+)
 
 # Registry: Gate-ID -> Check-Funktion(target, exclude_dirs, exclude_abs, **ctx) -> CheckResult
 REGISTRY = {
@@ -57,7 +72,7 @@ def _scalar(v):
     if q:
         return q.group(1)
     # ungequotet: Inline-Kommentar ' # ...' abschneiden
-    v = re.split(r"\s+#", v, 1)[0].strip()
+    v = re.split(r"\s+#", v, maxsplit=1)[0].strip()
     if v in ("true", "false"):
         return v == "true"
     if re.fullmatch(r"-?\d+", v):
@@ -138,6 +153,15 @@ def run_gates(gates_path, target, report_path, exclude_dirs=None, privacy_dir=No
     exclude_abs = _self_tooling_exclude(target)
     ctx = {"privacy_dir": privacy_dir, "required": privacy_required,
            "audit_log": audit_log, "schema_path": schema_path, "spec_file": spec_file}
+
+    # Pflichtmenge VOR der Schleife bestimmen: fail_fast darf nur bei einem PFLICHT-Gate
+    # abbrechen. Ein nicht-gefordertes block-Gate (z. B. ruff in einem schmalen Profil)
+    # darf die Ausfuehrung der geforderten Gates NICHT verhindern (sonst falsches "ungedeckt").
+    pflicht = verdict.load_pflichtenheft(pflichtenheft_path or verdict.DEFAULT_PATH)
+    profile_name = verdict.select_profile(pflicht, profile)
+    required = verdict.resolve_required(pflicht["profiles"], profile_name)
+    required_set = set(required)
+
     results, stage_log = {}, []
     block_fail_gates = []
 
@@ -157,16 +181,14 @@ def run_gates(gates_path, target, report_path, exclude_dirs=None, privacy_dir=No
             rows.append((g, res))
             if is_block and res.status == common.FAIL:
                 block_fail_gates.append(gid)
-                stage_aborted = True
-                break
+                if gid in required_set:        # nur ein PFLICHT-Block-FAIL bricht ab
+                    stage_aborted = True
+                    break
         stage_log.append((st, rows, stage_aborted))
         if stage_aborted and fail_fast:
             break
 
     # Hartes Verdikt aus dem Pflichtenheft (nicht mehr "kein block-FAIL => gruen").
-    pflicht = verdict.load_pflichtenheft(pflichtenheft_path or verdict.DEFAULT_PATH)
-    profile_name = verdict.select_profile(pflicht, profile)
-    required = verdict.resolve_required(pflicht["profiles"], profile_name)
     vd = verdict.compute_verdict(required, results, block_fail_gates)
     overall = vd["verdict"]
     profile_desc = pflicht["profiles"].get(profile_name, {}).get("desc", "")
@@ -193,23 +215,28 @@ def _write_report(path, spec, stage_log, overall, target, vd, profile_name, prof
     out.append("- **Pflicht-Gates UNGEDECKT (nicht geprueft):** %d" % len(vd["uncovered"]))
     # Stabile maschinenlesbare Zeile (Ralph-Drift-Gate / stop-hook lesen genau diese):
     out.append("- **Pflicht-Gates ohne PASS:** %d" % (len(vd["violated"]) + len(vd["uncovered"])))
-    if vd["extra_block_fails"]:
-        out.append("- **Block-Gates rot ausserhalb der Pflicht:** %d" % len(vd["extra_block_fails"]))
     out.append("- **Optionale Befunde (warn):** %d" % n_warn)
+    if vd["extra_block_fails"]:
+        out.append("- **Hinweis — Block-Gates rot ausserhalb des Profils (nicht blockend):** %d" % len(vd["extra_block_fails"]))
     out.append("")
     out.append("> **Hartes Gruen:** GRUEN gilt NUR, wenn alle %d Pflicht-Gates aktiv bestanden sind. "
                "SKIP eines Pflicht-Gates (Tool fehlt / kein Check / kein Kontext) ⇒ UNGEDECKT ⇒ ROT." % n_req)
     out.append("")
 
-    if vd["violated"] or vd["uncovered"] or vd["extra_block_fails"]:
+    if vd["violated"] or vd["uncovered"]:
         out.append("## Warum ROT — Pflicht-Gates ohne PASS")
         for v in vd["violated"]:
             out.append("- **%s VERLETZT** — %s" % (v["gate"], v["summary"]))
         for u in vd["uncovered"]:
             label = common.SKIP_REASON_LABEL.get(u["reason"], u["reason"])
             out.append("- **%s UNGEDECKT** (%s) — %s" % (u["gate"], label, u["summary"]))
+        out.append("")
+
+    if vd["extra_block_fails"]:
+        out.append("## Hinweis — rote Block-Gates ausserhalb des Profils (beratend, nicht verdikt-relevant)")
+        out.append("> Diese Gates sind nicht Teil von `%s`. Fuer harte Pflicht ins Profil aufnehmen." % profile_name)
         for e in vd["extra_block_fails"]:
-            out.append("- **%s ROT** (Block-Gate ausserhalb der Pflicht) — %s" % (e["gate"], e["summary"]))
+            out.append("- **%s ROT** — %s" % (e["gate"], e["summary"]))
         out.append("")
 
     out.append("## Detail je Stufe (Flags ★pflicht = Pflicht-Gate dieses Profils)")
@@ -224,8 +251,8 @@ def _write_report(path, spec, stage_log, overall, target, vd, profile_name, prof
             out.append("| %s | — | — | ABBRUCH | Stufe nach Block-FAIL abgebrochen (fail_fast) |" % st["stage"])
     # Findings (redigiert)
     findings_lines = []
-    for st, rows, _ in stage_log:
-        for g, r in rows:
+    for _st, rows, _ in stage_log:
+        for _g, r in rows:
             if r.findings:
                 findings_lines.extend(r.to_report_lines())
     if findings_lines:

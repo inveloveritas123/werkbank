@@ -113,7 +113,7 @@ def iter_files(target: str,
 def read_lines(abs_path: str):
     """Robustes Zeilenlesen (Binaerdateien werden uebersprungen)."""
     try:
-        with open(abs_path, "r", encoding="utf-8", errors="strict") as f:
+        with open(abs_path, encoding="utf-8", errors="strict") as f:
             return f.readlines()
     except (UnicodeDecodeError, OSError):
         return None

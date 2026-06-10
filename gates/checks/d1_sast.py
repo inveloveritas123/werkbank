@@ -36,7 +36,7 @@ def run(target, exclude_dirs=None, exclude_abs=None, **_):
         return common.skipped(GATE, "bandit nicht installiert", common.TOOL_MISSING)
 
     excludes = sorted(exclude_dirs or common.DEFAULT_EXCLUDE_DIRS)
-    cmd = ["bandit", "-r", os.path.abspath(target), "-f", "json",
+    cmd = ["bandit", "-q", "-r", os.path.abspath(target), "-f", "json",
            "-x", ",".join(excludes)]
     try:
         proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
@@ -44,8 +44,12 @@ def run(target, exclude_dirs=None, exclude_abs=None, **_):
     except (subprocess.SubprocessError, OSError) as ex:
         return common.CheckResult(GATE, common.FAIL, "bandit-Lauf fehlgeschlagen: %s" % ex)
 
+    # bandit kann eine Fortschrittszeile vor das JSON auf stdout schreiben -> ab dem
+    # ersten '{' parsen (robust gegen Progress-Ausgabe).
+    raw = proc.stdout or ""
+    brace = raw.find("{")
     try:
-        data = json.loads(proc.stdout or "{}")
+        data = json.loads(raw[brace:] if brace >= 0 else "{}")
     except json.JSONDecodeError:
         return common.CheckResult(GATE, common.FAIL, "bandit-Ausgabe nicht lesbar")
 

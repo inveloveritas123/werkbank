@@ -15,9 +15,10 @@ ARTE = os.path.join(REPO_ROOT, "golden-projects", "05-breach-incident-runbook", 
 sys.path.insert(0, GATES_DIR)
 sys.path.insert(0, APP_DIR)
 
-from checks import common, e5_artefakte  # noqa: E402
 import breach_runbook as br  # noqa: E402
 import legal_claims as lc  # noqa: E402
+
+from checks import common, e5_artefakte  # noqa: E402
 
 INCIDENT = {
     "type": "Unbefugter Zugriff auf die Kundendatenbank",

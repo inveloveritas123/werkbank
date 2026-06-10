@@ -19,8 +19,9 @@ ARTE = os.path.join(REPO_ROOT, "golden-projects", "02-kontaktformular-dsar", "ar
 sys.path.insert(0, GATES_DIR)
 sys.path.insert(0, APP_DIR)
 
-from checks import common, e2_pii_scan, e5_artefakte  # noqa: E402
 import contact_service as cs  # noqa: E402
+
+from checks import common, e2_pii_scan, e5_artefakte  # noqa: E402
 
 
 class _Clock:

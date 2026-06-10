@@ -21,10 +21,10 @@ _SAFEGUARD = re.compile(r"(?i)\bSCC\b|Standardvertragsklausel|Angemessenheitsbes
 
 def run(target, exclude_dirs=None, exclude_abs=None, privacy_dir=None, **_):
     if not privacy_dir:
-        return common.CheckResult(GATE, common.SKIP, "kein Privacy-Kontext (nicht anwendbar)")
+        return common.skipped(GATE, "kein Privacy-Kontext (nicht anwendbar)", common.NOT_APPLICABLE)
     f = os.path.join(privacy_dir, "THIRD-COUNTRY-TRANSFERS.md")
     if not os.path.isfile(f):
-        return common.CheckResult(GATE, common.SKIP, "kein Drittland-Artefakt vorhanden")
+        return common.skipped(GATE, "kein Drittland-Artefakt vorhanden", common.NOT_APPLICABLE)
     with open(f, encoding="utf-8", errors="replace") as fh:
         text = fh.read()
     if not _TRANSFER_YES.search(text):

@@ -17,8 +17,9 @@ APP_DIR = os.path.join(REPO_ROOT, "golden-projects", "04-upload-pii-redaction", 
 sys.path.insert(0, GATES_DIR)
 sys.path.insert(0, APP_DIR)
 
-from checks import common, e2_pii_scan  # noqa: E402
 import pii_redactor as red  # noqa: E402
+
+from checks import common, e2_pii_scan  # noqa: E402
 
 # (Label, Text, rohe-PII-Teilstrings die verschwinden müssen)
 CORPUS = [

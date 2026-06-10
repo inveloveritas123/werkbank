@@ -64,7 +64,7 @@ def _placeholders_in(text):
 
 def run(target, exclude_dirs=None, exclude_abs=None, privacy_dir=None, required=None, **_):
     if not privacy_dir:
-        return common.CheckResult(GATE, common.SKIP, "kein Privacy-Kontext (nicht anwendbar)")
+        return common.skipped(GATE, "kein Privacy-Kontext (nicht anwendbar)", common.NOT_APPLICABLE)
     base = privacy_dir
     req = required or REQUIRED_DEFAULT
     findings = []

@@ -80,7 +80,7 @@ class BashMotor(unittest.TestCase):
 class StopHook(unittest.TestCase):
     def _hook(self, payload):
         return subprocess.run([sys.executable, HOOK], input=json.dumps(payload),
-                              stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=120, env=ENV)
+                              capture_output=True, text=True, timeout=120, env=ENV)
 
     def test_allows_stop_when_green_and_promise(self):
         with tempfile.TemporaryDirectory() as d:

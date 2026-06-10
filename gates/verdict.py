@@ -24,7 +24,7 @@ ROT = "ROT"
 def _unquote(v):
     v = v.strip()
     m = re.match(r'^"([^"]*)"', v) or re.match(r"^'([^']*)'", v)
-    return m.group(1) if m else re.split(r"\s+#", v, 1)[0].strip()
+    return m.group(1) if m else re.split(r"\s+#", v, maxsplit=1)[0].strip()
 
 
 def _parse_list(v):
@@ -124,11 +124,15 @@ def compute_verdict(required, results, block_fail_gates=()):
                 summary = r.get("summary", "")
             uncovered.append({"gate": gid, "reason": reason, "summary": summary})
 
+    # Block-Gates, die FAILen, aber NICHT zur Pflichtmenge des Profils gehoeren: rein
+    # beratend (im Report sichtbar), aber NICHT verdikt-relevant. Das Profil ist der
+    # Vertrag — wer ruff/mypy hart will, nimmt sie ins Profil (z. B. basis). So koennen
+    # Fremd-Befunde ein bewusst schmales Profil nicht aushebeln.
     req_set = set(required)
     extra_block_fails = [{"gate": g, "summary": results.get(g, {}).get("summary", "")}
                          for g in block_fail_gates if g not in req_set]
 
-    verdict = GRUEN if not (violated or uncovered or extra_block_fails) else ROT
+    verdict = GRUEN if not (violated or uncovered) else ROT
     return {
         "verdict": verdict,
         "required": list(required),

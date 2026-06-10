@@ -15,7 +15,6 @@ Default Dry-Run. CLI:
 """
 import argparse
 import json
-import os
 import re
 import subprocess
 import sys
@@ -127,7 +126,7 @@ def _gh_open_issues():
     try:
         r = subprocess.run(["gh", "issue", "list", "--label", LABEL, "--state", "open",
                             "--json", "title,number", "--limit", "300"],
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=60)
+                           capture_output=True, text=True, timeout=60)
         if r.returncode != 0:
             return [], False
         return json.loads(r.stdout or "[]"), True

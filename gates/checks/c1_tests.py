@@ -32,11 +32,11 @@ def _find_testdir(target):
 def run(target, **_):
     testdir, rel = _find_testdir(target)
     if not testdir:
-        return common.CheckResult(GATE, common.SKIP, "kein Testverzeichnis gefunden")
+        return common.skipped(GATE, "kein Testverzeichnis gefunden", common.NOT_APPLICABLE)
     try:
         proc = subprocess.run(
             [sys.executable, "-m", "unittest", "discover", "-s", os.path.abspath(testdir), "-p", "test_*.py"],
-            cwd=os.path.abspath(target), stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=600)
+            cwd=os.path.abspath(target), capture_output=True, text=True, timeout=600)
     except (subprocess.SubprocessError, OSError) as ex:
         return common.CheckResult(GATE, common.FAIL, "Testlauf nicht möglich: %s" % ex)
     out = (proc.stderr or "") + (proc.stdout or "")

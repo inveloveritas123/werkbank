@@ -39,6 +39,44 @@ cd werkbank
 Der Agent liest `BACKLOG.md`, arbeitet die Aufgaben ab, misst gegen `SCORING-MATRIX.md`
 und verbessert sich gemäß `SELF-IMPROVEMENT.md` — gegen die `golden-projects/`, nicht frei.
 
+## Entwicklung — Tests & Gates
+Das Framework selbst ist **stdlib-only** (keine Laufzeit-Abhängigkeiten). Die Dev-Tools
+(ruff, mypy, coverage, bandit, pytest) sind **dev-only** und in `requirements-dev.txt` gepinnt.
+
+```bash
+make dev-setup   # Dev-Tools installieren (pip install -r requirements-dev.txt)
+make check       # Pre-Push-Set: lint + type + sast + test (schnell, lokal)
+make all         # check + harter Gate-Lauf (Profil werkbank_self)
+```
+
+| Ziel | Bewirkt |
+|---|---|
+| `make lint`  | `ruff check .` |
+| `make type`  | `mypy gates` (lenient — bewusst kein strict-Mode) |
+| `make sast`  | `bandit -r gates -q` |
+| `make test`  | `python3 -m unittest discover -s gates/checks/tests -p "test_*.py"` |
+| `make cover` | `coverage run … && coverage report` |
+| `make gate`  | harter Gate-Lauf gegen `--profile werkbank_self` |
+
+### Pflichtenheft & hartes Grün
+`gates/pflichtenheft.yaml` bindet die abstrakten Gates an konkrete **Profile**
+(`static_min`, `basis`, `spec_driven`, `pii`, `multi_tenant`, `werkbank_self`).
+Ein Profil legt fest, welche Gates **aktiv bestanden** sein müssen.
+
+> **Hartes Grün:** GRÜN ⇔ *jedes* Pflicht-Gate des aktiven Profils hat Status **PASS**.
+> Ein Pflicht-Gate, das **FAIL** ist → VERLETZT → **ROT**.
+> Ein Pflicht-Gate, das **SKIP/WARN** ist (Tool fehlt, kein Check, kein Kontext) → UNGEDECKT → **ROT**.
+> "Nicht geprüft" ist nie grün — so kann kein Projekt grün aussehen, nur weil Pflichttools fehlen.
+
+Das Repo selbst läuft unter `werkbank_self` (Pflicht: B1 ruff · B2 mypy · B3 build ·
+C1 tests · C2 coverage · D1 SAST · D3 secret-scan · F1 model-pinning · H4 changelog).
+Es wird **nur** grün, wenn ruff/mypy/coverage/bandit installiert sind **und** durchlaufen.
+
+Profil wählen über `--profile`:
+```bash
+python3 gates/runner.py --target . --report GATE-REPORT.md --profile werkbank_self --ci
+```
+
 ## Inhalt
 | Pfad | Zweck |
 |---|---|
