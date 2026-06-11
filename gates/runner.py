@@ -22,6 +22,7 @@ from checks import (  # noqa: E402
     a_spec,
     b_gates,
     bmad_qa,
+    branch,
     c1_tests,
     c2_coverage,
     c3_integration,
@@ -99,6 +100,8 @@ REGISTRY = {
     "I3": bmad_qa.run_i3,
     "J1": freigabe.run_j1,
     "J2": freigabe.run_j2,
+    "K1": branch.run_k1,
+    "K2": branch.run_k2,
 }
 
 
@@ -198,7 +201,7 @@ def _framework_exclude(target):
 
 def run_gates(gates_path, target, report_path, exclude_dirs=None, privacy_dir=None,
               privacy_required=None, audit_log=None, schema_path=None, spec_file=None,
-              profile=None, pflichtenheft_path=None, fail_fast=None):
+              profile=None, pflichtenheft_path=None, fail_fast=None, branch=None):
     spec = load_gates(gates_path)
     # fail_fast: aus gates.yaml (Default true) — oder explizit ueberschrieben. False = voller
     # Audit (jedes Gate laeuft, nichts wird nach einem Block-FAIL abgebrochen).
@@ -210,7 +213,8 @@ def run_gates(gates_path, target, report_path, exclude_dirs=None, privacy_dir=No
     if fw:
         exclude_dirs = (set(exclude_dirs) if exclude_dirs else set(common.DEFAULT_EXCLUDE_DIRS)) | fw
     ctx = {"privacy_dir": privacy_dir, "required": privacy_required,
-           "audit_log": audit_log, "schema_path": schema_path, "spec_file": spec_file}
+           "audit_log": audit_log, "schema_path": schema_path, "spec_file": spec_file,
+           "branch": branch}
 
     # Pflichtmenge VOR der Schleife bestimmen: fail_fast darf nur bei einem PFLICHT-Gate
     # abbrechen. Ein nicht-gefordertes block-Gate (z. B. ruff in einem schmalen Profil)
@@ -340,6 +344,8 @@ def main(argv=None):
     ap.add_argument("--profile", default=None,
                     help="Pflichtenheft-Profil (basis|spec_driven|pii|multi_tenant|werkbank_self); Default aus pflichtenheft.yaml")
     ap.add_argument("--pflichtenheft", default=None, help="Pfad zu pflichtenheft.yaml (Default: gates/pflichtenheft.yaml)")
+    ap.add_argument("--branch", default=None,
+                    help="Branchen-Regelpaket aktivieren (z. B. finanzen) -> Gates K1/K2; sonst aus .werkbank/branch.txt")
     ap.add_argument("--no-fail-fast", action="store_true",
                     help="Voller Audit: jedes Gate laeuft, kein Abbruch nach Block-FAIL")
     ap.add_argument("--ci", action="store_true", help="Exit-Code 1 bei ROT (fuer CI)")
@@ -352,7 +358,7 @@ def main(argv=None):
                     privacy_dir=a.privacy_dir, privacy_required=required,
                     audit_log=a.audit_log, schema_path=a.audit_schema, spec_file=a.spec_file,
                     profile=a.profile, pflichtenheft_path=a.pflichtenheft,
-                    fail_fast=False if a.no_fail_fast else None)
+                    fail_fast=False if a.no_fail_fast else None, branch=a.branch)
     vd = res["verdict"]
     print("Gate-Runner: %s  Profil=%s  Pflicht bestanden=%d/%d  verletzt=%d  ungedeckt=%d  (Report: %s)" % (
         res["overall"], res["profile"], len(vd["passed"]), len(vd["required"]),

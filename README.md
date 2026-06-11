@@ -108,8 +108,10 @@ python3 gates/runner.py --target . --report GATE-REPORT.md --profile werkbank_se
 | `golden-projects/` | 6 standardisierte Prüfprojekte (Scores 97–99) |
 | `examples/pilot-app/` | Thin-Slice-Durchstich 01→04 (Einwilligungs-Logbuch) |
 | `bootstrap.sh` · `werkbank-init.sh` | Fresh-System- / pro-Projekt-Installer |
-| `gates/runner.py` + `gates/checks/` | Gate-Runner + **40 Checks** (alle 8 Stufen A–I; deterministisch + LLM-Urteil via BMAD-QA-Evidence) |
+| `gates/runner.py` + `gates/checks/` | Gate-Runner + **44 Checks** (10 Stufen A–K; deterministisch + LLM-Urteil via BMAD-QA-Evidence) |
 | `gates/pflichtenheft.yaml` + `gates/verdict.py` | Pflichtenheft-Profile + **hartes Grün** (Pflicht-SKIP ⇒ ROT) |
+| `docs/produktivfreigabe/FREIGABE.yaml` | **menschliche Abnahme als Gate** (J1 Security, J2 Datenschutz; kein Self-Sign) |
+| `branch-modules/` | **Branchenregeln als Gate** (K1 Artefakte, K2 Fachabnahme; BaFin/HOAI/MDR/KRITIS …) |
 | `pilot/run_pilot.sh` | Pilot-Harness: ein Befehl fährt ein Projekt 01→04 mit Live-Issues + Metriken |
 | `ralph/` | Ralph-Loop (Fresh-Context, Drift-Pausegate, Kill-Switch) |
 | `tribunal/` · `deploy/` | I2 QA-Tribunal (Cross-Model) · I3 Deployment-Validierung |
@@ -120,9 +122,11 @@ python3 gates/runner.py --target . --report GATE-REPORT.md --profile werkbank_se
 | `bootstrap/` | Bootstrap-Prompt (Agent: bauen/selbst-verbessern) |
 
 ## Reife
-Lauffähig & **CI grün** (hartes Grün, Profil `werkbank_self`): **317 Tests**, **40 Gates** (alle 8 Stufen),
-Pflichtenheft-Verdikt, Ralph-Loop mit Self-Verify-Bau, Cross-Model-QA (BMAD-Evidence), selbstheilende
-Feedback-Schleife (rote Gates → GitHub-Issues), 6/6 Golden Projects, BMAD-Durchstich live, Pilot-Harness.
+Lauffähig & **CI grün** (hartes Grün, Profil `werkbank_self`): **332 Tests**, **44 Gates** (10 Stufen),
+Pflichtenheft-Verdikt, **menschliche Produktivfreigabe** (J1/J2) und **Branchenregeln** (K1/K2,
+z. B. BaFin/HOAI/MDR/KRITIS) als harte Gates, Ralph-Loop mit Self-Verify-Bau, Cross-Model-QA
+(BMAD-Evidence), selbstheilende Feedback-Schleife (rote Gates → GitHub-Issues), 6/6 Golden Projects,
+BMAD-Durchstich live, Pilot-Harness.
 **WERKBANK ist eine governte Build-Pipeline mit Nachweisführung — keine Auto-Grün-Fabrik:** eine autonom
 gebaute App grün durch alle harten Gates ist iterationsabhängig, nicht garantiert.
 **Geltung: intern, ohne echte Kundendaten** — für echte Kundendaten gelten die Auflagen aus

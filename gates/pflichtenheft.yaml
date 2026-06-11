@@ -59,6 +59,13 @@ profiles:
     extends: produktion
     required: [J1, J2]
 
+  # Regulierte Branche (Finanz/Medizin/Bau/KRITIS ...): zusaetzlich die Branchen-Pflicht-Artefakte
+  # (K1) und die Fachabnahme (K2). Branche via --branch / .werkbank/branch.txt aktivieren.
+  produktiv_reguliert:
+    desc: "Produktiv in regulierter Branche — produktiv + Branchenregeln (K1 Artefakte, K2 Fachabnahme)"
+    extends: produktiv
+    required: [K1, K2]
+
   # Profil fuer das WERKBANK-Repo selbst: kein Privacy-Kontext, kein erzwungenes SPEC,
   # aber die volle statische + Test-Pflicht inkl. SAST. Damit ist der eigene Gate-Lauf
   # ehrlich gruen NUR, wenn ruff/mypy/coverage/bandit installiert sind UND durchlaufen.

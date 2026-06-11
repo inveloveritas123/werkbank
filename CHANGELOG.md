@@ -2,6 +2,16 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-11 — Branchenregeln als hartes Gate (K1/K2, Profil `produktiv_reguliert`)
+- **Stufe `10_branche`, Gates K1 (Branchen-Pflicht-Artefakte) + K2 (Branchen-Fachabnahme)**
+  (`gates/checks/branch.py`): Branche via `--branch <name>` / `.werkbank/branch.txt`; Regelpaket in
+  `branch-modules/<name>/rules.yaml`. K1 prüft Präsenz der Pflicht-Artefakte, K2 die signierte
+  Fachabnahme (Domänen-Experte) in `FREIGABE.yaml`.
+- **Prinzip wie DSGVO:** WERKBANK erzwingt Präsenz + Abnahme; die fachliche Substanz (MaRisk/HOAI/MDR)
+  liefert der Domänen-Experte — kein halluziniertes Fachrecht. Beispiel-Paket `branch-modules/finanzen/`.
+- **Profil `produktiv_reguliert`** = `produktiv` + K1 + K2 (28 Pflicht-Gates). Registry 44 Gates, 10 Stufen.
+- 332 Tests grün (+9). Doku: `branch-modules/README.md`.
+
 ## 2026-06-11 — Menschliche Produktivfreigabe als hartes Gate (J1/J2, Profil `produktiv`)
 - **Gates J1 (Security-Abnahme) + J2 (Datenschutz-/DSB-Abnahme)** (`gates/checks/freigabe.py`, neue
   Stufe `9_freigabe`): lesen `docs/produktivfreigabe/FREIGABE.yaml`, das ein **Mensch** ausfüllt+signiert.
