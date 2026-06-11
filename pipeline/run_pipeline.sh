@@ -56,7 +56,7 @@ heal(){ local f="--apply"; [ "$GH" -eq 1 ] && f="$f --gh-issues"
 
 # 01 KONZIPIEREN (BMAD)
 log "▶ 01 Konzipieren (BMAD)"
-eval "$KONZ" >/dev/null 2>&1 || true
+( cd "$PROJECT" && eval "$KONZ" ) >/dev/null 2>&1 || true
 gate >/dev/null 2>&1 || true
 for g in A1 A2 A3; do
   if [ "$(status "$g")" != "PASS" ]; then log "⛔ 01 Halt: Spec-Gate $g nicht grün ($(status "$g"))"; heal; exit 3; fi
@@ -75,7 +75,7 @@ log "   Bau grün + promise."
 # 02b QA (BMAD-QA-Agent -> Evidence fuer die LLM-Urteils-Gates A4/H6/I1/I2/I3)
 if [ -n "$QA" ]; then
   log "▶ 02b QA (BMAD-Urteil -> .werkbank/qa-evidence.json)"
-  eval "$QA" >/dev/null 2>&1 || true
+  ( cd "$PROJECT" && eval "$QA" ) >/dev/null 2>&1 || true
   [ -f "$PROJECT/.werkbank/qa-evidence.json" ] && log "   QA-Evidence geschrieben." \
     || log "   ! keine QA-Evidence — LLM-Gates bleiben UNGEDECKT (ehrlich)."
 fi

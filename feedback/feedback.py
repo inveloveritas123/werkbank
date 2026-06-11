@@ -139,23 +139,40 @@ def _gate_of_title(title):
     return m.group(1) if m else None
 
 
+def _ensure_label():
+    """Legt das Label idempotent an. Ohne existierendes Label scheitert `gh issue create`."""
+    try:
+        subprocess.run(["gh", "label", "create", LABEL, "--color", "B60205",
+                        "--description", "WERKBANK-Gate rot (automatisch)"],
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30, check=False)
+    except (subprocess.SubprocessError, OSError):
+        pass
+
+
 def create_gh_issues(failures, apply=False):
     issues, ok = _gh_open_issues()
     if not ok:
         return {"available": False, "created": [], "error": "gh nicht verfügbar/authentifiziert"}
+    if apply:
+        _ensure_label()
     open_gates = {_gate_of_title(i.get("title")) for i in issues}
-    created = []
+    created, failed = [], []
     for f in failures:
         if f["gate"] in open_gates:
             continue
         if apply:
             try:
-                subprocess.run(gh_issue_cmd(f), stdout=subprocess.DEVNULL,
-                               stderr=subprocess.DEVNULL, timeout=60, check=False)
+                r = subprocess.run(gh_issue_cmd(f), stdout=subprocess.DEVNULL,
+                                   stderr=subprocess.DEVNULL, timeout=60, check=False)
             except (subprocess.SubprocessError, OSError):
+                failed.append(f["gate"])
+                continue
+            if r.returncode != 0:          # nur als erstellt zaehlen, wenn gh wirklich ok war
+                failed.append(f["gate"])
                 continue
         created.append(f["gate"])
-    return {"available": True, "created": created, "error": None}
+    err = ("gh issue create fehlgeschlagen: %s" % ", ".join(failed)) if failed else None
+    return {"available": True, "created": created, "error": err}
 
 
 def close_gh_issues(passed_gates, apply=False):

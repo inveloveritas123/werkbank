@@ -48,7 +48,7 @@ while :; do
   fi
 
   # 1) Worker (frischer Kontext je Aufruf, wenn build-cmd = 'claude -p ...')
-  build_out="$(eval "$BUILD_CMD" 2>&1)"; echo "$build_out" | tail -3
+  build_out="$( ( cd "$TARGET" && eval "$BUILD_CMD" ) 2>&1)"; echo "$build_out" | tail -3
   if printf '%s' "$build_out" | grep -qF "$PROMISE"; then promise=1; else promise=0; fi
 
   # 2) Gates
