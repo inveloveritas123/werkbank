@@ -35,9 +35,10 @@ jobs:
         run: mypy gates
 
       - name: SAST (bandit)
-        # Policy wie Gate D1: nur High/Medium blocken; Low (z. B. erwartete subprocess-Aufrufe
-        # im Tooling, B404/B603) ist beratend, kein CI-Fail.
-        run: bandit -r gates -q --severity-level medium
+        # Policy wie Gate D1: nur High/Medium blocken (Low subprocess-Warnungen sind beratend),
+        # und die Test-Fixtures ausschliessen (enthalten absichtlich "unsichere" Muster, z. B.
+        # geplante SQLi/Secrets fuer den Haerte-Test).
+        run: bandit -r gates -q --severity-level medium -x gates/checks/tests
 
       - name: Tests (unittest)
         run: python3 -m unittest discover -s gates/checks/tests -p "test_*.py"
