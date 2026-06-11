@@ -1,5 +1,7 @@
 # WERKBANK — Spec-Driven Production Framework
 
+[![werkbank-gates](https://github.com/inveloveritas123/werkbank/actions/workflows/werkbank-gates.yml/badge.svg)](https://github.com/inveloveritas123/werkbank/actions/workflows/werkbank-gates.yml)
+
 Ein **EU-souveränes, agentisches Framework**, das Software *konzipiert, baut, prüft und übergibt* —
 und sich gegen feste Prüfprojekte selbst verbessert. Modular: nicht jeder braucht alles.
 
@@ -106,7 +108,9 @@ python3 gates/runner.py --target . --report GATE-REPORT.md --profile werkbank_se
 | `golden-projects/` | 6 standardisierte Prüfprojekte (Scores 97–99) |
 | `examples/pilot-app/` | Thin-Slice-Durchstich 01→04 (Einwilligungs-Logbuch) |
 | `bootstrap.sh` · `werkbank-init.sh` | Fresh-System- / pro-Projekt-Installer |
-| `gates/runner.py` + `gates/checks/` | Gate-Runner + 19 Checks (A1–A3·B1–B3·C1/C2·D3·E1–E8·F1·H4) |
+| `gates/runner.py` + `gates/checks/` | Gate-Runner + **40 Checks** (alle 8 Stufen A–I; deterministisch + LLM-Urteil via BMAD-QA-Evidence) |
+| `gates/pflichtenheft.yaml` + `gates/verdict.py` | Pflichtenheft-Profile + **hartes Grün** (Pflicht-SKIP ⇒ ROT) |
+| `pilot/run_pilot.sh` | Pilot-Harness: ein Befehl fährt ein Projekt 01→04 mit Live-Issues + Metriken |
 | `ralph/` | Ralph-Loop (Fresh-Context, Drift-Pausegate, Kill-Switch) |
 | `tribunal/` · `deploy/` | I2 QA-Tribunal (Cross-Model) · I3 Deployment-Validierung |
 | `orchestrator/` | Tier-Routing · Budget/Kill-Switch · persistente Minds (kiln) |
@@ -116,9 +120,13 @@ python3 gates/runner.py --target . --report GATE-REPORT.md --profile werkbank_se
 | `bootstrap/` | Bootstrap-Prompt (Agent: bauen/selbst-verbessern) |
 
 ## Reife
-Lauffähig: 6/6 Golden Projects grün, 178 Tests, 19 Gates, Ralph-Loop, Tribunal, selbstheilende
-Feedback-Schleife, BMAD-Durchstich live. **Geltung: intern, ohne echte Kundendaten** — für echte
-Kundendaten gelten die Auflagen aus `docs/produktivfreigabe/`. Ehrlicher Stand: `docs/SOLL-IST-ABGLEICH.md`.
+Lauffähig & **CI grün** (hartes Grün, Profil `werkbank_self`): **317 Tests**, **40 Gates** (alle 8 Stufen),
+Pflichtenheft-Verdikt, Ralph-Loop mit Self-Verify-Bau, Cross-Model-QA (BMAD-Evidence), selbstheilende
+Feedback-Schleife (rote Gates → GitHub-Issues), 6/6 Golden Projects, BMAD-Durchstich live, Pilot-Harness.
+**WERKBANK ist eine governte Build-Pipeline mit Nachweisführung — keine Auto-Grün-Fabrik:** eine autonom
+gebaute App grün durch alle harten Gates ist iterationsabhängig, nicht garantiert.
+**Geltung: intern, ohne echte Kundendaten** — für echte Kundendaten gelten die Auflagen aus
+`docs/produktivfreigabe/` (menschliche DSB-/Security-Abnahme). Ehrlicher Stand: `docs/SOLL-IST-ABGLEICH.md`.
 
 ## Lizenz
 MIT — siehe `LICENSE`.
