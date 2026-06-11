@@ -9,6 +9,14 @@ secrets/
 node_modules/
 __pycache__/
 
+# Dev-Toolchain-Artefakte (ruff/mypy/coverage/pytest)
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
 # BMAD-Install (reinstallierbar via `npx bmad-method install` — nicht vendoren, Blueprint §1: "installieren, nicht nachbauen")
 examples/pilot-app/_bmad/
 examples/pilot-app/_bmad-output/

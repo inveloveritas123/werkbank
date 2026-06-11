@@ -15,7 +15,7 @@ GATES_DIR = os.path.abspath(os.path.join(HERE, "..", ".."))
 REPO_ROOT = os.path.abspath(os.path.join(GATES_DIR, ".."))
 sys.path.insert(0, GATES_DIR)
 
-from checks import common, e1_eu_routing, e2_pii_scan, d3_secret_scan, e5_artefakte  # noqa: E402
+from checks import common, d3_secret_scan, e1_eu_routing, e2_pii_scan, e5_artefakte  # noqa: E402
 
 ARTE = os.path.join(REPO_ROOT, "golden-projects", "01-dsgvo-projektstarter", "artefakte")
 

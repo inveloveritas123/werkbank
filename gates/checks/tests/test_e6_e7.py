@@ -18,7 +18,10 @@ def _w(d, name, content):
 
 class E6Dpia(unittest.TestCase):
     def test_skip_without_context(self):
-        self.assertEqual(e6_dpia.run(".").status, common.SKIP)
+        res = e6_dpia.run(".")
+        self.assertEqual(res.status, common.SKIP)
+        self.assertEqual(res.skip_reason, common.NOT_APPLICABLE)
+        self.assertIn("kein Privacy-Kontext", res.summary)
 
     def test_low_risk_passes_without_dpia(self):
         with tempfile.TemporaryDirectory() as d:
@@ -45,7 +48,10 @@ class E6Dpia(unittest.TestCase):
 class E7ThirdCountry(unittest.TestCase):
     def test_skip_without_file(self):
         with tempfile.TemporaryDirectory() as d:
-            self.assertEqual(e7_third_country.run(d, privacy_dir=d).status, common.SKIP)
+            res = e7_third_country.run(d, privacy_dir=d)
+            self.assertEqual(res.status, common.SKIP)
+            self.assertEqual(res.skip_reason, common.NOT_APPLICABLE)
+            self.assertIn("kein Drittland-Artefakt", res.summary)
 
     def test_eu_only_passes(self):
         with tempfile.TemporaryDirectory() as d:

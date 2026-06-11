@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WERKBANK — Das Gesamtsystem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0c0b;--bg2:#0f1311;--panel:#121715;--panel2:#161c19;--line:#243029;
+    --ink:#e9e7e0;--mut:#8b938c;--dim:#5c655e;
+    --go:#34d399;--go-deep:#0f3d2e;--warn:#f0b132;--block:#ef5350;
+    --eu:#5b8cff;--eu-deep:#16264d;--gold:#e8c372;
+    --mono:'JetBrains Mono',ui-monospace,monospace;--disp:'Big Shoulders Display',sans-serif;--body:'IBM Plex Sans',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:44px 44px;opacity:.15;mask-image:radial-gradient(ellipse 120% 90% at 50% 0%,#000 35%,transparent 80%)}
+  .wrap{position:relative;z-index:1;max-width:1160px;margin:0 auto;padding:0 28px}
+  section{padding:60px 0;border-top:1px solid var(--line)}
+  section:first-of-type{border-top:0}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--go);display:inline-flex;gap:9px;align-items:center}
+  .kicker::before{content:"";width:22px;height:1px;background:var(--go)}
+  .kicker.gold{color:var(--gold)} .kicker.gold::before{background:var(--gold)}
+  .kicker.block{color:var(--block)} .kicker.block::before{background:var(--block)}
+  h1{font-family:var(--disp);font-weight:900;line-height:.9;letter-spacing:-.01em;margin:.16em 0 0;font-size:clamp(46px,9.5vw,116px);text-transform:uppercase}
+  h1 .alt{color:transparent;-webkit-text-stroke:1.4px var(--gold)}
+  h2{font-family:var(--disp);font-weight:800;text-transform:uppercase;font-size:clamp(26px,4.4vw,46px);line-height:.99;margin:.3em 0 .5em}
+  h3{font-family:var(--disp);font-weight:700;text-transform:uppercase;font-size:18px;letter-spacing:.02em;margin:0 0 6px}
+  p{margin:0 0 13px;color:#cfd3cc;max-width:66ch}
+  .lead{font-size:18px;color:var(--ink);max-width:62ch}
+  .mut{color:var(--mut)} strong{color:#fff;font-weight:600} em{color:var(--ink);font-style:normal;border-bottom:1px dashed var(--dim)}
+  .mono{font-family:var(--mono)}
+
+  /* credibility strip */
+  .strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+  .pill{font-family:var(--mono);font-size:11px;letter-spacing:.05em;color:var(--mut);border:1px solid var(--line);border-radius:100px;padding:5px 12px;background:var(--panel)}
+  .pill b{color:var(--go);font-weight:500}
+
+  /* ---- ORG / TIERS ---- */
+  .org{margin-top:12px;display:flex;flex-direction:column;align-items:stretch;gap:0}
+  .conn{height:26px;width:2px;background:var(--line);margin:0 auto}
+  .band{border:1px solid var(--line);border-radius:4px;background:var(--panel);padding:18px 20px;position:relative}
+  .band .role{font-family:var(--disp);font-weight:800;text-transform:uppercase;font-size:21px;letter-spacing:.02em}
+  .band .sub{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--mut);margin-top:3px}
+  .band.human{background:linear-gradient(180deg,#1a1712,transparent);border-color:#4a4026}
+  .band.human .role{color:var(--gold)}
+  .band.kanzler{background:linear-gradient(180deg,#15110a 0%,#121715 100%);border-color:var(--gold);box-shadow:0 0 0 1px rgba(232,195,114,.18),inset 0 2px 0 var(--gold)}
+  .band.kanzler .role{color:var(--gold);font-size:26px}
+  .band.kanzler .tagrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .band.kanzler .tagrow span{font-family:var(--mono);font-size:10.5px;color:#e9dcc0;border:1px dashed #5a4d2c;border-radius:3px;padding:4px 9px}
+  .row{display:grid;gap:14px}
+  .row2{grid-template-columns:2.2fr 1fr} .rowinfra{grid-template-columns:repeat(5,1fr)}
+  .cell{border:1px solid var(--line);border-radius:3px;background:var(--panel2);padding:14px 15px}
+  .cell .t{font-family:var(--disp);font-weight:700;text-transform:uppercase;font-size:15px}
+  .cell .d{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:5px}
+  .cell.verify{box-shadow:inset 3px 0 0 var(--go)} .cell.verify .t{color:var(--go)}
+  .cell.infra .t{font-size:13px;color:var(--eu)}
+  .miniagents{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+  .miniagents span{font-family:var(--mono);font-size:10.5px;color:#cdd6cf;border:1px solid var(--line);border-radius:3px;padding:4px 8px;background:var(--panel)}
+  .bandlabel{position:absolute;top:14px;right:16px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+  .sideloop{margin-top:14px;border:1px dashed #2c5a48;border-radius:4px;background:var(--go-deep);padding:13px 16px;font-family:var(--mono);font-size:12px;color:#d6ddd5}
+  .sideloop b{color:var(--go);font-weight:500}
+
+  /* generic grid/cards */
+  .grid{display:grid;gap:14px}
+  .g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:20px;position:relative}
+  .card .idx{font-family:var(--mono);font-size:11px;color:var(--dim);position:absolute;top:15px;right:16px}
+  .card h3{font-size:17px}
+  .card p{font-size:13px;color:var(--mut);max-width:none;margin:7px 0 0}
+
+  /* authority dial */
+  .dial{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+  .lvl{border:1px solid var(--line);border-radius:3px;padding:16px 17px;background:var(--panel)}
+  .lvl .h{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+  .lvl h3{font-size:16px;margin-top:7px}
+  .lvl p{font-size:12.5px;color:var(--mut);margin:6px 0 0;max-width:none}
+  .lvl.green{box-shadow:inset 3px 0 0 var(--go)} .lvl.green .h{color:var(--go)}
+  .lvl.yellow{box-shadow:inset 3px 0 0 var(--warn)} .lvl.yellow .h{color:var(--warn)}
+  .lvl.red{box-shadow:inset 3px 0 0 var(--block)} .lvl.red .h{color:var(--block)}
+
+  /* tool cards */
+  .tool{background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:16px 17px}
+  .tool .n{font-family:var(--mono);font-size:13px;color:var(--go)}
+  .tool .d{font-size:12.5px;color:var(--mut);margin-top:6px}
+  .tool .tag{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:8px;display:block}
+
+  footer{border-top:1px solid var(--line);padding:36px 0 60px}
+  .stamp{font-family:var(--mono);font-size:11.5px;color:var(--dim);line-height:1.9}
+  .stamp b{color:var(--go);font-weight:500} .stamp .g{color:var(--gold)}
+
+  .rv{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+
+  @media(max-width:880px){
+    .g2,.g3,.dial,.row2,.rowinfra{grid-template-columns:1fr}
+    h1{font-size:clamp(40px,13vw,70px)}
+  }
+</style>
+</head>
+<body>
+
+<section style="padding-top:56px">
+  <div class="wrap">
+    <div class="kicker gold rv in">WERKBANK · Das Gesamtsystem</div>
+    <h1 class="rv">Die agentische<span class="alt"> Organisation</span></h1>
+    <p class="lead rv" style="margin-top:22px">Ein System, das Software <strong>konzipiert, baut, prüft und übergibt</strong> —
+      sich <strong>selbst verbessert</strong> — und an dessen Spitze ein digitaler Chief-of-Staff steht, der das Ganze
+      am Laufen hält: <strong style="color:var(--gold)">der Kanzler</strong>.</p>
+    <div class="strip rv">
+      <span class="pill">Muster: <b>Autonomous Manager Agent</b></span>
+      <span class="pill">Supervisor / Hierarchie</span>
+      <span class="pill">Human-on-the-Loop · Safe-Outputs</span>
+      <span class="pill"><b>Regler statt Schalter</b></span>
+      <span class="pill">EU-souverän</span>
+    </div>
+  </div>
+</section>
+
+<!-- ORG CHART / TIERS -->
+<section>
+  <div class="wrap">
+    <div class="kicker rv">01 · Das Organigramm</div>
+    <h2 class="rv">Wer wem berichtet — das ganze Framework in einem Bild.</h2>
+
+    <div class="org rv" style="margin-top:24px">
+      <!-- human -->
+      <div class="band human">
+        <span class="bandlabel">Mensch · Entscheider</span>
+        <div class="role">Robert · Geschäftsführer</div>
+        <div class="sub">setzt Ziele · gibt frei · entscheidet alles Konsequenzielle</div>
+      </div>
+      <div class="conn"></div>
+
+      <!-- kanzler -->
+      <div class="band kanzler">
+        <span class="bandlabel" style="color:var(--gold)">Governance · Ops · QA</span>
+        <div class="role">Kanzler</div>
+        <div class="sub">digitaler Assistent der Geschäftsführung · Qualitätsmanager · läuft als Daemon · eigener Branch <span class="mono">kanzler</span></div>
+        <div class="tagrow">
+          <span>Board füllen &amp; pflegen</span><span>Issues vorantreiben</span><span>zuweisen &amp; eingreifen</span>
+          <span>Agenten-Health</span><span>Test-/Gate-Aufsicht</span><span>Tages-Briefing</span><span>lernt (PDCA)</span>
+        </div>
+      </div>
+      <div class="conn"></div>
+
+      <!-- pipeline tier -->
+      <div class="row row2">
+        <div class="cell">
+          <div class="t">Junge · Coordinator</div>
+          <div class="d">technische Orchestrierung · zerlegt & dispatcht · LangGraph</div>
+          <div class="miniagents">
+            <span>PM / Analyst</span><span>Architect</span><span>Scrum Master</span><span>Implementor ×N</span><span>Explorer</span>
+          </div>
+        </div>
+        <div class="cell verify">
+          <div class="t">Wächter · Verifier</div>
+          <div class="d">62+ Gates · Vier-Augen · TEA · blockierend</div>
+          <div class="miniagents"><span>deterministisch zuerst</span><span>LLM danach</span></div>
+        </div>
+      </div>
+      <div class="conn"></div>
+
+      <!-- infra tier -->
+      <div class="row rowinfra">
+        <div class="cell infra"><div class="t">EU-Routing</div><div class="d">Bedrock FFM · Mistral EU</div></div>
+        <div class="cell infra"><div class="t">Budget-API</div><div class="d">Tiers · confirm-gate</div></div>
+        <div class="cell infra"><div class="t">Multi-Tenant</div><div class="d">LXC pro Kunde</div></div>
+        <div class="cell infra"><div class="t">Deploy · Ops</div><div class="d">Staging · k6 · Grafana</div></div>
+        <div class="cell infra"><div class="t">MCP-Memory</div><div class="d">Wissens-Layer</div></div>
+      </div>
+
+      <div class="sideloop">↻ quer über alle Ebenen: <b>Skill-Repo (git) + lernender Loop</b> — Telemetrie → wöchentliche Vorschläge → deine Freigabe → <b>temp&nbsp;→&nbsp;final</b> → alle ziehen nach</div>
+    </div>
+    <p class="mut rv" style="font-size:12.5px;margin-top:16px">Hierarchie bewusst zweistufig: der <strong>Kanzler</strong> führt auf Geschäfts-/Qualitätsebene, <strong>Junge</strong> auf technischer Ebene. KOLONIE ist das Fundament (BMAD endet beim Test).</p>
+  </div>
+</section>
+
+<!-- KANZLER MANDATE -->
+<section>
+  <div class="wrap">
+    <div class="kicker gold rv">02 · Der Kanzler — Mandat &amp; Reichweite</div>
+    <h2 class="rv">Ein Chief-of-Staff, der nie schläft.</h2>
+    <p class="lead rv">Er sorgt dafür, dass „es einfach weiterläuft": das Board gefüllt ist, getestet wird, Issues
+      abgearbeitet werden und die Agenten funktionieren — und mischt sich ein wie ein Qualitätsmanager.</p>
+    <div class="grid g3 rv" style="margin-top:24px">
+      <div class="card"><span class="idx">01</span><h3>Board-Pflege</h3><p>Auditiert Asana + GitHub-Issues: keine veralteten, herrenlosen oder kriterienlosen Items. Jedes Werkstück hat Owner, Done-Kriterien und Test-Pflicht.</p></div>
+      <div class="card"><span class="idx">02</span><h3>Issues vorantreiben</h3><p>Erkennt Stillstand, stupst an, weist zu, eskaliert Blocker. Treibt alles bis „done" — inkl. grünem Gate-Report.</p></div>
+      <div class="card"><span class="idx">03</span><h3>Agenten-Health</h3><p>Prüft, ob Junge, Implementor & Wächter laufen; erkennt Loops/Timeouts; startet neu oder eskaliert.</p></div>
+      <div class="card"><span class="idx">04</span><h3>Qualitäts-Aufsicht</h3><p>Wacht, dass getestet wird und Gates nicht übersprungen werden; verfolgt Coverage- & Gate-Trends; hält die Loop-Vorschläge in Bewegung.</p></div>
+      <div class="card"><span class="idx">05</span><h3>Tages-Briefing</h3><p>Liefert dir morgens: „die eine Sache für heute" + Blocker + Board-Health + offene Freigaben. Über Telegram / M365.</p></div>
+      <div class="card"><span class="idx">06</span><h3>Lernt</h3><p>Seine Policies/Skills liegen im Skill-Repo und verbessern sich im selben PDCA-Loop — nach deiner Freigabe.</p></div>
+    </div>
+    <div class="card rv" style="margin-top:16px">
+      <h3>Seine Werkzeuge &amp; sein Branch</h3>
+      <p style="max-width:none">Operiert über <strong>Asana-MCP</strong> (Management-Board), <strong>MCP GitHub Project Manager</strong> + <strong>GitHub Agentic Workflows</strong> (Issues/PRs/Projects v2, Safe-Outputs), <strong>M365</strong> (Posteingang/Kalender fürs Briefing) und <strong>Telegram</strong> (Report). Alles, was er tut und <em>warum</em>, protokolliert er auf seinem eigenen Branch <span class="mono">kanzler</span> — konsequenzielle Aktionen werden dort gestaged und erst nach Freigabe angewandt. Ein Ort zum Nachvollziehen und Debuggen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- THE DIAL -->
+<section>
+  <div class="wrap">
+    <div class="kicker block rv">03 · Der Regler — Autonomie mit Sicherung</div>
+    <h2 class="rv">„Praktikant mit unendlichem Durchsatz" — braucht einen Chef.</h2>
+    <p class="lead rv">Genau weil er zuweisen und eingreifen darf, ist er der riskanteste Baustein. Deshalb klare
+      Befugnis-Stufen — und ein Regler, den <em>du</em> Stufe für Stufe höher drehst, statt Vollautonomie ab Tag 1.</p>
+    <div class="dial rv" style="margin-top:22px">
+      <div class="lvl green"><div class="h">● GRÜN · autonom</div><h3>Routine</h3><p>Labeln, triagieren, Status posten, veraltete Items anstupsen, fehlende Tests flaggen, Health-Pings, Briefing entwerfen. Handelt frei, loggt auf Branch.</p></div>
+      <div class="lvl yellow"><div class="h">● GELB · handeln + melden</div><h3>Reversibel</h3><p>Issue einem freien <strong>KI-Agenten</strong> im Scope zuweisen, fehlgeschlagenen Task neu starten, Re-Run anfordern. Tut es, meldet es dir — rückholbar.</p></div>
+      <div class="lvl red"><div class="h">● ROT · vorschlagen + eskalieren</div><h3>Du entscheidest</h3><p>Arbeit an <strong>Menschen</strong> zuweisen, Issue als won't-fix schließen, Prioritäten/Scope ändern, Budget über Schwelle, Strategie/Personal. <strong>Report, don't rule.</strong></p></div>
+    </div>
+    <div class="grid g2 rv" style="margin-top:16px">
+      <div class="card"><h3>Harte Grenzen</h3><p>Iterations-Caps, Timeouts, deterministische Konflikt-Auflösung → <strong>hält an und eskaliert</strong> statt endlos zu schleifen. Autonome Aktionen laufen in <span class="mono">safe-outputs</span> (Whitelist erlaubter Aktionstypen).</p></div>
+      <div class="card"><h3>Anti-Gaming &amp; Invarianten</h3><p>Gemessen an Durchsatz <em>und</em> Qualität (eskapierte Defekte, Gate-Pass, Coverage-Trend) — kann sich nicht auf „viele Issues geschlossen" hin optimieren. Gebunden an <span class="mono">_invariants.md</span> (EU-Residenz, Vier-Augen, Gates nie lockern) + Kanzler-Regel: nie irreversibel ohne Freigabe.</p></div>
+    </div>
+    <p class="rv" style="margin-top:16px;font-size:15px"><strong style="color:var(--gold)">Reife-Rampe:</strong> Start mitdenkend (sieht alles, nur Grün) → verdient Gelb/Rot über seine Trefferbilanz. Den Regler drehst du — exakt deine temp→final-Disziplin, auf Verhalten angewandt.</p>
+  </div>
+</section>
+
+<!-- PROVEN APPROACHES -->
+<section>
+  <div class="wrap">
+    <div class="kicker rv">04 · Bewährte Ansätze &amp; wiederverwendbare Bausteine</div>
+    <h2 class="rv">Nicht von null — aufgesetzt auf Erprobtes.</h2>
+    <div class="grid g2 rv" style="margin-top:22px">
+      <div class="tool"><div class="n">MCP GitHub Project Manager</div><div class="d">Volle Kontrolle über GitHub Projects v2: PRDs, Task-Zerlegung, Issue-Triage, Anforderung→Verifikation-Traceability. Das „Board-füllen"-Werkzeug.</div><span class="tag">open source · MCP · stdio</span></div>
+      <div class="tool"><div class="n">GitHub Agentic Workflows (gh aw)</div><div class="d">CI/CD-Automation in Markdown; Issue-Triage, PR-Review, Doc-Sync. „Safe-outputs" = Sicherheitsgrenze für autonomes Handeln in Leitplanken.</div><span class="tag">GitHub-nativ · Preview 02/2026</span></div>
+      <div class="tool"><div class="n">Autonomous Manager Agent / MA-GYM</div><div class="d">Forschungsmuster + Simulator: Ziele→Task-Graph, Zuweisung an Mensch+KI, Monitoring, „Governance by Design". Die konzeptionelle Blaupause.</div><span class="tag">arXiv · Referenzmodell</span></div>
+      <div class="tool"><div class="n">Ontheia (EU-tauglich)</div><div class="d">Self-hosted, MCP-native, per Architektur DSGVO-konform, RBAC, Langzeit-Memory. Passt zu deiner Souveränität.</div><span class="tag">self-hosted · AGPL-3.0</span></div>
+      <div class="tool"><div class="n">Supervisor-Pattern (LangGraph)</div><div class="d">Zentral starten, einzelner Debug-Punkt; zyklische Workflows mit typisiertem State. Läuft auf deinem Junge-Orchestrator.</div><span class="tag">erprobt · production</span></div>
+      <div class="tool"><div class="n">Chief-of-Staff-Rezept</div><div class="d">Briefing-Agent über Copilot-Agent-Mode + MCP: Sprint-Health, PR-Queue, Team-Blocker aus Issues. Direkt adaptierbar.</div><span class="tag">3 Dateien · copybar</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- LOOP + SOVEREIGNTY recap -->
+<section>
+  <div class="wrap">
+    <div class="kicker rv">05 · Was das Ganze zusammenhält</div>
+    <h2 class="rv">Selbst-verbessernd &amp; souverän.</h2>
+    <div class="grid g2 rv" style="margin-top:22px">
+      <div class="card"><h3>Der lernende Loop</h3><p>Jeder Lauf sendet Telemetrie → Optimizer schlägt wöchentlich Skill-/Gate-Verbesserungen vor (mit Beleg) → deine Freigabe → <span class="mono">temp→final</span> → alle ziehen nach. <strong>Aktualisiert an sinnvollen Meilensteinen, nicht im Sekundentakt.</strong> Der Kanzler lernt im selben Loop mit.</p></div>
+      <div class="card" style="box-shadow:inset 3px 0 0 var(--eu);border-color:#2c3f6b"><h3>Der Souveränitäts-Moat</h3><p>Jeder Modell-Call über EU-Endpunkte (Gate E1), Mandantentrennung (E3), unveränderlicher Audit-Trail. EU-AI-Act ab 02.08.2026 als Rückenwind: Spec + Gate-Report + Audit-Log = ein Compliance-Paket. Kein US-Tool liefert das ab Werk.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="stamp">
+      <span class="g">WERKBANK</span> · Das Gesamtsystem · Spec-Driven Production Framework<br>
+      Ebenen: Robert → <span class="g">Kanzler</span> (Governance/QA) → Junge + Wächter (Pipeline) → KOLONIE (Infra) · quer: Skill-Repo + Loop<br>
+      Ablage: git — Markdown-Quelle + HTML-Begleitdatei · temp → Freigabe → final · serviert via skills-mcp:8487<br>
+      Stand · Juni 2026 · Arbeitsdokument · Namen (Kanzler/Junge/Wächter) sind Arbeitsnamen
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io=new IntersectionObserver((es)=>{es.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),(i%6)*55);io.unobserve(e.target);}})},{threshold:.1,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

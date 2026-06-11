@@ -2,6 +2,57 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-11 — Volle Gate-Abdeckung: alle 40 Gates implementiert
+- **19 Stub-Gates gebaut**, Registry jetzt 40/40 (vorher 21):
+  - *Deterministisch (14):* H1 TODOs-ohne-Ticket, H2 Komplexität (stdlib `ast`), H3 README,
+    D4 Lizenz-Scan, C3 Integrationstests, C4 E2E (Playwright), C5 Concurrency, C6 a11y (axe),
+    D2 SCA (pip-audit/safety), F2 Eval-on-Bump, F3 Golden-Snapshots, G1 k6, G2 Bundle-Budget, G3 N+1.
+  - *LLM-Urteil (5) als BMAD-QA-Evidence-Leser:* A4/H6/I1/I2/I3 lesen `.werkbank/qa-evidence.json`
+    (BMADs QA-Agent urteilt, WERKBANK gated auf dem Nachweis — kein Doppeln; I1/I2 erzwingen Cross-Model).
+  - Tool-Gates: `SKIP`/`TOOL_MISSING` wenn Tool fehlt (kein Vortäuschen) → unter Pflicht-Profil ROT.
+- **Profil `produktion` (neu):** voller Audit-Umfang = 24 Pflicht-Gates (Spec, Lint/Typen/Build, Tests/Coverage,
+  SAST+SCA+Secrets, EU/PII/Audit/Artefakte/DPIA/Mandanten, Pinning, Changelog, Drift, Vier-Augen, Tribunal,
+  Deployment-Validierung). Perf/E2E/a11y bleiben advisory.
+- **Pipeline-QA-Hook (`--qa-cmd`/`WERKBANK_QA_CMD`):** Phase 02b ruft BMADs QA-Agent, der die Evidence schreibt,
+  bevor Phase 03 die LLM-Gates prüft. Ohne Evidence bleiben sie ehrlich UNGEDECKT.
+- **313 Tests grün; Self-Lauf GRÜN 9/9.** Jeder der 40 Gates erscheint jetzt mit Status im Audit-Report.
+
+## 2026-06-11 — Self-contained Wellen, Härte-Test, Installer-Pinning
+- **Gate H5 (neu, `gates/checks/h5_waves.py`):** prüft, dass jede OFFENE Welle in `TASKS.md`
+  inline `Dateien`/`Verbote`/`Smoke`/`Akzeptanz` trägt (kein Nachlesen für frischen Worker/Resume).
+  Doktrin: `docs/DOKTRIN-Self-Contained-Wellen.md`; neues self-contained `templates/TASKS.md`. +7 Tests.
+- **Härte-Test (`gates/checks/tests/test_haerte.py` + `golden-projects/haerte-test/README.md`):**
+  beweist, dass die Gates WIRKLICH rot werden — SQLi (D1), Hardcoded Secret (D3), PII im Log (E2),
+  Non-EU-Routing (E1), fehlende DSGVO-Artefakte/Löschfrist (E5). Verstöße zur Laufzeit synthetisiert,
+  nie committet (Repo bleibt secret-/PII-frei). +6 Tests.
+- **`d1_sast` ehrt jetzt `exclude_abs`** — der Self-SAST-Lauf flaggt nicht mehr die eigenen
+  Test-Fixtures (sonst falsches D1-ROT aufs eigene Repo).
+- **Installer-Pinning (`bootstrap.sh`):** `WERKBANK_REF` (Tag/Commit pinnen) + optional
+  `WERKBANK_EXPECT_SHA` (harte Integritäts-Prüfung), Commit-SHA wird angezeigt; Update-Pfad
+  landet deterministisch auf dem gepinnten Ref. `docs/SICHERE-INSTALLATION.md` + README-Abschnitt
+  gegen blindes `curl | bash`.
+- **230 Tests grün; Self-Lauf GRÜN 9/9 (werkbank_self).**
+
+## 2026-06-11 — Hartes Grün + Pflichtenheft (Verdikt aus Profilen)
+- **`gates/verdict.py` (neu):** GRÜN ⟺ **jedes** Pflicht-Gate des aktiven Profils ist aktiv `PASS`.
+  Ein Pflicht-Gate, das `SKIP`t — egal warum (Tool fehlt, kein Check, kein Kontext) — zählt als
+  **UNGEDECKT ⇒ ROT**. Beendet das alte „GRÜN trotz 32 SKIPs". Das Profil ist der Vertrag;
+  rote Block-Gates ausserhalb des Profils werden beratend gemeldet, blocken aber nicht.
+- **`gates/pflichtenheft.yaml` (neu):** Profile `static_min` ⊂ `basis` ⊂ `spec_driven` ⊂ `pii` ⊂
+  `multi_tenant` (via `extends`) + `werkbank_self`. `--profile`/`--pflichtenheft` im Runner.
+- **`common.skip_reason`** (`NOT_APPLICABLE`/`TOOL_MISSING`/`NOT_IMPLEMENTED`) + `skipped()`-Helfer;
+  alle Checks markieren ihren SKIP-Grund. Report führt mit Pflicht-Bilanz + „Warum ROT".
+- **`fail_fast` nur bei Pflicht-Block-FAIL:** ein nicht-gefordertes rotes Gate verhindert nicht mehr
+  die Ausführung geforderter Gates (sonst falsches „ungedeckt").
+- **`gates/checks/d1_sast.py` (neu):** SAST-Gate (bandit, High/Medium ⇒ FAIL), robust gegen bandits
+  Fortschrittszeile vor dem JSON. Bau-/Abnahme-Profil-Trennung in Pipeline; Ralph/stop-hook lesen Profil.
+- **Echte Dev-Toolchain:** `pyproject.toml` (ruff/mypy/coverage/bandit), `requirements-dev.txt`, `Makefile`,
+  CI verdrahtet auf `--profile werkbank_self`. Repo-Lauf ist **ehrlich GRÜN (9/9)**: ruff/mypy/bandit
+  sauber, Coverage 86 %.
+- **Tests gehärtet:** `test_verdict.py` (24, rot/grün-Matrix inkl. Regression „32 SKIPs ≠ GRÜN"),
+  `test_d1_sast.py` (6), schwache `assertTrue(findings)` → exakte Count+Kind-Asserts, SKIP-only-Tests
+  um `skip_reason`/Summary erweitert. **217 Tests grün.**
+
 ## 2026-06-09 — Autonomer 01→04-Pipeline-Runner (#4) + BMAD-Einbindung (#5)
 - `pipeline/run_pipeline.sh`: ein Kommando fährt **01 Konzipieren (BMAD)** → **02 Bauen (Ralph-Loop)**
   → **03 Prüfen (alle Gates)** → **04 Übergeben** autonom. Gates als Orakel zwischen Phasen; rot →

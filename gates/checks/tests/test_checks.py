@@ -16,8 +16,8 @@ GATES_DIR = os.path.abspath(os.path.join(HERE, "..", ".."))   # .../gates
 REPO_ROOT = os.path.abspath(os.path.join(GATES_DIR, ".."))
 sys.path.insert(0, GATES_DIR)
 
-from checks import e1_eu_routing, e2_pii_scan, d3_secret_scan, common  # noqa: E402
 import runner  # noqa: E402
+from checks import common, d3_secret_scan, e1_eu_routing, e2_pii_scan  # noqa: E402
 
 CLEAN = os.path.join(HERE, "fixtures", "clean")
 
@@ -51,7 +51,10 @@ class E1CatchesNonEu(unittest.TestCase):
                    'ENDPOINT = "%s"\nREGION = "%s"\n' % (endpoint, region))
             res = e1_eu_routing.run(d)
             self.assertEqual(res.status, common.FAIL)
-            self.assertTrue(res.findings)
+            self.assertEqual(len(res.findings), 2)
+            kinds = [f.kind for f in res.findings]
+            self.assertIn("non-eu:openai-global", kinds)
+            self.assertIn("non-eu:aws-us-region", kinds)
 
     def test_azure_us_region_fails(self):
         with tempfile.TemporaryDirectory() as d:
@@ -87,7 +90,11 @@ class D3CatchesSecret(unittest.TestCase):
             _write(d, "creds.env", "AWS_ACCESS_KEY_ID=%s\nAWS_SECRET_ACCESS_KEY=%s\n" % (akia, secret))
             res = d3_secret_scan.run(d)
             self.assertEqual(res.status, common.FAIL)
-            self.assertTrue(res.findings)
+            # mindestens die zwei deterministischen Builtin-Funde (gitleaks ist optional/additiv)
+            self.assertGreaterEqual(len(res.findings), 2)
+            kinds = [f.kind for f in res.findings]
+            self.assertIn("aws-access-key-id", kinds)
+            self.assertIn("generic-secret", kinds)
 
     def test_private_key_fails(self):
         with tempfile.TemporaryDirectory() as d:
@@ -109,7 +116,10 @@ class E2CatchesPii(unittest.TestCase):
                    "2026 INFO user=max.mustermann@example.com phone=+49 151 23456789\n")
             res = e2_pii_scan.run(d)
             self.assertEqual(res.status, common.FAIL)
-            self.assertTrue(res.findings)
+            self.assertEqual(len(res.findings), 2)
+            kinds = [f.kind for f in res.findings]
+            self.assertIn("pii:email", kinds)
+            self.assertIn("pii:phone-intl", kinds)
 
     def test_iban_in_output_fails(self):
         with tempfile.TemporaryDirectory() as d:
@@ -154,6 +164,7 @@ class RunnerEndToEnd(unittest.TestCase):
                 gates_path=os.path.join(REPO_ROOT, "gates", "gates.yaml"),
                 target=CLEAN,
                 report_path=report,
+                profile="static_min",  # Minimal-Profil: CLEAN erfuellt B3/D3/F1/H4 mit stdlib
             )
             self.assertEqual(result["overall"], "GRUEN")
             self.assertTrue(os.path.exists(report))

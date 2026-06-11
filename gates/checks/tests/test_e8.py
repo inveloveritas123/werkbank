@@ -22,7 +22,10 @@ def _w(d, name, content):
 
 class E8(unittest.TestCase):
     def test_skip_without_context(self):
-        self.assertEqual(e8_minimization.run(".").status, common.SKIP)
+        res = e8_minimization.run(".")
+        self.assertEqual(res.status, common.SKIP)
+        self.assertEqual(res.skip_reason, common.NOT_APPLICABLE)
+        self.assertIn("kein Privacy-Kontext", res.summary)
 
     def test_documented_minimization_passes(self):
         with tempfile.TemporaryDirectory() as d:

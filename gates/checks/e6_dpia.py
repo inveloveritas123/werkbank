@@ -25,10 +25,10 @@ def _high_risk(text):
 
 def run(target, exclude_dirs=None, exclude_abs=None, privacy_dir=None, **_):
     if not privacy_dir:
-        return common.CheckResult(GATE, common.SKIP, "kein Privacy-Kontext (nicht anwendbar)")
+        return common.skipped(GATE, "kein Privacy-Kontext (nicht anwendbar)", common.NOT_APPLICABLE)
     screening = os.path.join(privacy_dir, "DPIA-SCREENING.md")
     if not os.path.isfile(screening):
-        return common.CheckResult(GATE, common.SKIP, "kein DPIA-Screening vorhanden")
+        return common.skipped(GATE, "kein DPIA-Screening vorhanden", common.NOT_APPLICABLE)
     with open(screening, encoding="utf-8", errors="replace") as f:
         text = f.read()
     if not _high_risk(text):

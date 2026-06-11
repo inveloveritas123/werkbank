@@ -25,7 +25,7 @@ def run_b3(target, exclude_dirs=None, exclude_abs=None, **_):
         except OSError:
             continue
     if n == 0:
-        return common.CheckResult("B3", common.SKIP, "kein Python-Code")
+        return common.skipped("B3", "kein Python-Code", common.NOT_APPLICABLE)
     if findings:
         return common.CheckResult("B3", common.FAIL, "%d Datei(en) kompilieren nicht" % len(findings), findings)
     return common.CheckResult("B3", common.PASS, "Build/Compile sauber (%d .py)" % n)
@@ -33,7 +33,7 @@ def run_b3(target, exclude_dirs=None, exclude_abs=None, **_):
 
 def _tool_gate(gate, tool, args, target):
     if not shutil.which(tool):
-        return common.CheckResult(gate, common.SKIP, "%s nicht installiert" % tool)
+        return common.skipped(gate, "%s nicht installiert" % tool, common.TOOL_MISSING)
     try:
         proc = subprocess.run([tool] + args, cwd=os.path.abspath(target),
                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=300)

@@ -1,0 +1,14 @@
+# Dev-only Werkzeuge fuer die WERKBANK-Entwicklung.
+#
+# WICHTIG: Das Framework selbst (gates/, checks/) ist bewusst STDLIB-ONLY und hat
+# KEINE Laufzeit-Abhaengigkeiten. Diese Pakete werden ausschliesslich von Entwicklern
+# und in CI benoetigt (Lint, Typen, Coverage, SAST, Tests) — nie zur Laufzeit.
+#
+# Installation:  make dev-setup   (bzw.  pip install -r requirements-dev.txt)
+# Kompatibel mit Python 3.9.
+
+ruff==0.6.9
+mypy==1.13.0
+coverage==7.6.1
+bandit==1.7.10
+pytest==8.3.3

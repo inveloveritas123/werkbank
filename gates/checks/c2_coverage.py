@@ -27,10 +27,10 @@ def _testdir(target):
 
 def run(target, exclude_dirs=None, exclude_abs=None, **_):
     if not shutil.which("coverage"):
-        return common.CheckResult(GATE, common.SKIP, "coverage nicht installiert")
+        return common.skipped(GATE, "coverage nicht installiert", common.TOOL_MISSING)
     td = _testdir(target)
     if not td:
-        return common.CheckResult(GATE, common.SKIP, "kein Testverzeichnis")
+        return common.skipped(GATE, "kein Testverzeichnis", common.NOT_APPLICABLE)
     minimum = int(os.environ.get("C2_MIN", "70"))
     cwd = os.path.abspath(target)
     try:

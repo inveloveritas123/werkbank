@@ -17,9 +17,10 @@ ARTE = os.path.join(REPO_ROOT, "golden-projects", "04-upload-pii-redaction", "ar
 sys.path.insert(0, GATES_DIR)
 sys.path.insert(0, APP_DIR)
 
-from checks import common, e2_pii_scan, e5_artefakte  # noqa: E402
-import upload_service as up  # noqa: E402
 import pii_redactor as red  # noqa: E402
+import upload_service as up  # noqa: E402
+
+from checks import common, e2_pii_scan, e5_artefakte  # noqa: E402
 
 
 class _Clock:

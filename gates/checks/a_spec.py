@@ -41,7 +41,7 @@ def _section_for(secs, keyword):
 def run_a1(target, exclude_dirs=None, exclude_abs=None, spec_file=None, **_):
     text = _load(spec_file)
     if text is None:
-        return common.CheckResult("A1", common.SKIP, "kein SPEC (nicht anwendbar)")
+        return common.skipped("A1", "kein SPEC (nicht anwendbar)", common.NOT_APPLICABLE)
     secs = _sections(text)
     findings = []
     for kw in MANDATORY:
@@ -60,7 +60,7 @@ def run_a1(target, exclude_dirs=None, exclude_abs=None, spec_file=None, **_):
 def run_a2(target, exclude_dirs=None, exclude_abs=None, spec_file=None, **_):
     text = _load(spec_file)
     if text is None:
-        return common.CheckResult("A2", common.SKIP, "kein SPEC (nicht anwendbar)")
+        return common.skipped("A2", "kein SPEC (nicht anwendbar)", common.NOT_APPLICABLE)
     _, body = _section_for(_sections(text), "Akzeptanz")
     if not body:
         return common.CheckResult("A2", common.FAIL, "kein Akzeptanzkriterien-Abschnitt")
@@ -77,7 +77,7 @@ def run_a2(target, exclude_dirs=None, exclude_abs=None, spec_file=None, **_):
 def run_a3(target, exclude_dirs=None, exclude_abs=None, spec_file=None, **_):
     text = _load(spec_file)
     if text is None:
-        return common.CheckResult("A3", common.SKIP, "kein SPEC (nicht anwendbar)")
+        return common.skipped("A3", "kein SPEC (nicht anwendbar)", common.NOT_APPLICABLE)
     _, body = _section_for(_sections(text), "Handoff")
     if not body:
         return common.CheckResult("A3", common.FAIL, "kein Handoff-Abschnitt (PM→Architect)")

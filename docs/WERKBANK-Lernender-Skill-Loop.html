@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WERKBANK — Der lernende Skill-Loop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0c0b;--bg2:#0f1311;--panel:#121715;--panel2:#161c19;--line:#243029;
+    --ink:#e9e7e0;--mut:#8b938c;--dim:#5c655e;
+    --go:#34d399;--go-deep:#0f3d2e;--warn:#f0b132;--block:#ef5350;
+    --eu:#5b8cff;--eu-deep:#16264d;
+    --mono:'JetBrains Mono',ui-monospace,monospace;--disp:'Big Shoulders Display',sans-serif;--body:'IBM Plex Sans',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:44px 44px;opacity:.16;mask-image:radial-gradient(ellipse 120% 90% at 50% 0%,#000 35%,transparent 80%)}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 28px}
+  section{padding:62px 0;border-top:1px solid var(--line)}
+  section:first-of-type{border-top:0}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--go);display:inline-flex;gap:9px;align-items:center}
+  .kicker::before{content:"";width:22px;height:1px;background:var(--go)}
+  h1{font-family:var(--disp);font-weight:900;line-height:.9;letter-spacing:-.01em;margin:.18em 0 0;font-size:clamp(48px,10vw,118px);text-transform:uppercase}
+  h1 .alt{color:transparent;-webkit-text-stroke:1.4px var(--go)}
+  h2{font-family:var(--disp);font-weight:800;text-transform:uppercase;font-size:clamp(26px,4.4vw,44px);line-height:.99;margin:.3em 0 .5em}
+  h3{font-family:var(--disp);font-weight:700;text-transform:uppercase;font-size:19px;letter-spacing:.02em;margin:0 0 6px}
+  p{margin:0 0 13px;color:#cfd3cc;max-width:64ch}
+  .lead{font-size:18px;color:var(--ink);max-width:60ch}
+  .mut{color:var(--mut)} strong{color:#fff;font-weight:600} em{color:var(--ink);font-style:normal;border-bottom:1px dashed var(--dim)}
+  .mono{font-family:var(--mono)}
+
+  .reframe{font-family:var(--disp);font-weight:700;text-transform:uppercase;font-size:clamp(20px,3vw,30px);
+    line-height:1.04;margin-top:26px;color:var(--ink);max-width:24ch}
+  .reframe b{color:var(--go)}
+
+  /* loop flow */
+  .loop{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid var(--line);margin-top:10px;position:relative}
+  .step{background:var(--panel);padding:20px 18px;border-right:1px solid var(--line);position:relative}
+  .step:last-child{border-right:0}
+  .step .ph{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;color:var(--go)}
+  .step .no{font-family:var(--disp);font-weight:800;font-size:13px;color:var(--dim);position:absolute;top:16px;right:16px}
+  .step h3{margin-top:10px;font-size:21px}
+  .step p{font-size:12.5px;color:var(--mut);margin:8px 0 0;max-width:none}
+  .step .art{font-family:var(--mono);font-size:11px;color:#cdd6cf;margin-top:10px;display:block;border-top:1px dashed var(--line);padding-top:9px}
+  .step.act{box-shadow:inset 0 3px 0 var(--warn)} .step.act .ph{color:var(--warn)}
+  .step.dist{box-shadow:inset 0 3px 0 var(--eu)} .step.dist .ph{color:var(--eu)}
+  .loopback{font-family:var(--mono);font-size:12px;color:var(--go);text-align:right;margin-top:12px}
+  .loopback span{color:var(--dim)}
+
+  .grid{display:grid;gap:16px}
+  .g2{grid-template-columns:1.05fr .95fr} .g3{grid-template-columns:repeat(3,1fr)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:22px;position:relative}
+  .card.eu{box-shadow:inset 3px 0 0 var(--eu);border-color:#2c3f6b}
+  .card.block{box-shadow:inset 3px 0 0 var(--block);border-color:#5a2c2c}
+
+  /* repo tree */
+  .tree{font-family:var(--mono);font-size:13px;line-height:1.85;color:#cdd6cf;background:var(--bg2);border:1px solid var(--line);border-radius:3px;padding:18px 20px;margin-top:8px;overflow:auto}
+  .tree .d{color:var(--go)} .tree .c{color:var(--dim)} .tree .t{color:var(--warn)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .chip{font-family:var(--mono);font-size:11px;border:1px solid var(--line);border-radius:100px;padding:5px 12px;color:var(--mut);background:var(--panel2)}
+  .chip b{color:var(--go);font-weight:500} .chip.t b{color:var(--warn)} .chip.f b{color:var(--go)}
+
+  /* safety rails */
+  .rails{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:8px}
+  .rail{background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:16px 18px}
+  .rail .t{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--block);text-transform:uppercase}
+  .rail h3{font-size:16px;margin-top:7px}
+  .rail p{font-size:12.5px;color:var(--mut);margin:6px 0 0;max-width:none}
+
+  /* cadence */
+  .cad{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);margin-top:8px}
+  .day{background:var(--panel);padding:18px 18px;border-right:1px solid var(--line)}
+  .day:last-child{border-right:0}
+  .day .d{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--go)}
+  .day h3{font-size:17px;margin-top:7px}
+  .day p{font-size:12.5px;color:var(--mut);margin:6px 0 0;max-width:none}
+  .day.appr{box-shadow:inset 0 3px 0 var(--warn)} .day.appr .d{color:var(--warn)}
+
+  /* gates panel */
+  .gates{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-top:8px}
+  .gnum{font-family:var(--disp);font-weight:900;font-size:64px;line-height:.8;color:#fff}
+  .gnum .plus{color:var(--go);font-size:38px;vertical-align:super}
+  .glist{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 22px;font-family:var(--mono);font-size:12px;color:var(--mut)}
+  .glist span b{color:var(--ink);font-weight:500}
+
+  footer{border-top:1px solid var(--line);padding:36px 0 60px}
+  .stamp{font-family:var(--mono);font-size:11.5px;color:var(--dim);line-height:1.9}
+  .stamp b{color:var(--go);font-weight:500}
+
+  .rv{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+
+  @media(max-width:860px){
+    .loop,.g2,.g3,.rails,.cad{grid-template-columns:1fr}
+    .step{border-right:0;border-bottom:1px solid var(--line)}
+    .day{border-right:0;border-bottom:1px solid var(--line)}
+    .glist{grid-template-columns:1fr}
+    h1{font-size:clamp(40px,14vw,72px)}
+  }
+</style>
+</head>
+<body>
+
+<section style="padding-top:58px">
+  <div class="wrap">
+    <div class="kicker rv in">WERKBANK · Selbst-Optimierung</div>
+    <h1 class="rv">Der lernende<span class="alt"> Loop</span></h1>
+    <p class="lead rv" style="margin-top:22px">PDCA-getrieben, git-versioniert, freigabe-gesteuert. Das Skill-System
+      beobachtet seine eigenen Läufe, schlägt einmal pro Woche Verbesserungen vor — und ändert <strong>nichts</strong>
+      Produktives ohne deine Freigabe.</p>
+    <div class="reframe rv">Gates reichen, wenn sie sich <b>selbst erweitern.</b></div>
+  </div>
+</section>
+
+<!-- LOOP -->
+<section>
+  <div class="wrap">
+    <div class="kicker rv">01 · Der PDCA-Kreislauf</div>
+    <h2 class="rv">Fünf Stufen, eine Woche, ein Freigabe-Tor.</h2>
+    <div class="loop rv">
+      <div class="step">
+        <div class="ph">PLAN</div><span class="no">01</span><h3>Definieren</h3>
+        <p>Skills & Gates liegen als Code im Repo <span class="mono">skills/</span> — versioniert, mit Eval und Label.</p>
+        <span class="art">→ SKILL.md · meta.yaml · eval/</span>
+      </div>
+      <div class="step">
+        <div class="ph">DO</div><span class="no">02</span><h3>Ausführen</h3>
+        <p>Agenten laufen mit den <span class="mono">final</span>-Skills. Jeder Lauf sendet strukturierte Telemetrie.</p>
+        <span class="art">→ Gate-Outcomes · eskapierte Defekte · FP/FN · Token · Time-to-Done</span>
+      </div>
+      <div class="step">
+        <div class="ph">CHECK · wöchentl.</div><span class="no">03</span><h3>Lernen</h3>
+        <p>Der <strong>Optimizer-Agent</strong> aggregiert die Woche und leitet Vorschläge ab — jeder mit Beleg.</p>
+        <span class="art">→ LEARNINGS.md + Proposed Diffs (temp-Branch/PR)</span>
+      </div>
+      <div class="step act">
+        <div class="ph">ACT · Freigabe</div><span class="no">04</span><h3>Freigeben</h3>
+        <p><strong>Du</strong> reviewst die Batch. Approve → promote <span class="mono">temp→final</span>, merge, push. Reject → archiviert mit Grund.</p>
+        <span class="art">→ kein Auto-Merge · reject verhindert Re-Vorschlag</span>
+      </div>
+      <div class="step dist">
+        <div class="ph">DISTRIBUTE</div><span class="no">05</span><h3>Verteilen</h3>
+        <p>Alle Agenten & Clients ziehen die neuen <span class="mono">final</span>-Skills. <strong>Alle haben Zugriff.</strong></p>
+        <span class="art">→ session-start pull · systemd-timer · skills-mcp:8487</span>
+      </div>
+    </div>
+    <div class="loopback rv">↻ <span>nach DISTRIBUTE zurück zu</span> PLAN — die nächste Woche läuft auf verbesserten Skills</div>
+  </div>
+</section>
+
+<!-- GIT REPO -->
+<section>
+  <div class="wrap">
+    <div class="kicker rv">02 · Das Skill-Repo — eine Quelle, alle greifen zu</div>
+    <h2 class="rv">Ja. Genau so.</h2>
+    <p class="lead rv">Du hast die Basis bereits (<span class="mono">claude_skills</span>). Ein git-Repo <span class="mono">skills</span>
+      hält jeden Skill versioniert; verbessert wird er <em>nur nach Freigabe</em> und neu gepusht — bedient von
+      <span class="mono">skills-mcp</span>, sodass jeder Agent und das Team denselben Stand zieht.</p>
+    <div class="grid g2 rv" style="margin-top:24px">
+      <div>
+        <div class="tree">
+<span class="d">skills/</span>
+├─ <span class="d">waechter-gate-suite/</span>
+│  ├─ SKILL.md          <span class="c"># die Regel/der Skill</span>
+│  ├─ meta.yaml         <span class="c"># version · label · metriken</span>
+│  └─ <span class="d">eval/</span>              <span class="c"># Tests DES Skills</span>
+├─ <span class="d">spec-template/</span>
+├─ <span class="d">drift-audit/</span>
+├─ <span class="d">_invariants.md</span>       <span class="c"># unantastbare Regeln</span>
+└─ <span class="d">_learnings/</span>          <span class="c"># Archiv, append-only</span>
+   └─ 2026-W23.md
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <h3>meta.yaml — was Versionierung trägt</h3>
+          <p class="mut" style="font-size:13px;max-width:none">Jeder Skill trägt Version (SemVer), Label, Owner und die Kennzahlen,
+            an denen der Optimizer ansetzt: Trefferquote, False-Positive-Rate, Kosten, eskapierte Defekte.</p>
+          <div class="chips">
+            <span class="chip t">Label <b>temp</b> · vorgeschlagen</span>
+            <span class="chip f">Label <b>final</b> · freigegeben</span>
+            <span class="chip">version <b>2.3.0</b></span>
+            <span class="chip">owner · Robert</span>
+          </div>
+          <p class="mut" style="font-size:12.5px;margin-top:14px;max-width:none"><strong>Nur <span class="mono">final</span> wird produktiv geladen.</strong>
+            Vorschläge leben als <span class="mono">temp</span> auf einem Branch, bis du sie promotest.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SAFETY RAILS -->
+<section>
+  <div class="wrap">
+    <div class="kicker rv" style="color:var(--block)">03 · Die Leitplanken — damit Selbst-Optimierung nicht entgleist</div>
+    <h2 class="rv">Die Falle, gegen die wir bauen.</h2>
+    <p class="lead rv">Ein selbst-optimierendes System „verbessert" sich sonst auf <em>weniger blockierte Merges</em> —
+      indem es heimlich Gates aufweicht. Vier Regeln verhindern das.</p>
+    <div class="rails rv" style="margin-top:22px">
+      <div class="rail"><div class="t">▣ Regel 1 · Propose, never apply</div><h3>Nur Vorschlag</h3>
+        <p>Der Optimizer schreibt ausschließlich auf <span class="mono">temp</span>. Produktiv (<span class="mono">final</span>) ändert nur deine Freigabe.</p></div>
+      <div class="rail"><div class="t">▣ Regel 2 · Invarianten</div><h3>Unantastbares</h3>
+        <p><span class="mono">_invariants.md</span>: EU-Residenz (E1), Vier-Augen (E4) und Security-BLOCK-Gates dürfen <strong>verschärft, nie aufgeweicht</strong> werden — außer per explizitem Override.</p></div>
+      <div class="rail"><div class="t">▣ Regel 3 · Eval-on-Change</div><h3>Skill testet sich</h3>
+        <p>Jeder geänderte Skill muss seine eigene <span class="mono">eval/</span> bestehen und darf die Gate-Suite nicht verschlechtern, bevor er promotebar ist.</p></div>
+      <div class="rail"><div class="t">▣ Regel 4 · Reversibel</div><h3>Alles per git zurück</h3>
+        <p>Jede Änderung ist ein Commit mit Beleg. Ein <span class="mono">git revert</span> stellt den Vorstand sofort wieder her.</p></div>
+    </div>
+    <div class="card block rv" style="margin-top:16px">
+      <p style="max-width:none;margin:0">Kurz: Der Optimizer darf <strong>vorschlagen und schärfen</strong>, nie eigenmächtig <strong>lockern</strong>.
+        Das hält das System an deiner Linie — kein stiller Qualitäts- oder Souveränitäts-Drift über die Wochen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CADENCE -->
+<section>
+  <div class="wrap">
+    <div class="kicker rv">04 · Die Wochen-Kadenz — auf deinem PDCA</div>
+    <h2 class="rv">Montag sehen. Freitag vorschlagen. Du gibst frei.</h2>
+    <div class="cad rv">
+      <div class="day"><div class="d">MONTAG</div><h3>Telegram-Puls</h3><p>Kurz-Summary: „N Learnings für Review vorgemerkt" + auffällige Gate-Metriken der Vorwoche.</p></div>
+      <div class="day"><div class="d">FREITAG</div><h3>Optimizer-Batch</h3><p>Sprint-Review: der Optimizer legt <span class="mono">LEARNINGS.md</span> + Proposed Diffs als temp-PR ab.</p></div>
+      <div class="day appr"><div class="d">FREIGABE</div><h3>Promote</h3><p>Deine Review-Session: approve → <span class="mono">temp→final</span> + push. Reject → archiviert mit Grund in <span class="mono">_learnings/</span>.</p></div>
+    </div>
+    <p class="mut rv" style="font-size:12.5px;margin-top:14px">Deckt sich mit deinem bestehenden Rhythmus (Mo-Telegram · Mi-decisions · Fr-Sprint-Review) — kein neuer Prozess, nur verdrahtet.</p>
+  </div>
+</section>
+
+<!-- GATES SELF-EXTEND -->
+<section>
+  <div class="wrap">
+    <div class="kicker rv">05 · „Reichen die Gates?"</div>
+    <h2 class="rv">Heute 62. Morgen so viele, wie nötig.</h2>
+    <div class="gates rv" style="margin-top:18px">
+      <div class="gnum">62<span class="plus">+6</span></div>
+      <div class="glist">
+        <span><b>+</b> Supply-Chain-Provenienz <span class="mut">(SBOM · Lizenz · Signatur)</span></span>
+        <span><b>+</b> AI-Act-Risikoklasse + Bias-Check <span class="mut">(pro Feature)</span></span>
+        <span><b>+</b> Observability <span class="mut">(Logs/Metriken/Traces vor Übergabe)</span></span>
+        <span><b>+</b> UX-/Design-Abnahme <span class="mut">(funktional ≠ benutzbar)</span></span>
+        <span><b>+</b> Accessibility-Handschicht <span class="mut">(axe-core ≈ 30–40 %)</span></span>
+        <span><b>+</b> Performance-Regression <span class="mut">(vs. letztes Release)</span></span>
+      </div>
+    </div>
+    <p class="rv" style="margin-top:22px;font-size:15px">Diese sechs schließen die heutigen Lücken — aber sie sind nicht der Endzustand.
+      <strong style="color:var(--go)">Jeder Defekt, der durch alle Gates rutscht, wird im nächsten Loop zum 69., 70., 71. Gate.</strong>
+      So beantwortet sich „reichen sie?" von selbst: nicht durch eine Zahl, sondern durch den Mechanismus.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="stamp">
+      <b>WERKBANK</b> · Der lernende Skill-Loop · Ergänzung zum Produktions-Framework<br>
+      Repo: <b>skills</b> (heute <b>claude_skills</b>) · versioniert · temp → Freigabe → final · serviert via <b>skills-mcp:8487</b><br>
+      Optimizer: schlägt vor & schärft · ändert <b>nie</b> final ohne Freigabe · alles reversibel<br>
+      Stand · Juni 2026 · Arbeitsdokument
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io=new IntersectionObserver((es)=>{es.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),(i%5)*55);io.unobserve(e.target);}})},{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

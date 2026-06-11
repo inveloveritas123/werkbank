@@ -20,6 +20,13 @@ SELF="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"; ROOT="$(cd "$SELF/.." && p
 
 PROJECT="."; BRIEF=""; MAXIT=15; APPLY=0; GH=0
 PRIV_DIR=""; PRIV_REQ=""; AUDIT=""
+# PROFILE = Abnahme-Profil (Phase-3-Gate, voller Kontext). BUILD_PROFILE = Bau-Loop-Profil
+# (Phase 2, Code-Qualitaet ohne Projekt-/Privacy-Kontext). Trennung: der Bau-Loop iteriert
+# Code gruen, die volle DSGVO-/Spec-Pflicht prueft erst die Abnahme mit allen Artefakten.
+PROFILE="${WERKBANK_PROFILE:-}"; PFLICHT="${WERKBANK_PFLICHTENHEFT:-}"
+BUILD_PROFILE="${WERKBANK_BUILD_PROFILE:-basis}"
+# QA-Hook: schreibt .werkbank/qa-evidence.json (BMADs QA-Agent -> Nachweis fuer A4/H6/I1/I2/I3).
+QA="${WERKBANK_QA_CMD:-}"
 KONZ='claude -p "Konzipiere mit BMAD (Skills bmad-prd, bmad-create-architecture, bmad-create-epics-and-stories) aus dem Brief und schreibe einen vollständigen, A-Gate-tauglichen templates/SPEC.md-konformen SPEC.md ins Projekt: 6 Pflichtfelder, >=2 testbare Akzeptanzkriterien, Handoff [x]."'
 BAUEN='claude -p "Arbeite die oberste offene Story test-first (RED->GREEN->REFACTOR) bis alle Block-Gates grün sind; gib bei fertig exakt <promise>GRUEN</promise> aus."'
 while [ $# -gt 0 ]; do case "$1" in
@@ -27,7 +34,10 @@ while [ $# -gt 0 ]; do case "$1" in
   --konzipieren-cmd) KONZ="$2"; shift 2;; --bauen-cmd) BAUEN="$2"; shift 2;;
   --max-iterations) MAXIT="$2"; shift 2;; --apply) APPLY=1; shift;; --gh-issues) GH=1; shift;;
   --privacy-dir) PRIV_DIR="$2"; shift 2;; --privacy-required) PRIV_REQ="$2"; shift 2;;
-  --audit-log) AUDIT="$2"; shift 2;; *) echo "Unbekannt: $1" >&2; exit 2;; esac; done
+  --audit-log) AUDIT="$2"; shift 2;;
+  --profile) PROFILE="$2"; shift 2;; --build-profile) BUILD_PROFILE="$2"; shift 2;; --pflichtenheft) PFLICHT="$2"; shift 2;;
+  --qa-cmd) QA="$2"; shift 2;;
+  *) echo "Unbekannt: $1" >&2; exit 2;; esac; done
 
 REPORT="$PROJECT/GATE-REPORT.md"; mkdir -p "$PROJECT/.werkbank"
 log(){ echo "$@"; printf '%s\n' "$@" >> "$PROJECT/.werkbank/STATE.md" 2>/dev/null || true; }
@@ -37,6 +47,8 @@ gate(){ # nie-leeres Array -> bash-3.2-sicher
   [ -n "$PRIV_DIR" ] && args+=(--privacy-dir "$PRIV_DIR")
   [ -n "$PRIV_REQ" ] && args+=(--privacy-required "$PRIV_REQ")
   [ -n "$AUDIT" ] && args+=(--audit-log "$AUDIT")
+  [ -n "$PROFILE" ] && args+=(--profile "$PROFILE")
+  [ -n "$PFLICHT" ] && args+=(--pflichtenheft "$PFLICHT")
   python3 "$ROOT/gates/runner.py" "${args[@]}"; }
 status(){ grep -E "\| $1 \|" "$REPORT" 2>/dev/null | grep -oE "PASS|FAIL|SKIP|WARN" | head -1; }
 heal(){ local f="--apply"; [ "$GH" -eq 1 ] && f="$f --gh-issues"
@@ -53,9 +65,20 @@ log "   A1/A2/A3 grün."
 
 # 02 BAUEN (Ralph-Loop)
 log "▶ 02 Bauen (Ralph-Loop)"
-if ! bash "$ROOT/ralph/ralph-loop.sh" --target "$PROJECT" --build-cmd "$BAUEN" --max-iterations "$MAXIT" --report "$REPORT" >/dev/null 2>&1; then
+ralph_args=(--target "$PROJECT" --build-cmd "$BAUEN" --max-iterations "$MAXIT" --report "$REPORT")
+[ -n "$BUILD_PROFILE" ] && ralph_args+=(--profile "$BUILD_PROFILE")
+[ -n "$PFLICHT" ] && ralph_args+=(--pflichtenheft "$PFLICHT")
+if ! bash "$ROOT/ralph/ralph-loop.sh" "${ralph_args[@]}" >/dev/null 2>&1; then
   log "⛔ 02 Halt: Ralph-Loop nicht grün (Drift/max-iterations)"; heal; exit 3; fi
 log "   Bau grün + promise."
+
+# 02b QA (BMAD-QA-Agent -> Evidence fuer die LLM-Urteils-Gates A4/H6/I1/I2/I3)
+if [ -n "$QA" ]; then
+  log "▶ 02b QA (BMAD-Urteil -> .werkbank/qa-evidence.json)"
+  eval "$QA" >/dev/null 2>&1 || true
+  [ -f "$PROJECT/.werkbank/qa-evidence.json" ] && log "   QA-Evidence geschrieben." \
+    || log "   ! keine QA-Evidence — LLM-Gates bleiben UNGEDECKT (ehrlich)."
+fi
 
 # 03 PRÜFEN (voller Gate-Lauf)
 log "▶ 03 Prüfen (alle Gates)"

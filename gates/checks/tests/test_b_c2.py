@@ -11,7 +11,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 GATES_DIR = os.path.abspath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, GATES_DIR)
 
-from checks import common, b_gates, c2_coverage  # noqa: E402
+from checks import b_gates, c2_coverage, common  # noqa: E402
 
 VALID = {PASS_OR_SKIP for PASS_OR_SKIP in (common.PASS, common.SKIP)}
 

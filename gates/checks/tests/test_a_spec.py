@@ -8,7 +8,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 GATES_DIR = os.path.abspath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, GATES_DIR)
 
-from checks import common, a_spec  # noqa: E402
+from checks import a_spec, common  # noqa: E402
 
 FILLED = """# SPEC — Beispiel
 
@@ -43,7 +43,18 @@ def _w(d, name, content):
 
 class SkipWithoutContext(unittest.TestCase):
     def test_a1_skip_without_spec(self):
-        self.assertEqual(a_spec.run_a1(".").status, common.SKIP)
+        res = a_spec.run_a1(".")
+        self.assertEqual(res.status, common.SKIP)
+        self.assertEqual(res.skip_reason, common.NOT_APPLICABLE)
+        self.assertIn("kein SPEC", res.summary)
+
+    def test_all_a_gates_skip_without_spec(self):
+        for fn in (a_spec.run_a1, a_spec.run_a2, a_spec.run_a3):
+            with self.subTest(gate=fn.__name__):
+                res = fn(".")
+                self.assertEqual(res.status, common.SKIP)
+                self.assertEqual(res.skip_reason, common.NOT_APPLICABLE)
+                self.assertIn("kein SPEC", res.summary)
 
 
 class FilledSpecPasses(unittest.TestCase):

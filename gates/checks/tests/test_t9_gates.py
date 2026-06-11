@@ -8,7 +8,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 GATES_DIR = os.path.abspath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, GATES_DIR)
 
-from checks import common, c1_tests, h4_changelog, f1_model_pinning  # noqa: E402
+from checks import c1_tests, common, f1_model_pinning, h4_changelog  # noqa: E402
 
 
 def _w(d, rel, content):
@@ -35,7 +35,10 @@ class C1Tests(unittest.TestCase):
     def test_no_tests_is_skip(self):
         with tempfile.TemporaryDirectory() as d:
             _w(d, "readme.md", "nix\n")
-            self.assertEqual(c1_tests.run(d).status, common.SKIP)
+            res = c1_tests.run(d)
+            self.assertEqual(res.status, common.SKIP)
+            self.assertEqual(res.skip_reason, common.NOT_APPLICABLE)
+            self.assertIn("kein Testverzeichnis", res.summary)
 
 
 class H4Changelog(unittest.TestCase):

@@ -20,8 +20,9 @@ SCHEMA = os.path.join(REPO_ROOT, "templates", "AUDIT-LOG.schema.json")
 sys.path.insert(0, GATES_DIR)
 sys.path.insert(0, APP_DIR)
 
-from checks import common, e2_pii_scan, e3_tenant_isolation, e4_audit_log, e5_artefakte  # noqa: E402
 import crm_service as crm  # noqa: E402
+
+from checks import common, e2_pii_scan, e3_tenant_isolation, e4_audit_log, e5_artefakte  # noqa: E402
 
 
 class _Clock:

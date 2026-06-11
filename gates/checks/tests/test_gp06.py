@@ -15,8 +15,9 @@ ARTE = os.path.join(REPO_ROOT, "golden-projects", "06-rag-pii-filter", "artefakt
 sys.path.insert(0, GATES_DIR)
 sys.path.insert(0, APP_DIR)
 
-from checks import common, e5_artefakte  # noqa: E402
 import rag_index as rag  # noqa: E402
+
+from checks import common, e5_artefakte  # noqa: E402
 
 
 def _idx():
