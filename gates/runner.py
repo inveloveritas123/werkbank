@@ -181,6 +181,18 @@ def _self_tooling_exclude(target):
     return set()
 
 
+def _framework_exclude(target):
+    """Liest <target>/.werkbank/framework-dirs (von werkbank-init geschrieben) -> Namen der
+    kopierten WERKBANK-Framework-Verzeichnisse, die der Scan ueberspringt (kein Projekt-Code).
+    So bleibt das Projekt standalone, ohne dass das eigene Framework den Audit verrauscht."""
+    p = os.path.join(target, ".werkbank", "framework-dirs")
+    try:
+        with open(p, encoding="utf-8") as f:
+            return {ln.strip() for ln in f if ln.strip() and not ln.lstrip().startswith("#")}
+    except OSError:
+        return set()
+
+
 def run_gates(gates_path, target, report_path, exclude_dirs=None, privacy_dir=None,
               privacy_required=None, audit_log=None, schema_path=None, spec_file=None,
               profile=None, pflichtenheft_path=None, fail_fast=None):
@@ -190,6 +202,10 @@ def run_gates(gates_path, target, report_path, exclude_dirs=None, privacy_dir=No
     if fail_fast is None:
         fail_fast = spec["meta"].get("fail_fast", True)
     exclude_abs = _self_tooling_exclude(target)
+    # Kopiertes Framework (laut .werkbank/framework-dirs) vom Scan ausschliessen.
+    fw = _framework_exclude(target)
+    if fw:
+        exclude_dirs = (set(exclude_dirs) if exclude_dirs else set(common.DEFAULT_EXCLUDE_DIRS)) | fw
     ctx = {"privacy_dir": privacy_dir, "required": privacy_required,
            "audit_log": audit_log, "schema_path": schema_path, "spec_file": spec_file}
 

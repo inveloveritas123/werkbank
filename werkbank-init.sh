@@ -57,6 +57,11 @@ cp_safe .github/workflows/werkbank-gates.yml .github/workflows/werkbank-gates.ym
 
 echo "▶ kiln-State initialisieren"
 mkdir -p "$TARGET/.werkbank"
+# Marker: welche Verzeichnisse sind kopiertes WERKBANK-Framework (kein Projekt-Code)?
+# Der Gate-Runner liest das und schliesst sie vom Scan aus -> kein Rauschen/Falsch-Positive
+# durch das eigene Framework, Projekt bleibt trotzdem standalone.
+printf '%s\n' gates templates agents workflows orchestrator ralph tribunal deploy feedback pipeline \
+  > "$TARGET/.werkbank/framework-dirs"
 if [ ! -f "$TARGET/.werkbank/STATE.md" ] || [ "$FORCE" -eq 1 ]; then
   cat > "$TARGET/.werkbank/STATE.md" <<EOF
 # STATE (kiln, crash-sicher) — $(basename "$TARGET")

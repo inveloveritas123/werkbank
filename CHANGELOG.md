@@ -2,6 +2,19 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-11 — Build-Konvergenz gelöst (end-to-end grüner autonomer Bau)
+- **Wurzel der Nicht-Konvergenz:** autonome Worker liefen mit `--permission-mode acceptEdits`
+  (nur Edits, keine Bash) → konnten `ruff`/`mypy`/Tests nicht ausführen, sahen ihre Fehler nie.
+  Fix: Self-Verify-Build-Prompt (Worker liest Report, läuft Tools selbst, fixt bis sauber, Promise
+  nur bei lokal grün) + `--dangerously-skip-permissions` für alle Worker (konzipieren/bauen/QA).
+- **F1-Falsch-Positiv:** Gate flaggte sein eigenes Docstring-Beispiel; Trigger-Literal entfernt.
+- **Framework-Pollution gelöst (Variante B):** `werkbank-init` schreibt `.werkbank/framework-dirs`
+  (Liste der ins Projekt kopierten Framework-Verzeichnisse); der Runner liest sie und schließt sie
+  vom Scan aus. Projekt bleibt **standalone**, Audit bleibt **sauber** (kein Framework-Rauschen). +4 Tests.
+- **Ergebnis:** die autonom gebaute Pilot-App (`consent_ledger`, BMAD→Ralph) besteht das volle
+  Bau-Profil `basis` **GRÜN (8/8)** — lint/typen/build/tests/coverage/secrets/pinning/changelog.
+  Konvergenz von vorher PASS=1 auf **8/8 grün**; Loop-Closure (Auto-Issue schließt bei PASS) live.
+
 ## 2026-06-11 — Pilot-Härtung: Verdrahtung end-to-end bewiesen (5 Bugs gefixt)
 - **Pilot A (Einwilligungs-Logbuch) als Verdrahtungs-Härtetest** deckte 5 echte Bugs auf, alle gefixt:
   (1) Phasen-Kommandos liefen im falschen cwd; (2) konzipieren legte Unterordner an; (3) `feedback.py`
