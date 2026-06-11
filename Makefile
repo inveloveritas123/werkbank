@@ -21,7 +21,7 @@ help:
 	@echo "  test       Unittests (discover)"
 	@echo "  lint       ruff check ."
 	@echo "  type       mypy gates"
-	@echo "  sast       bandit -r gates -q"
+	@echo "  sast       bandit (Medium+; Test-Fixtures ausgeschlossen)"
 	@echo "  cover      coverage run + report"
 	@echo "  gate       harter Gate-Lauf, Profil $(PROFILE)"
 	@echo "  check      lint + type + sast + test (Pre-Push)"

@@ -25,27 +25,27 @@ jobs:
         with:
           python-version: "3.9"
 
+      # SINGLE SOURCE OF TRUTH: die CI ruft NUR die Makefile-Targets. Damit laufen lokal
+      # (`make all`) und CI per Konstruktion dieselben Befehle — sie koennen nicht mehr
+      # auseinanderdriften (genau der Bug, der die CI 14 Laeufe lang unbemerkt rot hielt).
       - name: Dev-Tools installieren
-        run: pip install -r requirements-dev.txt
+        run: make dev-setup
 
       - name: Lint (ruff)
-        run: ruff check .
+        run: make lint
 
       - name: Typen (mypy)
-        run: mypy gates
+        run: make type
 
       - name: SAST (bandit)
-        # Policy wie Gate D1: nur High/Medium blocken (Low subprocess-Warnungen sind beratend),
-        # und die Test-Fixtures ausschliessen (enthalten absichtlich "unsichere" Muster, z. B.
-        # geplante SQLi/Secrets fuer den Haerte-Test).
-        run: bandit -r gates -q --severity-level medium -x gates/checks/tests
+        run: make sast
 
       - name: Tests (unittest)
-        run: python3 -m unittest discover -s gates/checks/tests -p "test_*.py"
+        run: make test
 
       - name: WERKBANK Gate-Lauf — hartes Gruen (Profil werkbank_self)
         id: gate
-        run: python3 gates/runner.py --target . --report GATE-REPORT.md --profile werkbank_self --ci
+        run: make gate
 
       - name: Gate-Report als Artefakt
         if: always()
