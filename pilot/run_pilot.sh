@@ -17,9 +17,16 @@ rm -rf "$PROJ"; mkdir -p "$PROJ/evidence" "$PROJ/artefakte"; ( cd "$PROJ" && git
 echo "▶ WERKBANK/BMAD einrichten"
 bash "$ROOT/werkbank-init.sh" "$PROJ" >/dev/null 2>&1 || echo "  ! init teilweise"
 
-# 2) GitHub-Repo fuer Live-Issues (privat)
-( cd "$PROJ" && gh repo create "$NAME" --private --source=. --remote=origin >/dev/null 2>&1 ) \
-  && echo "▶ GitHub-Repo angelegt (privat): $NAME" || echo "  ! gh repo create uebersprungen (existiert?)"
+# 2) GitHub-Repo fuer Live-Issues (privat). Existiert es schon, origin-Remote sicherstellen
+#    (sonst findet feedback das Repo nicht -> 'gh nicht authentifiziert').
+if ( cd "$PROJ" && gh repo create "$NAME" --private --source=. --remote=origin ) >/dev/null 2>&1; then
+  echo "▶ GitHub-Repo angelegt (privat): $NAME"
+else
+  GHUSER="$(gh api user -q .login 2>/dev/null)"
+  ( cd "$PROJ" && git remote get-url origin >/dev/null 2>&1 \
+      || git remote add origin "https://github.com/$GHUSER/$NAME.git" )
+  echo "▶ Repo existierte — origin-Remote gesetzt ($GHUSER/$NAME)"
+fi
 
 # 3) Phasen-Kommandos (headless, mit Permission-Flag + gepinntem Builder-Modell)
 KONZ="claude -p --model $BUILD_MODEL --permission-mode acceptEdits \"Konzipiere mit BMAD (Skills bmad-prd, bmad-create-architecture, bmad-create-epics-and-stories) aus diesem Brief: $BRIEF . Schreibe ALLE Dateien direkt ins AKTUELLE Verzeichnis (KEIN Unterordner anlegen). Erzeuge: SPEC.md (6 Pflichtfelder Ziel/Scope/Datenarten/Akzeptanz/Nicht-Ziele/Handoff, >=2 testbare Akzeptanzkriterien, Handoff-Checkliste [x]); ARCHITECTURE.md; TASKS.md mit self-contained Wellen (Dateien/Verbote/Smoke/Akzeptanz inline); DSGVO-Artefakte unter artefakte/ ($REQ); evidence/audit.log (JSONL). EU-Routing, keine Klartext-PII/Secrets, Modelle gepinnt (kein latest). CHANGELOG.md anlegen.\""
@@ -27,7 +34,7 @@ BAUEN="claude -p --model $BUILD_MODEL --permission-mode acceptEdits \"Arbeite di
 QA="bash $ROOT/pilot/qa_evidence.sh '$PROJ'"
 
 # 4) Pipeline 01->04 mit vollem Kontext, Cross-Model-QA und Live-Issues
-echo "▶ Pipeline 01->04 (Profil $PROFILE, max-iter 3, Live-Issues)"
+echo "▶ Pipeline 01->04 (Profil $PROFILE, max-iter $MAXIT, Live-Issues)"
 start=$SECONDS
 bash "$ROOT/pipeline/run_pipeline.sh" --project "$PROJ" \
   --konzipieren-cmd "$KONZ" --bauen-cmd "$BAUEN" --qa-cmd "$QA" \

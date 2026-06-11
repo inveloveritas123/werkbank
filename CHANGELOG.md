@@ -2,6 +2,21 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-11 — Pilot-Härtung: Verdrahtung end-to-end bewiesen (5 Bugs gefixt)
+- **Pilot A (Einwilligungs-Logbuch) als Verdrahtungs-Härtetest** deckte 5 echte Bugs auf, alle gefixt:
+  (1) Phasen-Kommandos liefen im falschen cwd; (2) konzipieren legte Unterordner an; (3) `feedback.py`
+  meldete Issues als erstellt trotz fehlendem Label; (4) Issues landeten im falschen Repo (cwd);
+  (5) origin-Remote fehlte bei existierendem Repo → feedback fand das Repo nicht.
+- **Bewiesen:** BMAD liefert SPEC+Architektur+Stories+7 DSGVO-Artefakte autonom; Bau-Loop baut echten
+  Code+Tests; Governance hält bei roten Gates an; Auto-Issue-Loop legt **echte Projekt-Repo-Issues** an
+  (Label, rc-Check, Projekt-Routing); **Cross-Model-QA-Evidence** speist die LLM-Gates — der Sonnet-Reviewer
+  fand via **I1 (Vier-Augen)** einen echten PII-Validierungs-Bug, den die deterministischen Gates übersahen.
+- **`--no-fail-fast` (neu):** voller Audit-Modus — jedes der 40 Gates läuft und erscheint mit Verdikt
+  (statt Abbruch nach erstem Block-FAIL). Für nachvollziehbare Audit-Reports.
+- **Ehrliche Grenze:** eine autonom gebaute App durch 24 harte Gates komplett GRÜN zu bekommen ist
+  iterationsabhängig und nicht garantiert (LLM-abhängige Bauphase) — WERKBANK ist eine *governte*
+  Build-Pipeline mit Nachweisführung, keine Auto-Grün-Fabrik.
+
 ## 2026-06-11 — Volle Gate-Abdeckung: alle 40 Gates implementiert
 - **19 Stub-Gates gebaut**, Registry jetzt 40/40 (vorher 21):
   - *Deterministisch (14):* H1 TODOs-ohne-Ticket, H2 Komplexität (stdlib `ast`), H3 README,

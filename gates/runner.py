@@ -183,9 +183,12 @@ def _self_tooling_exclude(target):
 
 def run_gates(gates_path, target, report_path, exclude_dirs=None, privacy_dir=None,
               privacy_required=None, audit_log=None, schema_path=None, spec_file=None,
-              profile=None, pflichtenheft_path=None):
+              profile=None, pflichtenheft_path=None, fail_fast=None):
     spec = load_gates(gates_path)
-    fail_fast = spec["meta"].get("fail_fast", True)
+    # fail_fast: aus gates.yaml (Default true) — oder explizit ueberschrieben. False = voller
+    # Audit (jedes Gate laeuft, nichts wird nach einem Block-FAIL abgebrochen).
+    if fail_fast is None:
+        fail_fast = spec["meta"].get("fail_fast", True)
     exclude_abs = _self_tooling_exclude(target)
     ctx = {"privacy_dir": privacy_dir, "required": privacy_required,
            "audit_log": audit_log, "schema_path": schema_path, "spec_file": spec_file}
@@ -318,6 +321,8 @@ def main(argv=None):
     ap.add_argument("--profile", default=None,
                     help="Pflichtenheft-Profil (basis|spec_driven|pii|multi_tenant|werkbank_self); Default aus pflichtenheft.yaml")
     ap.add_argument("--pflichtenheft", default=None, help="Pfad zu pflichtenheft.yaml (Default: gates/pflichtenheft.yaml)")
+    ap.add_argument("--no-fail-fast", action="store_true",
+                    help="Voller Audit: jedes Gate laeuft, kein Abbruch nach Block-FAIL")
     ap.add_argument("--ci", action="store_true", help="Exit-Code 1 bei ROT (fuer CI)")
     a = ap.parse_args(argv)
     exclude = set(common.DEFAULT_EXCLUDE_DIRS)
@@ -327,7 +332,8 @@ def main(argv=None):
     res = run_gates(a.gates, a.target, a.report, exclude_dirs=exclude,
                     privacy_dir=a.privacy_dir, privacy_required=required,
                     audit_log=a.audit_log, schema_path=a.audit_schema, spec_file=a.spec_file,
-                    profile=a.profile, pflichtenheft_path=a.pflichtenheft)
+                    profile=a.profile, pflichtenheft_path=a.pflichtenheft,
+                    fail_fast=False if a.no_fail_fast else None)
     vd = res["verdict"]
     print("Gate-Runner: %s  Profil=%s  Pflicht bestanden=%d/%d  verletzt=%d  ungedeckt=%d  (Report: %s)" % (
         res["overall"], res["profile"], len(vd["passed"]), len(vd["required"]),
