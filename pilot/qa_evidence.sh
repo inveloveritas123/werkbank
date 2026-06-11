@@ -26,7 +26,7 @@ $PROJ/.werkbank/qa-evidence.json mit GENAU dieser Struktur und gueltigem JSON:
 Setze verdict ehrlich auf "fail", wenn ein echtes Problem vorliegt, sonst "pass". Nur die Datei schreiben.
 EOF
 
-claude -p --model "$REVIEWER" --permission-mode acceptEdits "$PROMPT" >/dev/null 2>&1 || true
+claude -p --model "$REVIEWER" --dangerously-skip-permissions "$PROMPT" >/dev/null 2>&1 || true
 if [ -f "$PROJ/.werkbank/qa-evidence.json" ]; then
   echo "QA-Evidence geschrieben ($REVIEWER vs $IMPL)"
 else

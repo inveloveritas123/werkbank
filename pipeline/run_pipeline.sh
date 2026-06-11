@@ -27,8 +27,12 @@ PROFILE="${WERKBANK_PROFILE:-}"; PFLICHT="${WERKBANK_PFLICHTENHEFT:-}"
 BUILD_PROFILE="${WERKBANK_BUILD_PROFILE:-basis}"
 # QA-Hook: schreibt .werkbank/qa-evidence.json (BMADs QA-Agent -> Nachweis fuer A4/H6/I1/I2/I3).
 QA="${WERKBANK_QA_CMD:-}"
-KONZ='claude -p "Konzipiere mit BMAD (Skills bmad-prd, bmad-create-architecture, bmad-create-epics-and-stories) aus dem Brief und schreibe einen vollständigen, A-Gate-tauglichen templates/SPEC.md-konformen SPEC.md ins Projekt: 6 Pflichtfelder, >=2 testbare Akzeptanzkriterien, Handoff [x]."'
-BAUEN='claude -p "Arbeite die oberste offene Story test-first (RED->GREEN->REFACTOR) bis alle Block-Gates grün sind; gib bei fertig exakt <promise>GRUEN</promise> aus."'
+# WICHTIG: die autonomen Worker brauchen --dangerously-skip-permissions, damit claude -p im
+# Headless-Betrieb Dateien schreiben UND Werkzeuge (ruff/mypy/Tests) ausfuehren darf. Ohne das
+# werden Bash-Befehle automatisch abgelehnt -> der Worker kann sich nicht selbst verifizieren und
+# der Bau-Loop konvergiert NIE. Nur in isolierten/sandboxed Projektverzeichnissen verwenden.
+KONZ='claude -p --dangerously-skip-permissions "Konzipiere mit BMAD (Skills bmad-prd, bmad-create-architecture, bmad-create-epics-and-stories) aus dem Brief und schreibe einen vollständigen, A-Gate-tauglichen templates/SPEC.md-konformen SPEC.md ins Projekt: 6 Pflichtfelder, >=2 testbare Akzeptanzkriterien, Handoff [x]."'
+BAUEN='claude -p --dangerously-skip-permissions "Arbeite die oberste offene Story/Welle test-first (RED->GREEN->REFACTOR). SELBST-VERIFIKATION vor dem Fertigmelden: lies GATE-REPORT.md und BACKLOG.md und behebe die dort gelisteten roten Gate-Befunde gezielt (genannte Dateien/Fehler); fuehre dann selbst aus: ruff check ., mypy ., python3 -m unittest discover (oder pytest) und behebe ALLE Befunde, bis diese Tools sauber durchlaufen. Gib NUR DANN exakt <promise>GRUEN</promise> aus, wenn ruff+mypy+Tests lokal sauber sind; sonst arbeite weiter."'
 while [ $# -gt 0 ]; do case "$1" in
   --project) PROJECT="$2"; shift 2;; --brief) BRIEF="$2"; shift 2;;
   --konzipieren-cmd) KONZ="$2"; shift 2;; --bauen-cmd) BAUEN="$2"; shift 2;;
