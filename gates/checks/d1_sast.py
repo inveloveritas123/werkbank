@@ -35,7 +35,11 @@ def run(target, exclude_dirs=None, exclude_abs=None, **_):
     if not shutil.which("bandit"):
         return common.skipped(GATE, "bandit nicht installiert", common.TOOL_MISSING)
 
+    # exclude_dirs = Namen (z. B. node_modules); exclude_abs = absolute Pfade, die beim
+    # Self-Lauf uebersprungen werden (Gate-Tooling/Test-Fixtures — ein Scanner flaggt nicht
+    # seine eigenen, absichtlich "unsicheren" Test-Fixtures). bandit -x nimmt beides.
     excludes = sorted(exclude_dirs or common.DEFAULT_EXCLUDE_DIRS)
+    excludes += [os.path.abspath(p) for p in (exclude_abs or set())]
     cmd = ["bandit", "-q", "-r", os.path.abspath(target), "-f", "json",
            "-x", ",".join(excludes)]
     try:

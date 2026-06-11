@@ -2,6 +2,22 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-11 — Self-contained Wellen, Härte-Test, Installer-Pinning
+- **Gate H5 (neu, `gates/checks/h5_waves.py`):** prüft, dass jede OFFENE Welle in `TASKS.md`
+  inline `Dateien`/`Verbote`/`Smoke`/`Akzeptanz` trägt (kein Nachlesen für frischen Worker/Resume).
+  Doktrin: `docs/DOKTRIN-Self-Contained-Wellen.md`; neues self-contained `templates/TASKS.md`. +7 Tests.
+- **Härte-Test (`gates/checks/tests/test_haerte.py` + `golden-projects/haerte-test/README.md`):**
+  beweist, dass die Gates WIRKLICH rot werden — SQLi (D1), Hardcoded Secret (D3), PII im Log (E2),
+  Non-EU-Routing (E1), fehlende DSGVO-Artefakte/Löschfrist (E5). Verstöße zur Laufzeit synthetisiert,
+  nie committet (Repo bleibt secret-/PII-frei). +6 Tests.
+- **`d1_sast` ehrt jetzt `exclude_abs`** — der Self-SAST-Lauf flaggt nicht mehr die eigenen
+  Test-Fixtures (sonst falsches D1-ROT aufs eigene Repo).
+- **Installer-Pinning (`bootstrap.sh`):** `WERKBANK_REF` (Tag/Commit pinnen) + optional
+  `WERKBANK_EXPECT_SHA` (harte Integritäts-Prüfung), Commit-SHA wird angezeigt; Update-Pfad
+  landet deterministisch auf dem gepinnten Ref. `docs/SICHERE-INSTALLATION.md` + README-Abschnitt
+  gegen blindes `curl | bash`.
+- **230 Tests grün; Self-Lauf GRÜN 9/9 (werkbank_self).**
+
 ## 2026-06-11 — Hartes Grün + Pflichtenheft (Verdikt aus Profilen)
 - **`gates/verdict.py` (neu):** GRÜN ⟺ **jedes** Pflicht-Gate des aktiven Profils ist aktiv `PASS`.
   Ein Pflicht-Gate, das `SKIP`t — egal warum (Tool fehlt, kein Check, kein Kontext) — zählt als

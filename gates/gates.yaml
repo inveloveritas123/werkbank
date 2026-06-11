@@ -75,6 +75,7 @@ stages:
       - { id: H2, name: "Komplexitaet (cyclomatic) unter Schwelle",   flags: [warn, deterministic] }
       - { id: H3, name: "Doku/README aktualisiert",                   flags: [warn, deterministic] }
       - { id: H4, name: "CHANGELOG-Eintrag vorhanden (append, newest-top)", flags: [block, deterministic] }
+      - { id: H5, name: "Wellen self-contained (Dateien/Verbote/Smoke/Akzeptanz inline)", flags: [warn, deterministic] }
       - { id: H6, name: "Drift-Audit: PRD <-> implementierte Architektur",   flags: [block, llm] }
 
   - stage: 8_judgement

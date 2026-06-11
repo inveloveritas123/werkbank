@@ -36,6 +36,7 @@ from checks import (  # noqa: E402
     e8_minimization,
     f1_model_pinning,
     h4_changelog,
+    h5_waves,
 )
 
 # Registry: Gate-ID -> Check-Funktion(target, exclude_dirs, exclude_abs, **ctx) -> CheckResult
@@ -60,6 +61,7 @@ REGISTRY = {
     "E8": e8_minimization.run,
     "F1": f1_model_pinning.run,
     "H4": h4_changelog.run,
+    "H5": h5_waves.run,
 }
 
 

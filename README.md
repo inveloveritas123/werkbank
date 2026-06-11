@@ -18,6 +18,23 @@ curl -fsSL https://raw.githubusercontent.com/inveloveritas123/werkbank/main/boot
 ```
 Voraussetzung: **git, python3 ≥ 3.9**. Optional (degradiert sauber): node 20+ (BMAD), gh (PR/Issues), gitleaks (D3+).
 
+## Sichere Installation
+`curl … | bash` führt fremden Code ungeprüft aus. Ehrlich: für Wegwerf-/Testsysteme ist die Pipe oben in Ordnung.
+
+Für **echte oder Kundensysteme** nicht blind pipen, sondern auf einen **Release-Tag pinnen** (statt `main`) und herunterladen → prüfen → lesen → starten:
+```bash
+curl -fsSL https://raw.githubusercontent.com/inveloveritas123/werkbank/v1.0/bootstrap.sh -o bootstrap.sh
+shasum -a 256 bootstrap.sh        # mit veroeffentlichtem Hash vergleichen
+less bootstrap.sh                 # selbst lesen
+WERKBANK_REF=v1.0 bash bootstrap.sh
+```
+`WERKBANK_REF` (Default `main`) klont/checkt genau diesen Ref (Tag, Branch oder Commit) aus — auch ein
+bestehender Klon wird deterministisch dorthin bewegt. Optional zusätzlich hart pinnen mit
+`WERKBANK_EXPECT_SHA=<commit>`: weicht der ausgecheckte Commit ab, bricht der Installer ab.
+Der Installer gibt den aufgelösten Commit aus (`▶ WERKBANK @ <sha> (ref=<ref>)`) — du siehst genau, was installiert wurde.
+
+Details: [`docs/SICHERE-INSTALLATION.md`](docs/SICHERE-INSTALLATION.md).
+
 ## In ein eigenes Projekt — ein Befehl (bereits geklont)
 BMAD (Methode) + kiln-Loop (Autonomie) + WERKBANK-Gates (Governance) als **eine Einheit**:
 ```bash
