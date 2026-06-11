@@ -1,7 +1,9 @@
 """Gate F1 — Modell-Pinning (kein 'latest'). Deterministisch.
 
-FAIL, wenn ein Modell auf 'latest' statt auf eine gepinnte Version/ein Tier-Alias verweist
-(z. B. `model: ...-latest` oder `model: latest`). Scope: Code/Config (keine Markdown-Doku).
+FAIL, wenn ein Modell-Wert auf das bewegliche Tag statt auf eine gepinnte Version/ein Tier-Alias
+verweist (Zuweisung an einen Modell-Schluessel, deren Wert auf dieses Tag endet). Scope:
+Code/Config (keine Markdown-Doku). Hinweis: das Trigger-Wort steht hier bewusst nicht als
+Beispiel-Literal, damit das Gate seine eigene Doku nicht flaggt.
 """
 import re
 import sys

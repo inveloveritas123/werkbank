@@ -1,21 +1,15 @@
-# GATE-REPORT — target=`.` — 2026-06-11T09:06:31Z
+# GATE-REPORT — target=`.` — 2026-06-11T11:25:48Z
 
 ## Zusammenfassung
-- **Ergebnis:** ROT
+- **Ergebnis:** GRUEN
 - **Profil (Pflichtenheft):** `werkbank_self` — WERKBANK-Repo selbst — volle statische Pflicht ohne Projekt-/Privacy-Kontext
-- **Pflicht-Gates bestanden:** 5/9
+- **Pflicht-Gates bestanden:** 9/9
 - **Pflicht-Gates VERLETZT (FAIL):** 0
-- **Pflicht-Gates UNGEDECKT (nicht geprueft):** 4
-- **Pflicht-Gates ohne PASS:** 4
+- **Pflicht-Gates UNGEDECKT (nicht geprueft):** 0
+- **Pflicht-Gates ohne PASS:** 0
 - **Optionale Befunde (warn):** 3
 
 > **Hartes Gruen:** GRUEN gilt NUR, wenn alle 9 Pflicht-Gates aktiv bestanden sind. SKIP eines Pflicht-Gates (Tool fehlt / kein Check / kein Kontext) ⇒ UNGEDECKT ⇒ ROT.
-
-## Warum ROT — Pflicht-Gates ohne PASS
-- **B1 UNGEDECKT** (Pflicht-Tool nicht installiert) — ruff nicht installiert
-- **B2 UNGEDECKT** (Pflicht-Tool nicht installiert) — mypy nicht installiert
-- **C2 UNGEDECKT** (Pflicht-Tool nicht installiert) — coverage nicht installiert
-- **D1 UNGEDECKT** (Pflicht-Tool nicht installiert) — bandit nicht installiert
 
 ## Detail je Stufe (Flags ★pflicht = Pflicht-Gate dieses Profils)
 | Stufe | Gate | Flags | Ergebnis | Notiz |
@@ -24,15 +18,15 @@
 | 1_spec | A2 | block,deterministic | SKIP | kein SPEC (nicht anwendbar) |
 | 1_spec | A3 | block,deterministic | SKIP | kein SPEC (nicht anwendbar) |
 | 1_spec | A4 | warn,llm | SKIP | kein BMAD-QA-Nachweis (.werkbank/qa-evidence.json) |
-| 2_static | B1 | block,deterministic,★pflicht | SKIP | ruff nicht installiert |
-| 2_static | B2 | block,deterministic,★pflicht | SKIP | mypy nicht installiert |
+| 2_static | B1 | block,deterministic,★pflicht | PASS | ruff sauber |
+| 2_static | B2 | block,deterministic,★pflicht | PASS | mypy sauber |
 | 2_static | B3 | block,deterministic,★pflicht | PASS | Build/Compile sauber (29 .py) |
-| 2_static | D1 | block,deterministic,★pflicht | SKIP | bandit nicht installiert |
+| 2_static | D1 | block,deterministic,★pflicht | PASS | kein High/Medium (12 Low, beraten) |
 | 2_static | D2 | block,deterministic | SKIP | pip-audit/safety nicht installiert |
 | 2_static | D3 | block,deterministic,★pflicht | PASS | kein Secret gefunden |
 | 2_static | D4 | warn,deterministic | SKIP | pip-licenses nicht installiert |
 | 3_tests | C1 | block,deterministic,★pflicht | PASS | Tests grün (313 Tests in gates/checks/tests) |
-| 3_tests | C2 | block,deterministic,★pflicht | SKIP | coverage nicht installiert |
+| 3_tests | C2 | block,deterministic,★pflicht | PASS | Coverage 88% >= 70% |
 | 3_tests | C3 | block,deterministic | PASS | Integrationstests grün (6 in gates/checks/tests) |
 | 3_tests | C4 | block,deterministic | SKIP | kein E2E konfiguriert |
 | 3_tests | C5 | warn,deterministic | PASS | Concurrency-Tests grün (4 Tests) |
