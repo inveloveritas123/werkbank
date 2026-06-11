@@ -1,4 +1,4 @@
-# GATE-REPORT — target=`.` — 2026-06-11T07:09:36Z
+# GATE-REPORT — target=`.` — 2026-06-11T07:14:52Z
 
 ## Zusammenfassung
 - **Ergebnis:** GRUEN
@@ -48,7 +48,7 @@
 | 7_maintainability | H1 | warn,deterministic | PASS | alle TODO/FIXME getrackt (oder keine) |
 | 7_maintainability | H2 | warn,deterministic | WARN | 5 Funktion(en) ueber Komplexitaet 12 |
 | 7_maintainability | H3 | warn,deterministic | WARN | README enthaelt 5 Platzhalter |
-| 7_maintainability | H4 | block,deterministic,★pflicht | PASS | CHANGELOG vorhanden, 30 Einträge, newest-top |
+| 7_maintainability | H4 | block,deterministic,★pflicht | PASS | CHANGELOG vorhanden, 31 Einträge, newest-top |
 | 7_maintainability | H5 | warn,deterministic | SKIP | keine TASKS.md (nicht anwendbar) |
 | 7_maintainability | H6 | block,llm | SKIP | kein BMAD-QA-Nachweis (.werkbank/qa-evidence.json) |
 | 8_judgement | I1 | block,llm | SKIP | kein BMAD-QA-Nachweis (.werkbank/qa-evidence.json) |

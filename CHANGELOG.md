@@ -2,6 +2,21 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-11 — Volle Gate-Abdeckung: alle 40 Gates implementiert
+- **19 Stub-Gates gebaut**, Registry jetzt 40/40 (vorher 21):
+  - *Deterministisch (14):* H1 TODOs-ohne-Ticket, H2 Komplexität (stdlib `ast`), H3 README,
+    D4 Lizenz-Scan, C3 Integrationstests, C4 E2E (Playwright), C5 Concurrency, C6 a11y (axe),
+    D2 SCA (pip-audit/safety), F2 Eval-on-Bump, F3 Golden-Snapshots, G1 k6, G2 Bundle-Budget, G3 N+1.
+  - *LLM-Urteil (5) als BMAD-QA-Evidence-Leser:* A4/H6/I1/I2/I3 lesen `.werkbank/qa-evidence.json`
+    (BMADs QA-Agent urteilt, WERKBANK gated auf dem Nachweis — kein Doppeln; I1/I2 erzwingen Cross-Model).
+  - Tool-Gates: `SKIP`/`TOOL_MISSING` wenn Tool fehlt (kein Vortäuschen) → unter Pflicht-Profil ROT.
+- **Profil `produktion` (neu):** voller Audit-Umfang = 24 Pflicht-Gates (Spec, Lint/Typen/Build, Tests/Coverage,
+  SAST+SCA+Secrets, EU/PII/Audit/Artefakte/DPIA/Mandanten, Pinning, Changelog, Drift, Vier-Augen, Tribunal,
+  Deployment-Validierung). Perf/E2E/a11y bleiben advisory.
+- **Pipeline-QA-Hook (`--qa-cmd`/`WERKBANK_QA_CMD`):** Phase 02b ruft BMADs QA-Agent, der die Evidence schreibt,
+  bevor Phase 03 die LLM-Gates prüft. Ohne Evidence bleiben sie ehrlich UNGEDECKT.
+- **313 Tests grün; Self-Lauf GRÜN 9/9.** Jeder der 40 Gates erscheint jetzt mit Status im Audit-Report.
+
 ## 2026-06-11 — Self-contained Wellen, Härte-Test, Installer-Pinning
 - **Gate H5 (neu, `gates/checks/h5_waves.py`):** prüft, dass jede OFFENE Welle in `TASKS.md`
   inline `Dateien`/`Verbote`/`Smoke`/`Akzeptanz` trägt (kein Nachlesen für frischen Worker/Resume).

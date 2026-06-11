@@ -41,6 +41,16 @@ profiles:
     extends: pii
     required: [E3]
 
+  # Voller Audit-Umfang fuer eine produktionsreife DSGVO-App: alle harten Gates inkl.
+  # SCA (D2) UND der LLM-Review-Nachweise (A4/H6/I1/I2/I3 ueber BMAD-QA-Evidence).
+  # GRUEN heisst hier: jede Stufe aktiv bestanden — Lint/Typen/Build/Tests/Coverage,
+  # SAST+SCA+Secrets, EU/PII/Audit/Artefakte/DPIA/Mandanten, Modell-Pinning, Changelog,
+  # Drift-Audit, Vier-Augen, Tribunal, Deployment-Validierung. (Perf/E2E/a11y bleiben warn.)
+  produktion:
+    desc: "Produktionsreife DSGVO-App — voller Pflichtumfang inkl. SCA + LLM-Review-Nachweis"
+    extends: multi_tenant
+    required: [A4, D2, H6, I1, I2, I3]
+
   # Profil fuer das WERKBANK-Repo selbst: kein Privacy-Kontext, kein erzwungenes SPEC,
   # aber die volle statische + Test-Pflicht inkl. SAST. Damit ist der eigene Gate-Lauf
   # ehrlich gruen NUR, wenn ruff/mypy/coverage/bandit installiert sind UND durchlaufen.
