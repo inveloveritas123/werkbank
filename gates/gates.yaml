@@ -85,6 +85,12 @@ stages:
       - { id: I2, name: "QA-Tribunal (Dual-Model, anonymisierte Reconciliation)",    flags: [block, llm] }
       - { id: I3, name: "Deployment-Validierung gegen echte User-Flows (Argus-Stil)", flags: [block, llm] }
 
+  - stage: 9_freigabe
+    desc: "J — Produktivfreigabe (menschliche Abnahme; KEIN Self-Sign durch den Agenten)"
+    gates:
+      - { id: J1, name: "Security-Abnahme (signierte Freigabe liegt vor)",        flags: [block, deterministic] }
+      - { id: J2, name: "Datenschutz-/DSB-Abnahme (signierte Freigabe liegt vor)", flags: [block, deterministic] }
+
 # Branchen-Gates (branch) werden pro Kunde aus branch-modules/ zugeladen, z. B.:
 # bau: HOAI-Pruefungen | finanzen: BaFin/Audit-Trail | gis: Geodaten-Lizenz | iot: Firmware-Signatur
 branch_modules:

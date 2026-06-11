@@ -51,6 +51,14 @@ profiles:
     extends: multi_tenant
     required: [A4, D2, H6, I1, I2, I3]
 
+  # Hoechste Latte: alle technischen Gates UND die signierte menschliche Abnahme (J1 Security,
+  # J2 Datenschutz/DSB). GRUEN heisst hier wirklich 'darf mit echten Daten live' — und ist nur
+  # mit menschlicher Unterschrift erreichbar (kein Self-Sign durch den Agenten).
+  produktiv:
+    desc: "Produktiv mit echten Daten — produktion + menschliche Security-/Datenschutz-Abnahme"
+    extends: produktion
+    required: [J1, J2]
+
   # Profil fuer das WERKBANK-Repo selbst: kein Privacy-Kontext, kein erzwungenes SPEC,
   # aber die volle statische + Test-Pflicht inkl. SAST. Damit ist der eigene Gate-Lauf
   # ehrlich gruen NUR, wenn ruff/mypy/coverage/bandit installiert sind UND durchlaufen.

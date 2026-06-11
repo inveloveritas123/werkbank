@@ -2,6 +2,16 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-11 — Menschliche Produktivfreigabe als hartes Gate (J1/J2, Profil `produktiv`)
+- **Gates J1 (Security-Abnahme) + J2 (Datenschutz-/DSB-Abnahme)** (`gates/checks/freigabe.py`, neue
+  Stufe `9_freigabe`): lesen `docs/produktivfreigabe/FREIGABE.yaml`, das ein **Mensch** ausfüllt+signiert.
+  `freigegeben: true` mit `von`+`datum` ⇒ PASS; nicht erteilt/unvollständig ⇒ FAIL; fehlt ⇒ SKIP
+  (unter `produktiv` ⇒ ROT). **Kein Self-Sign durch den Agenten.**
+- **Profil `produktiv` (neu)** = `produktion` + J1 + J2 = **26 Pflicht-Gates**. Wird nur GRÜN mit
+  signierter menschlicher Security- **und** Datenschutz-Abnahme — „darf mit echten Daten live" ist
+  damit auditierbar an eine Unterschrift gebunden.
+- `FREIGABE.template.yaml` + Doku in `docs/produktivfreigabe/README.md`. Registry jetzt 42 Gates. +6 Tests.
+
 ## 2026-06-11 — Build-Konvergenz gelöst (end-to-end grüner autonomer Bau)
 - **Wurzel der Nicht-Konvergenz:** autonome Worker liefen mit `--permission-mode acceptEdits`
   (nur Edits, keine Bash) → konnten `ruff`/`mypy`/Tests nicht ausführen, sahen ihre Fehler nie.

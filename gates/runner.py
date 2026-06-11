@@ -44,6 +44,7 @@ from checks import (  # noqa: E402
     f1_model_pinning,
     f2_eval_on_bump,
     f3_snapshots,
+    freigabe,
     g1_loadtest,
     g2_bundle_budget,
     g3_nplus1,
@@ -96,6 +97,8 @@ REGISTRY = {
     "I1": bmad_qa.run_i1,
     "I2": bmad_qa.run_i2,
     "I3": bmad_qa.run_i3,
+    "J1": freigabe.run_j1,
+    "J2": freigabe.run_j2,
 }
 
 
