@@ -52,6 +52,8 @@ cp_safe tribunal tribunal
 cp_safe deploy deploy
 cp_safe feedback feedback
 cp_safe pipeline pipeline
+cp_safe branch-modules branch-modules          # Branchen-Regelpakete (Gates K1/K2)
+cp_safe docs/produktivfreigabe docs/produktivfreigabe  # FREIGABE-Template + Review-Doku (Gates J1/J2)
 mkdir -p "$TARGET/.github/workflows"
 cp_safe .github/workflows/werkbank-gates.yml .github/workflows/werkbank-gates.yml
 
@@ -60,7 +62,7 @@ mkdir -p "$TARGET/.werkbank"
 # Marker: welche Verzeichnisse sind kopiertes WERKBANK-Framework (kein Projekt-Code)?
 # Der Gate-Runner liest das und schliesst sie vom Scan aus -> kein Rauschen/Falsch-Positive
 # durch das eigene Framework, Projekt bleibt trotzdem standalone.
-printf '%s\n' gates templates agents workflows orchestrator ralph tribunal deploy feedback pipeline \
+printf '%s\n' gates templates agents workflows orchestrator ralph tribunal deploy feedback pipeline branch-modules \
   > "$TARGET/.werkbank/framework-dirs"
 if [ ! -f "$TARGET/.werkbank/STATE.md" ] || [ "$FORCE" -eq 1 ]; then
   cat > "$TARGET/.werkbank/STATE.md" <<EOF
