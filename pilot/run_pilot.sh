@@ -6,6 +6,7 @@ set -uo pipefail
 NAME="${1:?name}"; PROFILE="${2:?profil}"; BRIEF="${3:?brief}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILD_MODEL="${WERKBANK_BUILD_MODEL:-opus}"
+MAXIT="${WERKBANK_MAXIT:-3}"
 PROJ="$HOME/werkbank-pilots/$NAME"
 REQ="DATA-FLOW.md,PROCESSING-REGISTER.md,LAWFUL-BASIS.md,DPIA-SCREENING.md,TOMs.md,PROCESSORS-SUBPROCESSORS.md,RETENTION-DELETION.md"
 
@@ -30,7 +31,7 @@ echo "▶ Pipeline 01->04 (Profil $PROFILE, max-iter 3, Live-Issues)"
 start=$SECONDS
 bash "$ROOT/pipeline/run_pipeline.sh" --project "$PROJ" \
   --konzipieren-cmd "$KONZ" --bauen-cmd "$BAUEN" --qa-cmd "$QA" \
-  --max-iterations 3 --profile "$PROFILE" --build-profile basis \
+  --max-iterations "$MAXIT" --profile "$PROFILE" --build-profile basis \
   --privacy-dir "$PROJ/artefakte" --privacy-required "$REQ" \
   --audit-log "$PROJ/evidence/audit.log" \
   --gh-issues --apply

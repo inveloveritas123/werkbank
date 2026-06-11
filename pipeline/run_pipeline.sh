@@ -52,7 +52,9 @@ gate(){ # nie-leeres Array -> bash-3.2-sicher
   python3 "$ROOT/gates/runner.py" "${args[@]}"; }
 status(){ grep -E "\| $1 \|" "$REPORT" 2>/dev/null | grep -oE "PASS|FAIL|SKIP|WARN" | head -1; }
 heal(){ local f="--apply"; [ "$GH" -eq 1 ] && f="$f --gh-issues"
-  python3 "$ROOT/feedback/feedback.py" --report "$REPORT" --backlog "$PROJECT/BACKLOG.md" $f --close-resolved || true; }
+  # In $PROJECT laufen: gh-Issues landen so im PROJEKT-Repo (nicht im cwd-Repo der Pipeline).
+  ( cd "$PROJECT" && python3 "$ROOT/feedback/feedback.py" --report "$REPORT" \
+      --backlog "$PROJECT/BACKLOG.md" $f --close-resolved ) || true; }
 
 # 01 KONZIPIEREN (BMAD)
 log "▶ 01 Konzipieren (BMAD)"
