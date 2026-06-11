@@ -40,7 +40,7 @@ type:
 	mypy gates
 
 sast:
-	bandit -r gates -q
+	bandit -r gates -q --severity-level medium
 
 cover:
 	coverage run -m unittest discover -s $(TEST_DIR) -p "$(TEST_PATTERN)" && coverage report
