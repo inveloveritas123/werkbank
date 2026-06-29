@@ -2,6 +2,18 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-06-29 — AGENTS.md als SSoT + C4 agent-browser-Smoke + Webinar-Vergleich
+- **AGENTS.md ist jetzt kanonische Quelle der Wahrheit** (tool-übergreifend Claude/Codex), `CLAUDE.md`
+  ist ein dünner `@AGENTS.md`-Zeiger. Neu: Repo-Root `AGENTS.md`/`CLAUDE.md` (Arbeit am Framework),
+  `templates/AGENTS.werkbank.md` (Rollout in Zielprojekte), `templates/CLAUDE.werkbank.md` → Zeiger.
+- **`werkbank-init.sh` append-aware:** läuft nach dem BMAD-Install; existiert bereits eine `AGENTS.md`
+  (z. B. von BMAD `--tools codex`), wird nur ein abgegrenzter `WERKBANK`-Block eingefügt statt
+  überschrieben — kein Clash mit BMAD, kein Duplikat (House-Profil „eine Quelle der Wahrheit").
+- **Gate C4** prüft jetzt einen E2E-**Smoke** bevorzugt via **agent-browser** (live gegen die App,
+  Webinar-Empfehlung), Fallback Playwright. SKIP ohne E2E-Config (nicht in `werkbank_self`-Pflicht,
+  CI bleibt grün). +4 Tests.
+- **Doku:** `docs/WEBINAR-VS-WERKBANK.md` (Vergleich meinGPT-Coding-Webinar ↔ WERKBANK; Ableitungen).
+
 ## 2026-06-11 — Branchenregeln als hartes Gate (K1/K2, Profil `produktiv_reguliert`)
 - **Stufe `10_branche`, Gates K1 (Branchen-Pflicht-Artefakte) + K2 (Branchen-Fachabnahme)**
   (`gates/checks/branch.py`): Branche via `--branch <name>` / `.werkbank/branch.txt`; Regelpaket in
