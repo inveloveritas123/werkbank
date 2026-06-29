@@ -88,11 +88,6 @@ for line in ".env" ".env.*" "*.key" "*.pem" "secrets/" ".werkbank/STATE.md" ".we
 done
 echo "  ✓ .gitignore"
 
-# Bindeglied: CLAUDE.md macht die drei Schichten zu EINER Einheit für den Agenten.
-if [ ! -f "$TARGET/CLAUDE.md" ] || [ "$FORCE" -eq 1 ]; then
-  cp "$SRC/templates/CLAUDE.werkbank.md" "$TARGET/CLAUDE.md" 2>/dev/null && echo "  ✓ CLAUDE.md (Einheit BMAD+kiln+WERKBANK)"
-fi
-
 echo "▶ Git vorbereiten"
 if [ ! -d "$TARGET/.git" ]; then ( cd "$TARGET" && git init -q ); echo "  ✓ git init"; fi
 ( cd "$TARGET" && git rev-parse --verify werkbank-build >/dev/null 2>&1 || git checkout -q -b werkbank-build ) && echo "  ✓ Branch werkbank-build"
@@ -109,6 +104,28 @@ if [ "$WITH_BMAD" -eq 1 ]; then
   else
     echo "  ! node/npx fehlt — BMAD übersprungen. Später: npx bmad-method@6.8.0 install --tools claude-code"
   fi
+fi
+
+# Bindeglied: AGENTS.md ist die kanonische Quelle der Wahrheit (tool-übergreifend, Claude+Codex),
+# CLAUDE.md nur ein dünner @AGENTS.md-Zeiger. Läuft NACH dem BMAD-Install, damit eine evtl. von
+# BMAD (z. B. --tools codex) erzeugte AGENTS.md NICHT überschrieben, sondern um einen abgegrenzten
+# WERKBANK-Block ERGÄNZT wird — kein Clash mit BMAD, kein Duplikat.
+echo "▶ AGENTS.md (SSoT) + CLAUDE.md (Zeiger) einrichten"
+WB_BEGIN="<!-- WERKBANK:BEGIN (managed; nicht von Hand editieren) -->"
+WB_END="<!-- WERKBANK:END -->"
+if [ -f "$TARGET/AGENTS.md" ] && [ "$FORCE" -eq 0 ]; then
+  if grep -qF "$WB_BEGIN" "$TARGET/AGENTS.md" 2>/dev/null; then
+    echo "  = AGENTS.md: WERKBANK-Block bereits vorhanden (unverändert)"
+  else
+    { printf '\n%s\n' "$WB_BEGIN"; cat "$SRC/templates/AGENTS.werkbank.md"; printf '%s\n' "$WB_END"; } >> "$TARGET/AGENTS.md"
+    echo "  ✓ AGENTS.md: WERKBANK-Block angehängt (vorhandener BMAD-Inhalt unberührt)"
+  fi
+else
+  { printf '%s\n' "$WB_BEGIN"; cat "$SRC/templates/AGENTS.werkbank.md"; printf '%s\n' "$WB_END"; } > "$TARGET/AGENTS.md"
+  echo "  ✓ AGENTS.md (kanonische SSoT: BMAD+kiln+WERKBANK)"
+fi
+if [ ! -f "$TARGET/CLAUDE.md" ] || [ "$FORCE" -eq 1 ]; then
+  cp "$SRC/templates/CLAUDE.werkbank.md" "$TARGET/CLAUDE.md" 2>/dev/null && echo "  ✓ CLAUDE.md (Zeiger auf AGENTS.md)"
 fi
 
 if [ "$RALPH_HOOK" -eq 1 ]; then

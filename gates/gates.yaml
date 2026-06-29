@@ -38,7 +38,7 @@ stages:
       - { id: C1, name: "Unit-Tests gruen",                            flags: [block, deterministic] }
       - { id: C2, name: "Coverage >= Zielwert",                        flags: [block, deterministic] }
       - { id: C3, name: "Integrationstests gruen",                     flags: [block, deterministic] }
-      - { id: C4, name: "E2E (Playwright) Kernflows gruen",            flags: [block, deterministic] }
+      - { id: C4, name: "E2E-Smoke Kernflows gruen (agent-browser, Fallback Playwright)", flags: [block, deterministic] }
       - { id: C5, name: "Concurrency/Race-Condition-Test",             flags: [warn, deterministic] }
       - { id: C6, name: "a11y (axe-core) ohne Violations",             flags: [warn, deterministic] }
 

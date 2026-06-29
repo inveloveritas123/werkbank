@@ -90,5 +90,60 @@ class ToolPresentRuns(unittest.TestCase):
             self.assertEqual(res.status, common.FAIL)
 
 
+class AgentBrowserPreferred(unittest.TestCase):
+    """agent-browser ist der bevorzugte Runner; Playwright nur Fallback."""
+
+    def setUp(self):
+        self._orig_which = c4_e2e.shutil.which
+        self._orig_run = c4_e2e.subprocess.run
+
+    def tearDown(self):
+        c4_e2e.shutil.which = self._orig_which
+        c4_e2e.subprocess.run = self._orig_run
+
+    def test_agent_browser_config_without_npx_is_tool_missing(self):
+        c4_e2e.shutil.which = lambda name: None
+        with tempfile.TemporaryDirectory() as d:
+            _write(d, "agent-browser.config.ts", "export default {};\n")
+            res = c4_e2e.run(d)
+            self.assertEqual(res.status, common.SKIP)
+            self.assertEqual(res.skip_reason, common.TOOL_MISSING)
+
+    def test_agent_browser_returncode_zero_passes(self):
+        c4_e2e.shutil.which = lambda name: "/usr/bin/npx"
+        c4_e2e.subprocess.run = lambda *a, **kw: _FakeProc(0, stdout="smoke ok\n")
+        with tempfile.TemporaryDirectory() as d:
+            _write(d, "agent-browser.config.js", "module.exports = {};\n")
+            res = c4_e2e.run(d)
+            self.assertEqual(res.status, common.PASS)
+            self.assertIn("agent-browser", res.summary)
+
+    def test_agent_browser_returncode_nonzero_fails(self):
+        c4_e2e.shutil.which = lambda name: "/usr/bin/npx"
+        c4_e2e.subprocess.run = lambda *a, **kw: _FakeProc(1, stdout="missing icon\n")
+        with tempfile.TemporaryDirectory() as d:
+            _write(d, "agent-browser.config.mjs", "export default {};\n")
+            res = c4_e2e.run(d)
+            self.assertEqual(res.status, common.FAIL)
+            self.assertEqual(len(res.findings), 1)
+
+    def test_agent_browser_wins_over_playwright(self):
+        seen = {}
+        c4_e2e.shutil.which = lambda name: "/usr/bin/npx"
+
+        def capture(argv, *a, **kw):
+            seen["argv"] = argv
+            return _FakeProc(0, stdout="ok\n")
+
+        c4_e2e.subprocess.run = capture
+        with tempfile.TemporaryDirectory() as d:
+            _write(d, "agent-browser.config.ts", "export default {};\n")
+            _write(d, "playwright.config.ts", "export default {};\n")
+            res = c4_e2e.run(d)
+            self.assertEqual(res.status, common.PASS)
+            self.assertIn("agent-browser", seen["argv"])
+            self.assertNotIn("playwright", seen["argv"])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
