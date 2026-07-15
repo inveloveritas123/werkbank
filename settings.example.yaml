@@ -10,7 +10,8 @@ routing:
 tiers: { haiku_pct: 80, sonnet_pct: 15, opus_pct: 5, confirm_gate_from: S5 }
 budget: { period_cap_eur: 0, kill_switch_eur: 0 }
 conventions: { changelog: CHANGELOG.md, index_first: true }
-modules: { core: true, gates: true, kanzler: false, brownfield: false, branch_modules: [] }
+# starter_stack: Name aus starter-stacks/ (z. B. backend-go-graphql); leer = echtes Greenfield.
+modules: { core: true, gates: true, kanzler: false, brownfield: false, branch_modules: [], starter_stack: "" }
 kanzler:
   enabled: false
 build_isolation: { large: vm, small: container, default: vm }

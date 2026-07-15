@@ -112,6 +112,7 @@ python3 gates/runner.py --target . --report GATE-REPORT.md --profile werkbank_se
 | `gates/pflichtenheft.yaml` + `gates/verdict.py` | Pflichtenheft-Profile + **hartes Grün** (Pflicht-SKIP ⇒ ROT) |
 | `docs/produktivfreigabe/FREIGABE.yaml` | **menschliche Abnahme als Gate** (J1 Security, J2 Datenschutz; kein Self-Sign) |
 | `branch-modules/` | **Branchenregeln als Gate** (K1 Artefakte, K2 Fachabnahme; BaFin/HOAI/MDR/KRITIS …) |
+| `starter-stacks/` | **Geprüfte Projekt-Startvorlagen** (Architektur-Phase wählt Stack statt Rohbau; erster Stack: Go+GraphQL-Backend aus Filumio) |
 | `pilot/run_pilot.sh` | Pilot-Harness: ein Befehl fährt ein Projekt 01→04 mit Live-Issues + Metriken |
 | `ralph/` | Ralph-Loop (Fresh-Context, Drift-Pausegate, Kill-Switch) |
 | `tribunal/` · `deploy/` | I2 QA-Tribunal (Cross-Model) · I3 Deployment-Validierung |
