@@ -1,0 +1,32 @@
+name: backend-go-graphql
+repo: https://github.com/zkbandfriends/ZukunftsApp_Vorlage_Backend_Framework
+desc: "Go + GraphQL + Postgres Backend-Blaupause, extrahiert aus filumio_backend (Juli 2026)"
+
+# Was der Stack fertig mitbringt (Substanz, die Gates bereits besteht):
+liefert:
+  - "Auth komplett: Register/Login (bcrypt), Session-Cookies (HMAC), Passwort-Reset,
+     E-Mail-Verifikation (Double-Opt-In), Welcome-Mail-Job, DSGVO-Sweep unverifizierter Konten"
+  - "Rollen (admin/manager/user/beta) + Feature-Flags (eine Registry für UI und Enforcement)"
+  - "Event→Job-Pipeline auf Postgres (idempotente Handler, Retry, Delay-Bindings)"
+  - "GraphQL schema-first mit @auth-PolicyMap (fail-closed) und @cache-Codegen"
+  - "Append-only Migrations-Ledger (advisory-gelockt, idempotent)"
+  - "Deploy: GHCR+Watchtower, Traefik ODER Cloudflare-Tunnel; CI (unit+integration+build)"
+  - "Beispiel-Domäne Note als Referenz-Schnitt (Modell→Repo→Service→GraphQL→Event→Job)"
+
+# Kurzfassung der Passung — verbindlich ist docs/EIGNUNG.md im Stack-Repo:
+eignung:
+  passt: "CRUD-/SaaS-Apps mit Login, Hintergrundverarbeitung, KI-/LLM-Features, Multi-Client-APIs"
+  passt_mit_anpassung: "Team-/Org-Mandanten (org_id nachrüsten), Echtzeit-Häppchen (Subscriptions), große Uploads (S3-Provider)"
+  passt_nicht: "harte Echtzeit (Chat/Kollaboration/Games), Event-Streaming/Massen-Ingestion, statische Sites, Offline-First-Sync"
+eignung_doc: docs/EIGNUNG.md
+
+init: "./scripts/init_project.sh <modulname> \"<App-Name>\""
+onboarding_doc: docs/ONBOARDING.md      # neues Projekt in ~30 min, 11-Schritte-Tabelle
+verify: "make db-up && make run  # bootet+migriert; Tests: docker run --rm -v $PWD:/src -w /src golang:1.25 go test ./..."
+
+# DSGVO-relevante Eigenschaften (Zuarbeit für privacy/-Artefakte des Projekts):
+dsgvo:
+  - "Per-User-Datenisolation strukturell (WHERE user_id in jedem Repository)"
+  - "Unverifizierte Registrierungen werden nach UNVERIFIED_RETENTION (7d) gelöscht"
+  - "Tokens nur gehasht at rest; Session-Cookie HttpOnly; Audio/Uploads standardmäßig nicht persistiert"
+  - "Transaktions-Mails deutsch, BGH-konform transaktional (Verifikationsmail ohne Werbung)"

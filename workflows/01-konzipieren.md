@@ -6,9 +6,15 @@
 ## Ablauf (vom Agenten auszuführen)
 1. **Brief → PRD:** BMAD-Skill `bmad-prd` aufrufen (Analyst/PM-Rolle). Eingabe: Projektangaben/Story.
 2. **Architektur:** Skill `bmad-create-architecture` (Architect, Winston). Handoff PM→Architect dokumentieren.
-3. **Stories:** Skill `bmad-create-epics-and-stories` (Scrum-Master) → umsetzbare Stories mit Akzeptanz.
+3. **Starter-Stack prüfen:** Passt ein registrierter Stack aus `starter-stacks/` (dessen
+   `eignung`/`eignung_doc` gegen die Architektur halten)? Die Entscheidung — Stack X oder
+   bewusst Greenfield — **als Architektur-Entscheid ins SPEC** schreiben und bei Wahl
+   `starter_stack: <name>` in den Projekt-Settings setzen. `02-bauen` startet dann vom
+   geklonten, initialisierten Stack (`init` aus `stack.yaml`) statt vom Rohbau; Gates bleiben
+   unverändert der Maßstab.
+4. **Stories:** Skill `bmad-create-epics-and-stories` (Scrum-Master) → umsetzbare Stories mit Akzeptanz.
    (Unsicher, welcher Skill? `bmad-help` aufrufen.)
-4. **SPEC ableiten:** aus PRD/Architektur `templates/SPEC.md` befüllen — alle 6 Pflichtfelder
+5. **SPEC ableiten:** aus PRD/Architektur `templates/SPEC.md` befüllen — alle 6 Pflichtfelder
    (Ziel, Scope, Datenarten, Akzeptanzkriterien, Nicht-Ziele, Handoff), **keine Platzhalter**,
    Akzeptanzkriterien als testbare `- [ ]`-Liste, Handoff-Checkliste `- [x]`.
 
