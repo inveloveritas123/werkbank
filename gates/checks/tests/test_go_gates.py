@@ -119,9 +119,16 @@ class GoTestCase(unittest.TestCase):
         os.makedirs(self.root)
         self.fakes = Fakes(self._tmp.name)
         env = {k: v for k, v in os.environ.items() if k not in _WB_ENV}
-        # Minimaler PATH: nur Fakes + System-Basis (sh/cat/sleep). Dadurch sind weder ein echtes
-        # go noch ruff/mypy/bandit aus der Entwicklungsumgebung sichtbar -> deterministisch.
-        env["PATH"] = self.fakes.dir + os.pathsep + "/usr/bin" + os.pathsep + "/bin"
+        # Minimaler PATH: nur Fakes + die wenigen Hilfsprogramme der Fake-Skripte (per Symlink).
+        # Dadurch sind weder ein echtes go/gofmt noch ruff/mypy/bandit der Umgebung sichtbar
+        # (auf CI-Runnern liegt gofmt z. B. in /usr/bin) -> deterministisch.
+        sysbin = os.path.join(self._tmp.name, "sysbin")
+        os.makedirs(sysbin)
+        for tool in ("cat", "sleep", "dirname", "basename"):
+            real = shutil.which(tool)
+            if real:
+                os.symlink(real, os.path.join(sysbin, tool))
+        env["PATH"] = self.fakes.dir + os.pathsep + sysbin
         p = mock.patch.dict(os.environ, env, clear=True)
         p.start()
         self.addCleanup(p.stop)
