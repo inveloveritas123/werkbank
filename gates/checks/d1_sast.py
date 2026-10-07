@@ -6,6 +6,8 @@ Deterministisch: ruft `bandit -r <target> -f json`. Bewertet nach Severity.
 - bandit nicht installiert   -> SKIP/TOOL_MISSING (kein Vortaeuschen).
 - kein Python-Code           -> SKIP/NOT_APPLICABLE.
 
+Go-Projekte (go.mod gefunden): gosec (`-fmt=json`), gleiche Bewertung nach Severity (golang.py).
+
 Kein Klartext im Report: Fundstelle = Datei:Zeile + Test-ID, kein Code-Snippet.
 """
 import json
@@ -14,9 +16,10 @@ import shutil
 import subprocess
 
 try:
-    from . import common
+    from . import common, golang
 except ImportError:
     import common  # type: ignore
+    import golang  # type: ignore
 
 GATE = "D1"
 _BLOCK_SEVERITIES = {"HIGH", "MEDIUM"}
@@ -30,6 +33,12 @@ def _has_python(target, exclude_dirs, exclude_abs):
 
 
 def run(target, exclude_dirs=None, exclude_abs=None, **_):
+    return golang.combine(GATE, target, exclude_dirs, exclude_abs,
+                          py=lambda: _run_python(target, exclude_dirs, exclude_abs),
+                          go=golang.sast)
+
+
+def _run_python(target, exclude_dirs=None, exclude_abs=None):
     if not _has_python(target, exclude_dirs, exclude_abs):
         return common.skipped(GATE, "kein Python-Code", common.NOT_APPLICABLE)
     if not shutil.which("bandit"):

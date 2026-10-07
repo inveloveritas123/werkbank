@@ -2,6 +2,24 @@
 
 > Append, neuster Eintrag oben (Gate H4).
 
+## 2026-10-07 — Go-Unterstützung in den Quality-Gates (B1–B3, C1, C2, D1, D2, H2)
+- **Go statt nur Python:** dieselben Gates bekommen eine Go-Variante (`gates/checks/golang.py`), keine
+  neuen Gate-IDs, keine Profiländerung. Erkennung über `go.mod` (Root **oder Unterordner**, Monorepo;
+  `vendor/`, `node_modules/`, `testdata/`, `exclude_dirs`, `.werkbank/framework-dirs` zählen nicht;
+  mehrere Module → jedes wird geprüft).
+- **Zuordnung:** B1 `gofmt -l` · B2 `go vet ./...` · B3 `go build ./...` · C1 `go test ./...` ·
+  C2 `go test -coverprofile` + `go tool cover -func` (Schwelle `C2_MIN`) · D1 `gosec` (High/Medium = FAIL) ·
+  D2 `govulncheck` (nur erreichbare Schwachstellen = FAIL) · H2 `gocyclo` (optional, warn).
+  D4 bewusst ohne Go-Variante (nur warn, kein belastbares Standardwerkzeug; in keinem Profil).
+- **Kompatibilität:** ohne `go.mod` liefern die Gates exakt das bisherige Python-Ergebnis (gleiche Texte).
+  Gemischte Projekte: beide Sprachen, strengstes Ergebnis (`common.merge_results`: FAIL > SKIP > WARN > PASS,
+  nur Teile ohne jeglichen Code fallen als „nicht anwendbar“ weg; Code ohne Tests/Manifest bleibt SKIP ⇒ unter
+  hartem Grün ROT). Reines Go scheitert nicht an „kein Python-Code“.
+- **Ehrlich:** Werkzeug fehlt ⇒ SKIP/`TOOL_MISSING`; Timeout ⇒ FAIL. Konfigurierbar über `WERKBANK_GO`
+  (auch Docker-Wrapper), `WERKBANK_GOFMT/GOSEC/GOVULNCHECK/GOCYCLO`, `WERKBANK_GO_TIMEOUT`.
+- **CI:** `werkbank-gates.yml` richtet bei vorhandenem `go.mod` Go (`setup-go`, Version aus `go.mod`) und
+  gosec/govulncheck/gocyclo ein; Python-Pfad unverändert. Doku: README „Go-Projekte“. +74 Tests (inkl. echtem Go-Smoke-Test).
+
 ## 2026-06-11 — Branchenregeln als hartes Gate (K1/K2, Profil `produktiv_reguliert`)
 - **Stufe `10_branche`, Gates K1 (Branchen-Pflicht-Artefakte) + K2 (Branchen-Fachabnahme)**
   (`gates/checks/branch.py`): Branche via `--branch <name>` / `.werkbank/branch.txt`; Regelpaket in

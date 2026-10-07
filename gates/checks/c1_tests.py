@@ -4,6 +4,8 @@ Führt die Test-Suite des Ziels als Subprozess aus (unittest discover). PASS bei
 FAIL bei rotem Test, SKIP wenn kein Testverzeichnis gefunden. Schließt die Lücke
 „Tests existieren, aber kein Gate führt sie aus".
 
+Go-Projekte (go.mod gefunden): zusätzlich/stattdessen `go test ./...` je Modul (golang.py).
+
 Rekursion: ruft ein Test selbst den Runner auf einem Ziel OHNE Testverzeichnis auf, liefert C1
 dort SKIP — die Tests dieses Repos zielen nie auf ein Suite-Verzeichnis, daher keine Endlosschleife.
 """
@@ -13,9 +15,10 @@ import subprocess
 import sys
 
 try:
-    from . import common
+    from . import common, golang
 except ImportError:
     import common  # type: ignore
+    import golang  # type: ignore
 
 GATE = "C1"
 TEST_DIRS = ("gates/checks/tests", "tests", "test")
@@ -29,7 +32,13 @@ def _find_testdir(target):
     return None, None
 
 
-def run(target, **_):
+def run(target, exclude_dirs=None, exclude_abs=None, **_):
+    return golang.combine(GATE, target, exclude_dirs, exclude_abs,
+                          py=lambda: _run_python(target),
+                          go=golang.tests)
+
+
+def _run_python(target):
     testdir, rel = _find_testdir(target)
     if not testdir:
         return common.skipped(GATE, "kein Testverzeichnis gefunden", common.NOT_APPLICABLE)
