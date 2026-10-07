@@ -96,6 +96,45 @@ Profil wählen über `--profile`:
 python3 gates/runner.py --target . --report GATE-REPORT.md --profile werkbank_self --ci
 ```
 
+### Go-Projekte (Monorepo-fähig)
+Dieselben Gates (keine neuen IDs, keine Profiländerung) prüfen auch Go. **Go gilt, wenn ein `go.mod`
+gefunden wird** — im Root oder in Unterordnern (z. B. `backend/go.mod`); `vendor/`, `node_modules/`,
+`.git/`, `testdata/` sowie `exclude_dirs` und `.werkbank/framework-dirs` zählen nicht. Mehrere Module
+werden einzeln geprüft. **Python-Projekte (ohne `go.mod`) verhalten sich exakt wie vorher.**
+
+| Gate | Go-Variante (je Modul, im Modulverzeichnis) |
+|---|---|
+| B1 Lint | `gofmt -l .` — leere Ausgabe = PASS |
+| B2 Typecheck | `go vet ./...` — typprüft alle Pakete **inkl. Testdateien** + vet-Analyzer |
+| B3 Build | `go build ./...` |
+| C1 Tests | `go test ./...` (Modul ohne `*_test.go` ⇒ SKIP/nicht anwendbar) |
+| C2 Coverage | `go test -coverprofile` + `go tool cover -func`; Gesamtwert gegen `C2_MIN` (Default 70), je Modul |
+| D1 SAST | `gosec -fmt=json ./...` — High/Medium = FAIL, Low beraten |
+| D2 SCA | `govulncheck -format json ./...` — nur **erreichbare** Schwachstellen (Symbol-Ebene) = FAIL |
+| H2 Komplexität | `gocyclo -over $H2_MAX .` (optional, warn) |
+
+D4 (Lizenzen) hat bewusst keine Go-Variante. Gemischte Projekte (Python + Go) prüfen beide Sprachen;
+das Gate-Ergebnis ist das **strengste** (FAIL > SKIP > WARN > PASS, „nicht anwendbar“ zählt nicht).
+Ein reines Go-Projekt scheitert nicht an „kein Python-Code“ — ruff/mypy/bandit laufen dort gar nicht.
+Fehlt ein Werkzeug, ist das Gate SKIP/`TOOL_MISSING` (unter hartem Grün ⇒ UNGEDECKT/ROT); eine
+Zeitüberschreitung ist FAIL mit Hinweis. Installation der Go-Werkzeuge:
+`go install github.com/securego/gosec/v2/cmd/gosec@latest`,
+`go install golang.org/x/vuln/cmd/govulncheck@latest`, optional
+`go install github.com/fzipp/gocyclo/cmd/gocyclo@latest`.
+
+Konfiguration über Umgebungsvariablen (Wert wird wie eine Shell-Zeile zerlegt):
+
+| Variable | Bedeutung | Default |
+|---|---|---|
+| `WERKBANK_GO` | Go-Aufruf, auch Wrapper, z. B. `docker run --rm -v $PWD:/src -w /src golang:1.25 go` | `go` |
+| `WERKBANK_GOFMT` | gofmt-Aufruf; ohne Angabe aus `WERKBANK_GO` abgeleitet (letztes Token `go` → `gofmt`) | `gofmt` |
+| `WERKBANK_GOSEC` / `WERKBANK_GOVULNCHECK` / `WERKBANK_GOCYCLO` | Aufruf des jeweiligen Werkzeugs | Name |
+| `WERKBANK_GO_TIMEOUT` | Timeout je Subprozess in Sekunden | `900` |
+
+Bei einem Docker-Wrapper müssen `WERKBANK_GOSEC`/`WERKBANK_GOVULNCHECK` bei Bedarf ebenfalls gesetzt
+werden; der Projektordner muss im Container eingebunden sein (die Coverage-Datei liegt vorübergehend
+im Modulverzeichnis). Implementierung: `gates/checks/golang.py`.
+
 ## Inhalt
 | Pfad | Zweck |
 |---|---|

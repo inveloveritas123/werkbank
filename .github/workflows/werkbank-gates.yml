@@ -25,6 +25,29 @@ jobs:
         with:
           python-version: "3.9"
 
+      # Go (optional): nur wenn das Projekt ein go.mod hat (Root oder Unterordner, ohne
+      # vendor/node_modules/testdata). Ohne go.mod laufen diese Schritte nicht — der Python-Pfad
+      # bleibt unveraendert. Die Gates B1-B3/C1/C2/D1/D2/H2 erkennen Go selbst (gates/checks/golang.py).
+      - name: Go-Modul erkennen
+        id: gomod
+        run: |
+          f=$(find . \( -name vendor -o -name node_modules -o -name .git -o -name testdata \) -prune \
+                -o -name go.mod -print | sort | head -n 1)
+          echo "file=${f}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-go@v6
+        if: steps.gomod.outputs.file != ''
+        with:
+          go-version-file: ${{ steps.gomod.outputs.file }}
+
+      - name: Go-Gate-Werkzeuge installieren (gosec, govulncheck, gocyclo)
+        if: steps.gomod.outputs.file != ''
+        run: |
+          go install github.com/securego/gosec/v2/cmd/gosec@v2.29.0
+          go install golang.org/x/vuln/cmd/govulncheck@v1.8.0
+          go install github.com/fzipp/gocyclo/cmd/gocyclo@v0.6.0
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
       # SINGLE SOURCE OF TRUTH: die CI ruft NUR die Makefile-Targets. Damit laufen lokal
       # (`make all`) und CI per Konstruktion dieselben Befehle — sie koennen nicht mehr
       # auseinanderdriften (genau der Bug, der die CI 14 Laeufe lang unbemerkt rot hielt).
