@@ -114,7 +114,9 @@ werden einzeln geprüft. **Python-Projekte (ohne `go.mod`) verhalten sich exakt 
 | H2 Komplexität | `gocyclo -over $H2_MAX .` (optional, warn) |
 
 D4 (Lizenzen) hat bewusst keine Go-Variante. Gemischte Projekte (Python + Go) prüfen beide Sprachen;
-das Gate-Ergebnis ist das **strengste** (FAIL > SKIP > WARN > PASS, „nicht anwendbar“ zählt nicht).
+das Gate-Ergebnis ist das **strengste** (FAIL > SKIP > WARN > PASS). Ein Sprachteil bzw. Modul **mit Code, aber ohne Tests/Manifest**
+bleibt SKIP (unter hartem Grün ROT) — wie im reinen Python-Projekt; nur Teile **ohne jeglichen Code**
+(z. B. `go.mod` ohne `.go`-Dateien, kein Python-Code) fallen als „nicht anwendbar“ weg.
 Ein reines Go-Projekt scheitert nicht an „kein Python-Code“ — ruff/mypy/bandit laufen dort gar nicht.
 Fehlt ein Werkzeug, ist das Gate SKIP/`TOOL_MISSING` (unter hartem Grün ⇒ UNGEDECKT/ROT); eine
 Zeitüberschreitung ist FAIL mit Hinweis. Installation der Go-Werkzeuge:

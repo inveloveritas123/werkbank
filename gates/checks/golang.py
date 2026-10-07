@@ -90,19 +90,27 @@ def has_python(target, exclude_dirs=None, exclude_abs=None) -> bool:
 
 def combine(gate, target, exclude_dirs, exclude_abs,
             py: Callable[[], "common.CheckResult"],
-            go: Callable[[GoModule], "common.CheckResult"],
-            py_relevant: Optional[Callable[[], bool]] = None) -> "common.CheckResult":
-    """Zentrale Weiche. Ohne go.mod: exakt das bisherige Python-Ergebnis (py())."""
+            go: Callable[[GoModule], "common.CheckResult"]) -> "common.CheckResult":
+    """Zentrale Weiche. Ohne go.mod: exakt das bisherige Python-Ergebnis (py()).
+
+    Mit go.mod zaehlt ein Sprachteil genau dann, wenn er CODE hat (Python: .py-Dateien,
+    Go: .go-Dateien im Modul). Hat er Code, aber keine Tests/kein Manifest, liefert seine
+    Funktion SKIP und das Gate bleibt ungedeckt (unter hartem Gruen ROT) — wie im reinen
+    Python-Projekt. Nur Teile ohne jeglichen Code fallen als „nicht anwendbar“ weg."""
     mods = find_modules(target, exclude_dirs, exclude_abs)
     if not mods:
         return py()
     parts = []
-    relevant = py_relevant() if py_relevant else has_python(target, exclude_dirs, exclude_abs)
-    if relevant:
+    droppable = []
+    if has_python(target, exclude_dirs, exclude_abs):
         parts.append(("Python", py()))
     for m in mods:
-        parts.append((m.label, go(m)))
-    return common.merge_results(gate, parts)
+        if has_go_code(m):
+            parts.append((m.label, go(m)))
+        else:
+            parts.append((m.label, common.skipped(gate, "kein Go-Code im Modul", common.NOT_APPLICABLE)))
+            droppable.append(m.label)
+    return common.merge_results(gate, parts, tuple(droppable))
 
 
 # ---------- Werkzeug-Aufrufe ----------
@@ -221,12 +229,23 @@ def _first_line(*texts: str) -> str:
     return ""
 
 
+def _go_files(module: GoModule) -> Iterator[str]:
+    """Alle .go-Dateinamen des Moduls (ohne vendor/testdata/versteckte Ordner/verschachtelte Module)."""
+    for root, dirs, files in os.walk(module.path):
+        dirs[:] = [d for d in dirs
+                   if d not in _GO_SKIP_SEGMENTS and not d.startswith(".")
+                   and not os.path.exists(os.path.join(root, d, GO_MOD))]
+        for f in files:
+            if f.endswith(".go"):
+                yield f
+
+
+def has_go_code(module: GoModule) -> bool:
+    return any(True for _ in _go_files(module))
+
+
 def _has_go_tests(module: GoModule) -> bool:
-    for _root, dirs, files in os.walk(module.path):
-        dirs[:] = [d for d in dirs if d not in _GO_SKIP_SEGMENTS and not d.startswith(".")]
-        if any(f.endswith("_test.go") for f in files):
-            return True
-    return False
+    return any(f.endswith("_test.go") for f in _go_files(module))
 
 
 # ---------- B1 / B2 / B3 ----------

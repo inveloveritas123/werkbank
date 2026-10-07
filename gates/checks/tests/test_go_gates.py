@@ -241,15 +241,23 @@ class MergeResults(unittest.TestCase):
                                  ("B", self.R(common.SKIP, reason=common.TOOL_MISSING))]).status, common.SKIP)
         self.assertEqual(m("X", [("A", self.R(common.PASS)), ("B", self.R(common.PASS))]).status, common.PASS)
 
-    def test_not_applicable_does_not_count_but_is_mentioned(self):
-        res = common.merge_results("X", [("Python", self.R(common.SKIP, "kein Python-Code", common.NOT_APPLICABLE)),
-                                         ("Go", self.R(common.PASS, "sauber"))])
+    def test_only_droppable_not_applicable_is_dropped_but_mentioned(self):
+        res = common.merge_results("X", [("Go leer", self.R(common.SKIP, "kein Go-Code", common.NOT_APPLICABLE)),
+                                         ("Go", self.R(common.PASS, "sauber"))], droppable=("Go leer",))
         self.assertEqual(res.status, common.PASS)
-        self.assertIn("nicht anwendbar: Python: kein Python-Code", res.summary)
+        self.assertIn("nicht anwendbar: Go leer: kein Go-Code", res.summary)
+
+    def test_not_applicable_part_with_code_is_not_dropped(self):
+        # Teil MIT Code, aber ohne Tests (nicht droppable) -> SKIP, nie stillschweigend PASS
+        res = common.merge_results("X", [("Python", self.R(common.SKIP, "kein Testverzeichnis", common.NOT_APPLICABLE)),
+                                         ("Go", self.R(common.PASS, "grün"))])
+        self.assertEqual((res.status, res.skip_reason), (common.SKIP, common.NOT_APPLICABLE))
+        self.assertIn("Python: kein Testverzeichnis", res.summary)
 
     def test_all_not_applicable_stays_not_applicable(self):
         res = common.merge_results("X", [("A", self.R(common.SKIP, "n1", common.NOT_APPLICABLE)),
-                                         ("B", self.R(common.SKIP, "n2", common.NOT_APPLICABLE))])
+                                         ("B", self.R(common.SKIP, "n2", common.NOT_APPLICABLE))],
+                                   droppable=("A", "B"))
         self.assertEqual((res.status, res.skip_reason), (common.SKIP, common.NOT_APPLICABLE))
 
     def test_skip_reason_priority_and_findings_kept(self):
@@ -454,12 +462,57 @@ class TestGatesGo(GoTestCase):
         self.assertEqual((res.status, res.skip_reason), (common.SKIP, common.NOT_APPLICABLE))
         self.assertEqual(self.fakes.calls(), [])
 
-    def test_c1_multi_module_one_without_tests_still_checks_others(self):
+    def test_c1_multi_module_one_without_tests_is_not_green(self):
+        # Modul MIT Code, aber ohne Tests, darf nicht wegfallen (wie bei nur einem Modul).
         self.go_project("backend")
         self.go_project("tools", tests=False)
         res = c1_tests.run(self.root)
+        self.assertEqual((res.status, res.skip_reason), (common.SKIP, common.NOT_APPLICABLE))
+        self.assertIn("Go tools: keine Go-Tests", res.summary)
+
+    def test_c2_multi_module_one_without_tests_is_not_green(self):
+        self.go_project("backend")
+        self.go_project("tools", tests=False)
+        self._cover("95.0")
+        res = c2_coverage.run(self.root)
+        self.assertEqual(res.status, common.SKIP)
+        self.assertIn("Go tools: keine Go-Tests", res.summary)
+
+    def test_module_without_any_go_code_is_dropped(self):
+        self.go_project("backend")
+        _w(self.root, "docs/go.mod", "module example.com/docs\n")      # go.mod ohne .go-Dateien
+        res = c1_tests.run(self.root)
         self.assertEqual(res.status, common.PASS)
-        self.assertIn("nicht anwendbar: Go tools", res.summary)
+        self.assertIn("nicht anwendbar: Go docs: kein Go-Code im Modul", res.summary)
+
+    def test_tests_in_nested_module_do_not_count_for_parent(self):
+        self.go_project("a", tests=False)
+        self.go_project("a/inner")                                       # Tests nur im verschachtelten Modul
+        res = c1_tests.run(self.root)
+        self.assertEqual(res.status, common.SKIP)
+        self.assertIn("Go a: keine Go-Tests", res.summary)
+
+    def test_mixed_python_code_without_tests_dir_is_not_green(self):
+        # reines Python-Projekt wäre hier SKIP -> gemischt darf es nicht grün werden
+        self.go_project("backend")
+        _w(self.root, "tools/helper.py", "x = 1\n")
+        res = c1_tests.run(self.root)
+        self.assertEqual(res.status, common.SKIP)
+        self.assertIn("Python: kein Testverzeichnis gefunden", res.summary)
+        self.fakes._install("coverage", _FAKE)
+        self.fakes.set("coverage", "main", out="TOTAL 10 0 100%\n")
+        self._cover("95.0")
+        res = c2_coverage.run(self.root)
+        self.assertEqual(res.status, common.SKIP)
+        self.assertIn("Python: kein Testverzeichnis", res.summary)
+
+    def test_mixed_python_code_without_manifest_d2_is_not_green(self):
+        self.go_project("backend")
+        _w(self.root, "tools/helper.py", "x = 1\n")
+        self.fakes.set("govulncheck", "main", out=_vuln_stream())
+        res = d2_sca.run(self.root)
+        self.assertEqual(res.status, common.SKIP)
+        self.assertIn("Python: kein Dependency-Manifest", res.summary)
 
     def test_c1_go_present_python_tests_dir_runs_both(self):
         self.go_project("backend")
@@ -768,6 +821,22 @@ class RunnerHardGreen(GoTestCase):
         self.assertEqual(res["overall"], "ROT")
         unc = {u["gate"]: u["reason"] for u in res["verdict"]["uncovered"]}
         self.assertEqual(unc, {g: common.TOOL_MISSING for g in ("B1", "B2", "B3", "C1", "C2", "D1", "D2")})
+
+    def test_second_module_without_tests_makes_it_red(self):
+        self.go_project("backend")
+        self.go_project("tools", tests=False)
+        self._healthy()
+        res = self._run()
+        self.assertEqual(res["overall"], "ROT")
+        self.assertEqual({u["gate"] for u in res["verdict"]["uncovered"]}, {"C1", "C2"})
+
+    def test_mixed_python_without_tests_makes_it_red(self):
+        self.go_project("backend")
+        _w(self.root, "tools/helper.py", "x = 1\n")
+        self._healthy()
+        res = self._run()
+        self.assertEqual(res["overall"], "ROT")
+        self.assertIn("C1", {u["gate"] for u in res["verdict"]["uncovered"]})
 
     def test_go_failure_makes_it_red(self):
         self.go_project("backend")

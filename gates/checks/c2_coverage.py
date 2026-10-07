@@ -31,9 +31,7 @@ def _testdir(target):
 def run(target, exclude_dirs=None, exclude_abs=None, **_):
     return golang.combine(GATE, target, exclude_dirs, exclude_abs,
                           py=lambda: _run_python(target),
-                          go=golang.coverage,
-                          py_relevant=lambda: bool(_testdir(target))
-                          and golang.has_python(target, exclude_dirs, exclude_abs))
+                          go=golang.coverage)
 
 
 def _run_python(target):

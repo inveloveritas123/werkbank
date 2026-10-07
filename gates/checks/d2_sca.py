@@ -94,9 +94,7 @@ def _findings(vuln_pkgs):
 def run(target, exclude_dirs=None, exclude_abs=None, **_):
     return golang.combine(GATE, target, exclude_dirs, exclude_abs,
                           py=lambda: _run_python(target),
-                          go=golang.sca,
-                          py_relevant=lambda: _has_manifest(target)
-                          and golang.has_python(target, exclude_dirs, exclude_abs))
+                          go=golang.sca)
 
 
 def _run_python(target):

@@ -71,13 +71,16 @@ def skipped(gate: str, summary: str, reason: str = NOT_APPLICABLE) -> "CheckResu
     return CheckResult(gate, SKIP, summary, skip_reason=reason)
 
 
-def merge_results(gate: str, parts: list) -> "CheckResult":
+def merge_results(gate: str, parts: list, droppable: tuple = ()) -> "CheckResult":
     """Fasst Teilergebnisse mehrerer Sprachen/Module zu EINEM Gate-Ergebnis zusammen.
 
     parts: Liste von (Label, CheckResult). Das Ergebnis ist das strengste:
-    FAIL > SKIP > WARN > PASS. Teile mit SKIP/NOT_APPLICABLE zaehlen nicht mit (z. B. Python-
-    Teil ohne Python-Code), werden aber in der Notiz erwaehnt. Bei SKIP gewinnt der strengere
-    Grund (TOOL_MISSING > NOT_IMPLEMENTED > sonstige). Findings aller Teile bleiben erhalten.
+    FAIL > SKIP > WARN > PASS. NUR Teile, deren Label in `droppable` steht UND die
+    SKIP/NOT_APPLICABLE sind (Teil ohne jeglichen Code), fallen weg und werden nur in der
+    Notiz erwaehnt. Ein Teil MIT Code, aber ohne Tests/Manifest, bleibt als SKIP erhalten
+    (unter hartem Gruen ROT) — genau wie im reinen Python-Projekt. Bei SKIP gewinnt der
+    strengere Grund (TOOL_MISSING > NOT_IMPLEMENTED > NOT_APPLICABLE-nur > sonstige).
+    Findings aller Teile bleiben erhalten.
     Wird nur bei gemischten/Go-Projekten benutzt — reine Python-Projekte sehen das nie."""
     def seg(items: list) -> str:
         groups: dict = {}
@@ -85,8 +88,11 @@ def merge_results(gate: str, parts: list) -> "CheckResult":
             groups.setdefault(r.summary, []).append(label)
         return "; ".join("%s: %s" % (", ".join(lbls), summ) for summ, lbls in groups.items())
 
-    real = [(lb, r) for lb, r in parts if not (r.status == SKIP and r.skip_reason == NOT_APPLICABLE)]
-    na = [(lb, r) for lb, r in parts if (lb, r) not in real]
+    def dropped(lb: str, r: "CheckResult") -> bool:
+        return lb in droppable and r.status == SKIP and r.skip_reason == NOT_APPLICABLE
+
+    real = [(lb, r) for lb, r in parts if not dropped(lb, r)]
+    na = [(lb, r) for lb, r in parts if dropped(lb, r)]
     if not real:
         return skipped(gate, seg(na) or "nicht anwendbar", NOT_APPLICABLE)
     for status in (FAIL, SKIP, WARN, PASS):
@@ -100,6 +106,8 @@ def merge_results(gate: str, parts: list) -> "CheckResult":
     reason = None
     if status == SKIP:
         reasons = [r.skip_reason for _lb, r in chosen]
+        if all(x == NOT_APPLICABLE for x in reasons):
+            reason = NOT_APPLICABLE
         for cand in (TOOL_MISSING, NOT_IMPLEMENTED):
             if cand in reasons:
                 reason = cand

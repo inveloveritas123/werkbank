@@ -13,7 +13,8 @@
   D4 bewusst ohne Go-Variante (nur warn, kein belastbares Standardwerkzeug; in keinem Profil).
 - **Kompatibilität:** ohne `go.mod` liefern die Gates exakt das bisherige Python-Ergebnis (gleiche Texte).
   Gemischte Projekte: beide Sprachen, strengstes Ergebnis (`common.merge_results`: FAIL > SKIP > WARN > PASS,
-  „nicht anwendbar“ zählt nicht). Reines Go scheitert nicht an „kein Python-Code“.
+  nur Teile ohne jeglichen Code fallen als „nicht anwendbar“ weg; Code ohne Tests/Manifest bleibt SKIP ⇒ unter
+  hartem Grün ROT). Reines Go scheitert nicht an „kein Python-Code“.
 - **Ehrlich:** Werkzeug fehlt ⇒ SKIP/`TOOL_MISSING`; Timeout ⇒ FAIL. Konfigurierbar über `WERKBANK_GO`
   (auch Docker-Wrapper), `WERKBANK_GOFMT/GOSEC/GOVULNCHECK/GOCYCLO`, `WERKBANK_GO_TIMEOUT`.
 - **CI:** `werkbank-gates.yml` richtet bei vorhandenem `go.mod` Go (`setup-go`, Version aus `go.mod`) und
