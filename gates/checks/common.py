@@ -71,6 +71,42 @@ def skipped(gate: str, summary: str, reason: str = NOT_APPLICABLE) -> "CheckResu
     return CheckResult(gate, SKIP, summary, skip_reason=reason)
 
 
+def merge_results(gate: str, parts: list) -> "CheckResult":
+    """Fasst Teilergebnisse mehrerer Sprachen/Module zu EINEM Gate-Ergebnis zusammen.
+
+    parts: Liste von (Label, CheckResult). Das Ergebnis ist das strengste:
+    FAIL > SKIP > WARN > PASS. Teile mit SKIP/NOT_APPLICABLE zaehlen nicht mit (z. B. Python-
+    Teil ohne Python-Code), werden aber in der Notiz erwaehnt. Bei SKIP gewinnt der strengere
+    Grund (TOOL_MISSING > NOT_IMPLEMENTED > sonstige). Findings aller Teile bleiben erhalten.
+    Wird nur bei gemischten/Go-Projekten benutzt — reine Python-Projekte sehen das nie."""
+    def seg(items: list) -> str:
+        groups: dict = {}
+        for label, r in items:
+            groups.setdefault(r.summary, []).append(label)
+        return "; ".join("%s: %s" % (", ".join(lbls), summ) for summ, lbls in groups.items())
+
+    real = [(lb, r) for lb, r in parts if not (r.status == SKIP and r.skip_reason == NOT_APPLICABLE)]
+    na = [(lb, r) for lb, r in parts if (lb, r) not in real]
+    if not real:
+        return skipped(gate, seg(na) or "nicht anwendbar", NOT_APPLICABLE)
+    for status in (FAIL, SKIP, WARN, PASS):
+        chosen = [(lb, r) for lb, r in real if r.status == status]
+        if chosen:
+            break
+    summary = seg(chosen)
+    if na:
+        summary += " (nicht anwendbar: %s)" % seg(na)
+    findings = [f for _lb, r in real for f in r.findings]
+    reason = None
+    if status == SKIP:
+        reasons = [r.skip_reason for _lb, r in chosen]
+        for cand in (TOOL_MISSING, NOT_IMPLEMENTED):
+            if cand in reasons:
+                reason = cand
+                break
+    return CheckResult(gate, status, summary, findings, skip_reason=reason)
+
+
 def iter_files(target: str,
                exts: Optional[set] = None,
                name_suffixes: Optional[tuple] = None,

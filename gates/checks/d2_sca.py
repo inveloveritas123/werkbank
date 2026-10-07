@@ -6,6 +6,8 @@ Sucht bekannte Schwachstellen in den deklarierten Dependencies.
 - keines installiert     -> SKIP/TOOL_MISSING (kein Vortaeuschen eines Pass).
 - kein Dependency-Manifest (requirements*.txt/pyproject.toml/package.json) -> SKIP/NOT_APPLICABLE.
 
+Go-Projekte (go.mod gefunden): govulncheck, nur ERREICHBARE Schwachstellen sind FAIL (golang.py).
+
 Bei Befunden: FAIL mit Anzahl + redigierten Paketnamen — KEIN Roh-Advisory-Text im Report.
 Robust gegen eine Fortschrittszeile vor dem JSON (ab erstem '{' bzw. '[' parsen).
 """
@@ -16,9 +18,10 @@ import subprocess
 import sys
 
 try:
-    from . import common
+    from . import common, golang
 except ImportError:
     import common  # type: ignore
+    import golang  # type: ignore
 
 GATE = "D2"
 
@@ -89,6 +92,14 @@ def _findings(vuln_pkgs):
 
 
 def run(target, exclude_dirs=None, exclude_abs=None, **_):
+    return golang.combine(GATE, target, exclude_dirs, exclude_abs,
+                          py=lambda: _run_python(target),
+                          go=golang.sca,
+                          py_relevant=lambda: _has_manifest(target)
+                          and golang.has_python(target, exclude_dirs, exclude_abs))
+
+
+def _run_python(target):
     if not _has_manifest(target):
         return common.skipped(GATE, "kein Dependency-Manifest", common.NOT_APPLICABLE)
 

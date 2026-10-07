@@ -1,6 +1,8 @@
 """Gate C2 — Test-Coverage >= Zielwert. Nutzt coverage.py, sonst SKIP (kein Vortäuschen).
 
 Zielwert via Env C2_MIN (Default 70). SKIP, wenn coverage fehlt oder kein Testverzeichnis da ist.
+Go-Projekte (go.mod gefunden): `go test -coverprofile` + `go tool cover -func` je Modul (golang.py),
+derselbe Schwellwert C2_MIN.
 """
 import os
 import re
@@ -9,9 +11,10 @@ import subprocess
 import sys
 
 try:
-    from . import common
+    from . import common, golang
 except ImportError:
     import common  # type: ignore
+    import golang  # type: ignore
 
 GATE = "C2"
 TEST_DIRS = ("gates/checks/tests", "tests", "test")
@@ -26,6 +29,14 @@ def _testdir(target):
 
 
 def run(target, exclude_dirs=None, exclude_abs=None, **_):
+    return golang.combine(GATE, target, exclude_dirs, exclude_abs,
+                          py=lambda: _run_python(target),
+                          go=golang.coverage,
+                          py_relevant=lambda: bool(_testdir(target))
+                          and golang.has_python(target, exclude_dirs, exclude_abs))
+
+
+def _run_python(target):
     if not shutil.which("coverage"):
         return common.skipped(GATE, "coverage nicht installiert", common.TOOL_MISSING)
     td = _testdir(target)

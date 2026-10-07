@@ -9,15 +9,18 @@ Schwelle via env `H2_MAX` (Default 12). H2 ist ein WARN-Gate: hohe Komplexitaet
 blockiert nicht, ist aber ein Hinweis (Refactoring-Kandidat).
 - Funktion ueber Schwelle -> WARN (mit Fundstellen "func() = N").
 - kein .py -> SKIP/NOT_APPLICABLE.
+Go-Projekte (go.mod gefunden): optional via `gocyclo -over <H2_MAX>` (golang.py); ohne gocyclo
+SKIP/TOOL_MISSING (warn-Gate, blockiert nichts).
 """
 import ast
 import os
 import sys
 
 try:
-    from . import common
+    from . import common, golang
 except ImportError:
     import common  # type: ignore
+    import golang  # type: ignore
 
 GATE = "H2"
 _DEFAULT_MAX = 12
@@ -68,6 +71,12 @@ def _iter_functions(tree):
 
 def run(target, exclude_dirs=None, exclude_abs=None, **_):
     limit = _max_threshold()
+    return golang.combine(GATE, target, exclude_dirs, exclude_abs,
+                          py=lambda: _run_python(target, limit, exclude_dirs, exclude_abs),
+                          go=lambda m: golang.complexity(m, limit))
+
+
+def _run_python(target, limit, exclude_dirs=None, exclude_abs=None):
     findings, n = [], 0
     for ap, rel in common.iter_files(target, exts={".py"},
                                      exclude_dirs=exclude_dirs, exclude_abs=exclude_abs):

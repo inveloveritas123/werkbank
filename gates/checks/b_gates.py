@@ -1,6 +1,7 @@
 """Gates B — statisch. B1 Lint (ruff), B2 Typecheck (mypy), B3 Build (py_compile, stdlib).
 
 B3 ist immer real (kompiliert alle .py). B1/B2 nutzen externe Tools, sonst SKIP (kein Vortäuschen).
+Go-Projekte (go.mod gefunden): B1 gofmt, B2 go vet, B3 go build — siehe golang.py.
 """
 import os
 import py_compile
@@ -9,12 +10,19 @@ import subprocess
 import sys
 
 try:
-    from . import common
+    from . import common, golang
 except ImportError:
     import common  # type: ignore
+    import golang  # type: ignore
 
 
 def run_b3(target, exclude_dirs=None, exclude_abs=None, **_):
+    return golang.combine("B3", target, exclude_dirs, exclude_abs,
+                          py=lambda: _run_b3_python(target, exclude_dirs, exclude_abs),
+                          go=golang.build)
+
+
+def _run_b3_python(target, exclude_dirs=None, exclude_abs=None):
     findings, n = [], 0
     for ap, rel in common.iter_files(target, exts={".py"}, exclude_dirs=exclude_dirs, exclude_abs=exclude_abs):
         n += 1
@@ -46,11 +54,15 @@ def _tool_gate(gate, tool, args, target):
 
 
 def run_b1(target, exclude_dirs=None, exclude_abs=None, **_):
-    return _tool_gate("B1", "ruff", ["check", "."], target)
+    return golang.combine("B1", target, exclude_dirs, exclude_abs,
+                          py=lambda: _tool_gate("B1", "ruff", ["check", "."], target),
+                          go=golang.lint)
 
 
 def run_b2(target, exclude_dirs=None, exclude_abs=None, **_):
-    return _tool_gate("B2", "mypy", ["."], target)
+    return golang.combine("B2", target, exclude_dirs, exclude_abs,
+                          py=lambda: _tool_gate("B2", "mypy", ["."], target),
+                          go=golang.typecheck)
 
 
 if __name__ == "__main__":
