@@ -55,15 +55,16 @@
 
 ## Sidequests (außerhalb der Sprint-Reihenfolge)
 
-- [ ] **SQ1 · Go-Gates für Bestandsprojekte im Umstieg von Python auf Go**
-  - Anlass: Ein Bestandsprojekt (FastAPI, PostGIS, Next.js) wechselt auf Go und GraphQL nach der ZukunftsApp-Vorlage. Python-Importer laufen übergangsweise als eigene Jobs weiter, bis sie portiert sind. Im Go-Teil ersetzt `go test` pytest; pytest bleibt nur, solange Python-Code existiert.
+- [ ] **SQ1 · Sprachunabhängige Gates und Umstieg eines Bestandsprojekts auf einen Zielrahmen**
+  - Ziel: Die Werkbank prüft jedes Projekt unabhängig von der Sprache und begleitet den Umstieg eines bestehenden, oft schnell oder per „Vibe-Coding“ entstandenen Projekts in einen kontrollierbaren Zielrahmen. Standard-Zielrahmen ist Go mit GraphQL nach der ZukunftsApp-Vorlage.
+  - Beispiele für Umstiege: Python/FastAPI nach Go/GraphQL; Node/Express nach Go/GraphQL; ein KI-generierter Prototyp ohne Tests nach Go/GraphQL mit Gates. Übergangsweise laufen Teile der alten Sprache weiter (etwa Import-Jobs), bis sie portiert sind.
   - Abhängig von: PR #13 (Go-Gates), PR #12 (Starter-Stacks mit `backend-go-graphql`).
   - Teilaufgaben:
     1. PR #13 und PR #12 prüfen und nach menschlicher Freigabe mergen.
-    2. Gemischte Projekte: Go-Backend, Python-Import-Jobs und Next.js im selben Repo. Jede Sprache wird geprüft, der `GATE-REPORT.md` zeigt das Ergebnis je Modul.
-    3. Falsches Grün schließen: C1 und C2 laufen mit `unittest` und melden bei pytest-Projekten „Ran 0 tests“ mit Exit 0. Testrunner erkennen (pytest, `go test`), null gefundene Tests zählen als Rot.
-    4. `werkbank-gates.yml` setzt Make-Ziele voraus (`dev-setup`, `type`, `sast`, `gate`), die Bestandsprojekte nicht haben. Fehlende Ziele erkennen und klar melden, statt die vorhandene CI rot zu machen.
-    5. Planungsartefakte nicht in `_bmad-output/` liegen lassen (steht in `.gitignore`). PRD, Architektur und SPEC nach `docs/` übernehmen.
-    6. Frontend-Gates ergänzen: Next.js wird heute nicht geprüft (Lint, Typprüfung, Build, Tests).
-    7. Migrationsmuster dokumentieren: Die vorhandenen Python-Tests dienen als Referenz für die Go-Portierung (gleiche Eingabe, gleicher Wert). Python-Code wird erst entfernt, wenn die Go-Tests dieselben Fälle abdecken und grün sind.
-  - Akzeptanz: Ein gemischtes Beispielprojekt (Go, Python, Next.js) unter `examples/` läuft durch alle Gates; Negativtests für „0 Tests“, fehlende Make-Ziele und Go-Befunde sind grün; die bestehenden Tests bleiben unverändert grün; Score ≥ 85.
+    2. Sprachweiche verallgemeinern: Jedes Gate (Lint, Typprüfung, Tests, Abdeckung, Secrets, Abhängigkeiten) hat je Sprache einen Adapter (Python: ruff, mypy, pytest; Go: go vet, golangci-lint, go test; TypeScript: eslint, tsc, vitest oder jest). Gemischte Repos werden je Modul geprüft, der `GATE-REPORT.md` zeigt das Ergebnis je Modul.
+    3. Falsches Grün schließen: Null gefundene Tests zählen als Rot, in jeder Sprache. Bekannter Fall: C1 und C2 laufen mit `unittest` und melden bei pytest-Projekten „Ran 0 tests“ mit Exit 0.
+    4. `werkbank-gates.yml` setzt keine Make-Ziele voraus, die ein Bestandsprojekt nicht hat (`dev-setup`, `type`, `sast`, `gate`). Fehlende Ziele werden erkannt und gemeldet.
+    5. Planungsartefakte nicht in `_bmad-output/` liegen lassen (steht in `.gitignore`), sondern nach `docs/` übernehmen.
+    6. **Umstiegs-Test (Verhaltensgleichheit):** Vor dem Umstieg werden aus dem alten System Referenzfälle gezogen (gleiche Eingabe, erwartete Ausgabe; bei APIs Anfrage und Antwort). Der neue Rahmen gilt erst als fertig, wenn er alle Referenzfälle besteht. Der alte Code wird erst danach entfernt.
+    7. **Bestandsaufnahme vor dem Umstieg:** Ein Gate-Lauf über das alte Projekt erzeugt einen Befundbericht (Testabdeckung, Mocks im Produktivpfad, Geheimnisse, Lizenzen, Determinismus, offene Ports). Er dient als Ausgangslage und Abnahmemaßstab.
+  - Akzeptanz: Zwei Beispielprojekte unter `examples/` (Python nach Go, TypeScript nach Go) laufen durch Bestandsaufnahme, Umstiegs-Test und alle Gates; Negativtests für „0 Tests“, fehlende Make-Ziele und Verhaltensabweichungen sind grün; die bestehenden Tests bleiben unverändert grün; Score ≥ 85.
