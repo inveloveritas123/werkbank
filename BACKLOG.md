@@ -50,3 +50,20 @@
 - Eine Aufgabe gilt erst als `[x]`, wenn ihre Akzeptanz **gemessen** erfüllt ist (Score + grüne Gates), nicht wenn der Agent es „glaubt".
 - Pro fertiger Aufgabe: CHANGELOG-Eintrag (neuster oben) + BENCHMARK-Eintrag + PR (kein Selbst-Merge).
 - Verschlechtert eine Änderung eine frühere Aufgabe (Regression) → zurückrollen, Aufgabe bleibt `[~]`.
+
+---
+
+## Sidequests (außerhalb der Sprint-Reihenfolge)
+
+- [ ] **SQ1 · Go-Gates für Bestandsprojekte im Umstieg von Python auf Go**
+  - Anlass: Ein Bestandsprojekt (FastAPI, PostGIS, Next.js) wechselt auf Go und GraphQL nach der ZukunftsApp-Vorlage. Python-Importer laufen übergangsweise als eigene Jobs weiter, bis sie portiert sind. Im Go-Teil ersetzt `go test` pytest; pytest bleibt nur, solange Python-Code existiert.
+  - Abhängig von: PR #13 (Go-Gates), PR #12 (Starter-Stacks mit `backend-go-graphql`).
+  - Teilaufgaben:
+    1. PR #13 und PR #12 prüfen und nach menschlicher Freigabe mergen.
+    2. Gemischte Projekte: Go-Backend, Python-Import-Jobs und Next.js im selben Repo. Jede Sprache wird geprüft, der `GATE-REPORT.md` zeigt das Ergebnis je Modul.
+    3. Falsches Grün schließen: C1 und C2 laufen mit `unittest` und melden bei pytest-Projekten „Ran 0 tests“ mit Exit 0. Testrunner erkennen (pytest, `go test`), null gefundene Tests zählen als Rot.
+    4. `werkbank-gates.yml` setzt Make-Ziele voraus (`dev-setup`, `type`, `sast`, `gate`), die Bestandsprojekte nicht haben. Fehlende Ziele erkennen und klar melden, statt die vorhandene CI rot zu machen.
+    5. Planungsartefakte nicht in `_bmad-output/` liegen lassen (steht in `.gitignore`). PRD, Architektur und SPEC nach `docs/` übernehmen.
+    6. Frontend-Gates ergänzen: Next.js wird heute nicht geprüft (Lint, Typprüfung, Build, Tests).
+    7. Migrationsmuster dokumentieren: Die vorhandenen Python-Tests dienen als Referenz für die Go-Portierung (gleiche Eingabe, gleicher Wert). Python-Code wird erst entfernt, wenn die Go-Tests dieselben Fälle abdecken und grün sind.
+  - Akzeptanz: Ein gemischtes Beispielprojekt (Go, Python, Next.js) unter `examples/` läuft durch alle Gates; Negativtests für „0 Tests“, fehlende Make-Ziele und Go-Befunde sind grün; die bestehenden Tests bleiben unverändert grün; Score ≥ 85.
